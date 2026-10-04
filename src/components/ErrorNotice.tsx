@@ -2,6 +2,10 @@ import { Alert, Button, Space } from 'antd'
 import { ApiError } from '../api/client'
 
 const domainMessages: Record<string, string> = {
+ LIBRARY_UNIQUE_CONFLICT: 'Mã sách hoặc bản sao đã được sử dụng.',
+ LIBRARY_COPY_ALREADY_LOANED: 'Bản sao đang có lượt mượn mở; chưa tạo lượt mượn mới.',
+ LIBRARY_REFERENCE_UNAVAILABLE: 'Đầu sách, bản sao hoặc sinh viên không còn ACTIVE.',
+ INVALID_LIBRARY_STATE: 'Lượt mượn đã được trả; mở lại để xem lịch sử.',
  EVENT_CODE_ALREADY_EXISTS: 'Mã sự kiện đã được sử dụng.',
  INVALID_EVENT_STATE: 'Sự kiện hoặc đăng ký không cho phép thao tác này.',
  EVENT_REGISTRATION_ALREADY_EXISTS: 'Sinh viên đã có đăng ký; mở bản ghi cũ để khôi phục nếu đã hủy.',

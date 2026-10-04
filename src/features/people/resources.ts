@@ -19,6 +19,7 @@ export interface Resource {
  disabled?: (field: Field, current: RegistryRow) => boolean
  choices?: (field: Field, current: RegistryRow) => Field['options']
  editValues?: (current: RegistryRow) => Values
+ updatePath?: (current: RegistryRow) => string
  createPath?: (values: Values) => string
  body: (values: Values, current?: RegistryRow) => unknown
 }

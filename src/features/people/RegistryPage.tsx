@@ -64,7 +64,7 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
  })
  useEffect(() => { if (detail.data && !detail.isFetching) form.setFieldsValue(resource.editValues?.(detail.data) ?? detail.data) }, [detail.data, detail.isFetching, form, resource])
  const mutation = useMutation({
-  mutationFn: (values: Values) => api.mutation<RegistryRow>((id ? resource.path + '/' + id : resource.createPath?.(values) ?? resource.path), id ? 'PUT' : 'POST', resource.body(values, id ? detail.data : undefined)),
+  mutationFn: (values: Values) => api.mutation<RegistryRow>((id ? resource.updatePath?.(detail.data!) ?? resource.path + '/' + id : resource.createPath?.(values) ?? resource.path), id ? 'PUT' : 'POST', resource.body(values, id ? detail.data : undefined)),
   onSuccess: () => {
    void queryClient.invalidateQueries({ queryKey: ['registry', resource.path] })
    void queryClient.invalidateQueries({ queryKey: ['reference'] })
