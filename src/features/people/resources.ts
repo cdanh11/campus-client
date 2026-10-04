@@ -7,7 +7,7 @@ import type { OrganizationCreate, OrganizationUpdate, StudentCreate, StudentUpda
 export type RegistryRow = { id: string; rowVersion: Version; [key: string]: unknown }
 export type Values = Record<string, unknown>
 export interface Field {
- name: string; label: string; type: 'text' | 'email' | 'enum' | 'integer' | 'date' | ReferenceKind
+ name: string; label: string; type: 'text' | 'textarea' | 'email' | 'enum' | 'integer' | 'date' | ReferenceKind
  inputMode?: 'numeric'; maxLength?: number; min?: number; max?: number; updateOnly?: boolean; dependencies?: string[]
  required?: boolean; rules?: Rule[]; options?: { value: string; label: string }[]
 }

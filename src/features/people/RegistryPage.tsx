@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { App as AntApp, Button, Form, Input, InputNumber, Modal, Select, Space, Table, Tag, Typography } from 'antd'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
@@ -12,7 +12,7 @@ import type { PageResult } from './contracts'
 
 const referenceKind = (type: string): type is ReferenceKind => type in referenceSources
 
-export function RegistryPage({ resource }: { resource: Resource }) {
+export function RegistryPage({ resource, rowActions }: { resource: Resource; rowActions?: (row: RegistryRow) => ReactNode }) {
  const [filters, setFilters] = useState({ page: 0, size: 20, q: '', status: '', personnelType: '', sort: resource.sorts[0].value })
  const [referenceFilters, setReferenceFilters] = useState<Record<string, string | undefined>>({})
  const [edit, setEdit] = useState<{ id?: string } | null>(null)
@@ -46,7 +46,7 @@ export function RegistryPage({ resource }: { resource: Resource }) {
      ? <ReferenceLabel kind={column.reference} value={value} />
      : resource.fields.find((field) => field.name === column.key)?.options?.find((option) => option.value === value)?.label ?? String(value ?? '—') })),
     { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={value === 'ACTIVE' || value === 'OPEN' || value === 'ENROLLED' ? 'green' : 'default'}>{labels[String(value)] ?? String(value)}</Tag> },
-    { title: 'Thao tác', key: 'actions', render: (_, row) => <Button onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button> },
+    { title: 'Thao tác', key: 'actions', render: (_, row) => <Space wrap><Button onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space> },
    ]}
    locale={{ emptyText: 'Chưa có bản ghi phù hợp.' }}
    pagination={{ current: filters.page + 1, pageSize: filters.size, total, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setFilters({ ...filters, page: page - 1, size }) }}
@@ -93,7 +93,8 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
      rules={[...(field.required ? [{ required: true, message: 'Chọn ' + field.label.toLowerCase() + '.' }] : []), ...(field.rules ?? [])]}>
      {field.type === 'enum' ? <Select options={choices} disabled={disabled || busy} /> :
       referenceKind(field.type) ? <ReferencePicker kind={field.type} label={field.label} disabled={disabled || busy} allowClear={!field.required} /> :
-      field.type === 'integer' ? <InputNumber min={field.min} max={field.max} disabled={disabled || busy} style={{ width: '100%' }} /> :
+      field.type === 'textarea' ? <Input.TextArea rows={5} disabled={disabled || busy} /> :
+       field.type === 'integer' ? <InputNumber min={field.min} max={field.max} disabled={disabled || busy} style={{ width: '100%' }} /> :
       <Input inputMode={field.inputMode} maxLength={field.maxLength} type={field.type === 'date' ? 'date' : 'text'} autoComplete="off" disabled={disabled || busy} />}
     </Form.Item>
    })}

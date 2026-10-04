@@ -2,6 +2,9 @@ import { Alert, Button, Space } from 'antd'
 import { ApiError } from '../api/client'
 
 const domainMessages: Record<string, string> = {
+ NOTIFICATION_CODE_ALREADY_EXISTS: 'Mã mẫu thông báo đã được sử dụng.',
+ NOTIFICATION_REFERENCE_UNAVAILABLE: 'Mẫu hoặc một tài khoản nhận không còn ACTIVE; chưa có thông báo nào được gửi.',
+ INVALID_NOTIFICATION_STATE: 'Thông báo đã phát hành và không thể sửa hoặc phát hành lại.',
  DORMITORY_CODE_ALREADY_EXISTS: 'Mã đã tồn tại trong phạm vi ký túc xá tương ứng.',
  DORMITORY_REFERENCE_UNAVAILABLE: 'Tòa/phòng/giường chưa đủ điều kiện hoạt động.',
  INVALID_DORMITORY_STATE: 'Cần xử lý mục con hoặc chỗ ở hiện tại trước khi đổi trạng thái.',

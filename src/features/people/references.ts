@@ -1,9 +1,11 @@
 import type { RegistryRow } from './resources'
-export type ReferenceKind = 'organization' | 'identity' | 'term' | 'course' | 'offering' | 'faculty' | 'student' | 'section' | 'building' | 'room' | 'bed' | 'fee' | 'charge'
+export type ReferenceKind = 'organization' | 'identity' | 'term' | 'course' | 'offering' | 'faculty' | 'student' | 'section' | 'building' | 'room' | 'bed' | 'fee' | 'charge' | 'notificationTemplate' | 'recipient'
 export interface ReferenceSource { path: string; sort: string; search?: boolean; eligible?: Record<string, string>; available?: (row: RegistryRow) => boolean; label: (row: RegistryRow) => string }
 const base = '/api/v1/admin/'
 const named = (code: string, name: string) => (row: RegistryRow) => String(row[code]) + ' · ' + String(row[name])
 export const referenceSources: Record<ReferenceKind, ReferenceSource> = {
+ notificationTemplate: { path: base + 'notifications/templates', sort: 'code,asc', eligible: { status: 'ACTIVE' }, label: named('code', 'name') },
+ recipient: { path: base + 'users', sort: 'email,asc', eligible: { status: 'ACTIVE' }, label: named('email', 'displayName') },
  building: { path: base + 'dormitory/buildings', sort: 'code,asc', eligible: { status: 'ACTIVE' }, label: named('code', 'name') },
  room: { path: base + 'dormitory/rooms', sort: 'code,asc', eligible: { status: 'ACTIVE' }, label: named('code', 'name') },
  bed: { path: base + 'dormitory/beds', sort: 'code,asc', eligible: { status: 'ACTIVE' }, label: named('code', 'name') },
