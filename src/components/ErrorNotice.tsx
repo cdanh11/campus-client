@@ -2,6 +2,7 @@ import { Alert, Button, Space } from 'antd'
 import { ApiError } from '../api/client'
 
 const domainMessages: Record<string, string> = {
+ REPORT_EXPORT_LIMIT_EXCEEDED: 'Báo cáo vượt 5.000 dòng; thu hẹp bộ lọc trước khi tải CSV.',
  LIBRARY_UNIQUE_CONFLICT: 'Mã sách hoặc bản sao đã được sử dụng.',
  LIBRARY_COPY_ALREADY_LOANED: 'Bản sao đang có lượt mượn mở; chưa tạo lượt mượn mới.',
  LIBRARY_REFERENCE_UNAVAILABLE: 'Đầu sách, bản sao hoặc sinh viên không còn ACTIVE.',
