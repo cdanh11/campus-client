@@ -1,4 +1,5 @@
 import type { ReferenceKind } from './references'
+import type { ReactNode } from 'react'
 import type { Rule } from 'antd/es/form'
 import { contactEmailRule, nameRule, trimOrganization } from '../../forms/validation'
 import type { OrganizationCreate, OrganizationUpdate, StudentCreate, StudentUpdate, PersonnelCreate, PersonnelUpdate, Version } from './contracts'
@@ -7,13 +8,14 @@ export type RegistryRow = { id: string; rowVersion: Version; [key: string]: unkn
 export type Values = Record<string, unknown>
 export interface Field {
  name: string; label: string; type: 'text' | 'email' | 'enum' | 'integer' | 'date' | ReferenceKind
- min?: number; max?: number; updateOnly?: boolean; dependencies?: string[]
+ inputMode?: 'numeric'; maxLength?: number; min?: number; max?: number; updateOnly?: boolean; dependencies?: string[]
  required?: boolean; rules?: Rule[]; options?: { value: string; label: string }[]
 }
 export interface Resource {
  path: string; title: string; singular: string; identifier: string
- fields: Field[]; columns: { key: string; title: string; reference?: ReferenceKind }[]; sorts: { value: string; label: string }[]
+ fields: Field[]; columns: { key: string; title: string; reference?: ReferenceKind; format?: (value: unknown) => string }[]; sorts: { value: string; label: string }[]
  states?: { value: string; label: string }[]; defaults?: Values; search?: boolean; filters?: Field[]; note?: string
+ readOnly?: (current: RegistryRow) => boolean; details?: (current: RegistryRow) => ReactNode
  disabled?: (field: Field, current: RegistryRow) => boolean
  choices?: (field: Field, current: RegistryRow) => Field['options']
  editValues?: (current: RegistryRow) => Values

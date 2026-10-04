@@ -2,6 +2,16 @@ import { Alert, Button, Space } from 'antd'
 import { ApiError } from '../api/client'
 
 const domainMessages: Record<string, string> = {
+ DORMITORY_CODE_ALREADY_EXISTS: 'Mã đã tồn tại trong phạm vi ký túc xá tương ứng.',
+ DORMITORY_REFERENCE_UNAVAILABLE: 'Tòa/phòng/giường chưa đủ điều kiện hoạt động.',
+ INVALID_DORMITORY_STATE: 'Cần xử lý mục con hoặc chỗ ở hiện tại trước khi đổi trạng thái.',
+ ACCOMMODATION_ALREADY_ASSIGNED: 'Sinh viên hoặc giường đã có chỗ ở hiện tại.',
+ STUDENT_UNAVAILABLE: 'Sinh viên chưa đủ điều kiện nhận chỗ.',
+ INVALID_ASSIGNMENT_STATE: 'Chỗ ở đã trả hoặc không thể chuyển trạng thái này.',
+ FINANCE_CODE_ALREADY_EXISTS: 'Mã biểu phí, khoản thu hoặc biên nhận đã được sử dụng.',
+ FINANCE_REFERENCE_UNAVAILABLE: 'Sinh viên hoặc biểu phí chưa đủ điều kiện tạo khoản thu.',
+ INVALID_FINANCE_STATE: 'Khoản thu hoặc biên nhận không cho phép thao tác này. Kiểm tra thanh toán còn hiệu lực trước khi hủy.',
+ PAYMENT_EXCEEDS_BALANCE: 'Số tiền vượt quá công nợ còn lại. Không có thanh toán mới được ghi nhận.',
  PROGRAM_CODE_ALREADY_EXISTS: 'Mã chương trình đã được sử dụng.',
  COURSE_CODE_ALREADY_EXISTS: 'Mã môn học đã được sử dụng.',
  ACADEMIC_RESOURCE_ALREADY_EXISTS: 'Bản ghi học vụ đã tồn tại. Với ghi danh đã hủy, mở bản ghi cũ để ghi danh lại.',

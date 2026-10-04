@@ -42,7 +42,7 @@ export function RegistryPage({ resource }: { resource: Resource }) {
   {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
   <Table<RegistryRow> rowKey="id" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 850 }}
    columns={[
-    ...resource.columns.map((column) => ({ title: column.title, key: column.key, dataIndex: column.key, render: (value: unknown) => column.reference
+    ...resource.columns.map((column) => ({ title: column.title, key: column.key, dataIndex: column.key, render: (value: unknown) => column.format ? column.format(value) : column.reference
      ? <ReferenceLabel kind={column.reference} value={value} />
      : resource.fields.find((field) => field.name === column.key)?.options?.find((option) => option.value === value)?.label ?? String(value ?? '—') })),
     { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={value === 'ACTIVE' || value === 'OPEN' || value === 'ENROLLED' ? 'green' : 'default'}>{labels[String(value)] ?? String(value)}</Tag> },
@@ -72,12 +72,14 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
    onClose()
   },
  })
+ const readOnly = !!detail.data && !!resource.readOnly?.(detail.data)
  const busy = mutation.isPending || (!!id && (detail.isFetching || !detail.data || !!detail.error))
  const conflict = mutation.error instanceof ApiError && mutation.error.status === 409 && mutation.error.detail.code === 'CONCURRENT_MODIFICATION'
  return <Modal open title={(id ? 'Xem / sửa ' : 'Thêm ') + resource.singular} onCancel={mutation.isPending ? undefined : onClose}
-  footer={<Space><Button disabled={mutation.isPending} onClick={onClose}>Hủy</Button><Button aria-label="Lưu" type="primary" loading={mutation.isPending} disabled={busy || conflict} onClick={() => form.submit()}>Lưu</Button></Space>}>
+  footer={<Space><Button disabled={mutation.isPending} onClick={onClose}>Hủy</Button>{!readOnly && <Button aria-label="Lưu" type="primary" loading={mutation.isPending} disabled={busy || conflict} onClick={() => form.submit()}>Lưu</Button>}</Space>}>
   {resource.note && <Typography.Paragraph>{resource.note}</Typography.Paragraph>}
   {detail.data && <Typography.Paragraph type="secondary">Trạng thái hiện tại: {String(detail.data.status)} · Phiên bản: {String(detail.data.rowVersion)}</Typography.Paragraph>}
+  {detail.data && resource.details?.(detail.data)}
   {detail.error && <ErrorNotice error={detail.error} onRetry={() => { void detail.refetch() }} />}
   {mutation.error && <ErrorNotice error={mutation.error} onRetry={id && conflict ? () => {
    modal.confirm({ okText: 'Tải lại', cancelText: 'Giữ form', title: 'Tải lại dữ liệu mới?', content: 'Các thay đổi chưa lưu trong form sẽ được thay bằng dữ liệu mới nhất.', onOk: async () => { const refreshed = await detail.refetch(); if (refreshed.error) throw refreshed.error; mutation.reset() } })
@@ -85,14 +87,14 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
   <Form form={form} layout="vertical" initialValues={resource.defaults ?? { status: 'ACTIVE' }} disabled={busy}
    onFinish={(values) => mutation.mutate(values)} requiredMark={false}>
    {resource.fields.filter((field) => id || !field.updateOnly).map((field) => {
-    const disabled = !!id && !!detail.data && !!resource.disabled?.(field, detail.data)
+    const disabled = readOnly || (!!id && !!detail.data && !!resource.disabled?.(field, detail.data))
     const choices = detail.data ? resource.choices?.(field, detail.data) ?? field.options : field.options
     return <Form.Item key={field.name} name={field.name} label={field.label} dependencies={field.dependencies}
      rules={[...(field.required ? [{ required: true, message: 'Chọn ' + field.label.toLowerCase() + '.' }] : []), ...(field.rules ?? [])]}>
      {field.type === 'enum' ? <Select options={choices} disabled={disabled || busy} /> :
       referenceKind(field.type) ? <ReferencePicker kind={field.type} label={field.label} disabled={disabled || busy} allowClear={!field.required} /> :
       field.type === 'integer' ? <InputNumber min={field.min} max={field.max} disabled={disabled || busy} style={{ width: '100%' }} /> :
-      <Input type={field.type === 'date' ? 'date' : 'text'} autoComplete="off" disabled={disabled || busy} />}
+      <Input inputMode={field.inputMode} maxLength={field.maxLength} type={field.type === 'date' ? 'date' : 'text'} autoComplete="off" disabled={disabled || busy} />}
     </Form.Item>
    })}
   </Form>
