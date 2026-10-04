@@ -6,6 +6,11 @@ export interface PageFilters {
  sort: string
  role?: string
  personnelType?: string
+ termId?: string
+ courseId?: string
+ offeringId?: string
+ studentId?: string
+ sectionId?: string
 }
 export function queryParams(filters: PageFilters): string {
  if (!Number.isSafeInteger(filters.page) || filters.page < 0 ||
@@ -14,7 +19,7 @@ export function queryParams(filters: PageFilters): string {
  const params = new URLSearchParams({
   page: String(filters.page), size: String(filters.size), sort: filters.sort,
  })
- for (const key of ['q', 'status', 'role', 'personnelType'] as const) {
+ for (const key of ['q', 'status', 'role', 'personnelType', 'termId', 'courseId', 'offeringId', 'studentId', 'sectionId'] as const) {
   const value = filters[key]
   if (value !== undefined && value !== '') params.set(key, value)
  }

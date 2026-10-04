@@ -2,6 +2,12 @@ import { Alert, Button, Space } from 'antd'
 import { ApiError } from '../api/client'
 
 const domainMessages: Record<string, string> = {
+ PROGRAM_CODE_ALREADY_EXISTS: 'Mã chương trình đã được sử dụng.',
+ COURSE_CODE_ALREADY_EXISTS: 'Mã môn học đã được sử dụng.',
+ ACADEMIC_RESOURCE_ALREADY_EXISTS: 'Bản ghi học vụ đã tồn tại. Với ghi danh đã hủy, mở bản ghi cũ để ghi danh lại.',
+ ACADEMIC_REFERENCE_UNAVAILABLE: 'Tham chiếu học vụ chưa đủ điều kiện. Kiểm tra đơn vị, môn học, sinh viên và giảng viên hiện tại.',
+ INVALID_ACADEMIC_STATE: 'Chưa đủ điều kiện chuyển trạng thái. Kiểm tra học kỳ, đợt mở môn và các lớp trực thuộc.',
+ SECTION_CAPACITY_EXCEEDED: 'Lớp học phần đã hết chỗ. Không có ghi danh mới được tạo.',
  CONCURRENT_MODIFICATION: 'Dữ liệu hoặc trạng thái đã thay đổi. Tải lại để kiểm tra trước khi thao tác tiếp.',
  ORGANIZATION_UNIT_CODE_ALREADY_EXISTS: 'Mã đơn vị đã được sử dụng.',
  STUDENT_NUMBER_ALREADY_EXISTS: 'Mã sinh viên đã được sử dụng.',

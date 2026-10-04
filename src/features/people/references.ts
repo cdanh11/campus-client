@@ -1,0 +1,15 @@
+import type { RegistryRow } from './resources'
+export type ReferenceKind = 'organization' | 'identity' | 'term' | 'course' | 'offering' | 'faculty' | 'student' | 'section'
+export interface ReferenceSource { path: string; sort: string; search?: boolean; eligible?: Record<string, string>; available?: (row: RegistryRow) => boolean; label: (row: RegistryRow) => string }
+const base = '/api/v1/admin/'
+const named = (code: string, name: string) => (row: RegistryRow) => String(row[code]) + ' · ' + String(row[name])
+export const referenceSources: Record<ReferenceKind, ReferenceSource> = {
+ organization: { path: base + 'organization-units', sort: 'code,asc', eligible: { status: 'ACTIVE' }, label: named('code', 'name') },
+ identity: { path: base + 'users', sort: 'email,asc', label: named('email', 'status') },
+ term: { path: base + 'academic/terms', sort: 'code,asc', available: (row) => row.status === 'PLANNED' || row.status === 'ACTIVE', label: named('code', 'name') },
+ course: { path: base + 'academic/courses', sort: 'code,asc', eligible: { status: 'ACTIVE' }, label: named('code', 'title') },
+ offering: { path: base + 'academic/offerings', sort: 'createdAt,desc', search: false, available: (row) => row.status === 'DRAFT' || row.status === 'OPEN', label: (row) => String(row.id) + ' · ' + String(row.status) },
+ faculty: { path: base + 'faculty-staff', sort: 'personnelNumber,asc', eligible: { status: 'ACTIVE', personnelType: 'FACULTY' }, label: named('personnelNumber', 'fullName') },
+ student: { path: base + 'students', sort: 'studentNumber,asc', eligible: { status: 'ACTIVE' }, label: named('studentNumber', 'fullName') },
+ section: { path: base + 'academic/sections', sort: 'code,asc', eligible: { status: 'OPEN' }, label: named('code', 'status') },
+}
