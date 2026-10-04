@@ -1,7 +1,7 @@
 import type { components } from './schema'
 import type { User } from './client'
 import { ApiError } from './errors'
-type Tokens = Required<Pick<components['schemas']['RefreshResponse'], 'accessToken'>>
+type Tokens = Required<Pick<components['schemas']['com.campus.identity.api.AuthController.RefreshResponse'], 'accessToken'>>
 function record(value: unknown): value is Record<string, unknown> { return !!value && typeof value === 'object' }
 export function requireTokens(value: unknown): Tokens {
  if (!record(value) || typeof value.accessToken !== 'string' || value.accessToken.length === 0) throw new ApiError(502, { code: 'INVALID_SERVER_RESPONSE', message: 'Phản hồi đăng nhập không hợp lệ.' })

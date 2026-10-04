@@ -37,7 +37,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/NotificationDelivery"
+                  "$ref" : "#/components/schemas/com.campus.notification.domain.NotificationDelivery"
                 }
               }
             }
@@ -67,7 +67,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/EventRegistration"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.EventRegistration"
                 }
               }
             }
@@ -105,7 +105,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/EventRegistration"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.EventRegistration"
                 }
               }
             }
@@ -133,7 +133,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/RolesRequest"
+                "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.RolesRequest"
               }
             }
           },
@@ -145,7 +145,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AdminUserResponse"
+                  "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.AdminUserResponse"
                 }
               }
             }
@@ -172,7 +172,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.student.api.AdminStudentController.Response"
                 }
               }
             }
@@ -195,7 +195,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/com.campus.student.api.AdminStudentController.UpdateRequest"
               }
             }
           },
@@ -207,7 +207,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.student.api.AdminStudentController.Response"
                 }
               }
             }
@@ -234,7 +234,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.organization.api.AdminOrganizationUnitController.Response"
                 }
               }
             }
@@ -257,7 +257,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/com.campus.organization.api.AdminOrganizationUnitController.UpdateRequest"
               }
             }
           },
@@ -269,7 +269,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.organization.api.AdminOrganizationUnitController.Response"
                 }
               }
             }
@@ -296,7 +296,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/NotificationTemplate"
+                  "$ref" : "#/components/schemas/com.campus.notification.domain.NotificationTemplate"
                 }
               }
             }
@@ -334,7 +334,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/NotificationTemplate"
+                  "$ref" : "#/components/schemas/com.campus.notification.domain.NotificationTemplate"
                 }
               }
             }
@@ -364,7 +364,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Notice"
+                  "$ref" : "#/components/schemas/com.campus.notification.domain.Notice"
                 }
               }
             }
@@ -402,7 +402,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Notice"
+                  "$ref" : "#/components/schemas/com.campus.notification.domain.Notice"
                 }
               }
             }
@@ -432,7 +432,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/BookTitle"
+                  "$ref" : "#/components/schemas/com.campus.library.domain.BookTitle"
                 }
               }
             }
@@ -470,7 +470,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/BookTitle"
+                  "$ref" : "#/components/schemas/com.campus.library.domain.BookTitle"
                 }
               }
             }
@@ -510,7 +510,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/BookLoan"
+                  "$ref" : "#/components/schemas/com.campus.library.domain.BookLoan"
                 }
               }
             }
@@ -540,7 +540,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/BookCopy"
+                  "$ref" : "#/components/schemas/com.campus.library.domain.BookCopy"
                 }
               }
             }
@@ -578,7 +578,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/BookCopy"
+                  "$ref" : "#/components/schemas/com.campus.library.domain.BookCopy"
                 }
               }
             }
@@ -608,7 +608,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ManualPayment"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.ManualPayment"
                 }
               }
             }
@@ -648,7 +648,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ManualPayment"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.ManualPayment"
                 }
               }
             }
@@ -678,7 +678,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/FeeDefinition"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.FeeDefinition"
                 }
               }
             }
@@ -716,7 +716,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/FeeDefinition"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.FeeDefinition"
                 }
               }
             }
@@ -746,7 +746,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StudentCharge"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.StudentCharge"
                 }
               }
             }
@@ -786,7 +786,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StudentCharge"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.StudentCharge"
                 }
               }
             }
@@ -816,7 +816,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.personnel.api.AdminFacultyStaffController.Response"
                 }
               }
             }
@@ -839,7 +839,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/com.campus.personnel.api.AdminFacultyStaffController.UpdateRequest"
               }
             }
           },
@@ -851,7 +851,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.personnel.api.AdminFacultyStaffController.Response"
                 }
               }
             }
@@ -878,7 +878,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/CampusEvent"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.CampusEvent"
                 }
               }
             }
@@ -916,7 +916,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/CampusEvent"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.CampusEvent"
                 }
               }
             }
@@ -946,7 +946,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/EventRegistration"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.EventRegistration"
                 }
               }
             }
@@ -984,7 +984,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/EventRegistration"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.EventRegistration"
                 }
               }
             }
@@ -1021,7 +1021,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/InventoryItem"
+                  "$ref" : "#/components/schemas/com.campus.dormitory.domain.InventoryItem"
                 }
               }
             }
@@ -1068,7 +1068,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/InventoryItem"
+                  "$ref" : "#/components/schemas/com.campus.dormitory.domain.InventoryItem"
                 }
               }
             }
@@ -1098,7 +1098,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AccommodationAssignment"
+                  "$ref" : "#/components/schemas/com.campus.dormitory.domain.AccommodationAssignment"
                 }
               }
             }
@@ -1138,7 +1138,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AccommodationAssignment"
+                  "$ref" : "#/components/schemas/com.campus.dormitory.domain.AccommodationAssignment"
                 }
               }
             }
@@ -1168,7 +1168,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AcademicTerm"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.AcademicTerm"
                 }
               }
             }
@@ -1196,7 +1196,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.delivery.AdminAcademicTermController.UpdateRequest"
               }
             }
           },
@@ -1208,7 +1208,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AcademicTerm"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.AcademicTerm"
                 }
               }
             }
@@ -1238,7 +1238,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ClassSection"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.ClassSection"
                 }
               }
             }
@@ -1266,7 +1266,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.delivery.AdminClassSectionController.UpdateRequest"
               }
             }
           },
@@ -1278,7 +1278,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ClassSection"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.ClassSection"
                 }
               }
             }
@@ -1308,7 +1308,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicProgramController.Response"
                 }
               }
             }
@@ -1336,7 +1336,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicProgramController.UpdateRequest"
               }
             }
           },
@@ -1348,7 +1348,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicProgramController.Response"
                 }
               }
             }
@@ -1378,7 +1378,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/CourseOffering"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.CourseOffering"
                 }
               }
             }
@@ -1406,7 +1406,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.delivery.AdminCourseOfferingController.UpdateRequest"
               }
             }
           },
@@ -1418,7 +1418,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/CourseOffering"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.CourseOffering"
                 }
               }
             }
@@ -1448,7 +1448,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Enrollment"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.Enrollment"
                 }
               }
             }
@@ -1476,7 +1476,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.enrollment.AdminEnrollmentController.UpdateRequest"
               }
             }
           },
@@ -1488,7 +1488,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Enrollment"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.Enrollment"
                 }
               }
             }
@@ -1518,7 +1518,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicCourseController.Response"
                 }
               }
             }
@@ -1546,7 +1546,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicCourseController.UpdateRequest"
               }
             }
           },
@@ -1558,7 +1558,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicCourseController.Response"
                 }
               }
             }
@@ -1588,7 +1588,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/EventRegistration"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.EventRegistration"
                 }
               }
             }
@@ -1609,7 +1609,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/RefreshResponse"
+                  "$ref" : "#/components/schemas/com.campus.identity.api.AuthController.RefreshResponse"
                 }
               }
             }
@@ -1636,7 +1636,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/LoginRequest"
+                "$ref" : "#/components/schemas/com.campus.identity.api.AuthController.LoginRequest"
               }
             }
           },
@@ -1648,7 +1648,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LoginResponse"
+                  "$ref" : "#/components/schemas/com.campus.identity.api.AuthController.LoginResponse"
                 }
               }
             }
@@ -1714,7 +1714,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AdminUserPageResponse"
+                  "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.AdminUserPageResponse"
                 }
               }
             }
@@ -1728,7 +1728,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/CreateAdminUserRequest"
+                "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.CreateAdminUserRequest"
               }
             }
           },
@@ -1740,7 +1740,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AdminUserResponse"
+                  "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.AdminUserResponse"
                 }
               }
             }
@@ -1765,7 +1765,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/PasswordResetRequest"
+                "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.PasswordResetRequest"
               }
             }
           },
@@ -1829,7 +1829,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageResponse"
+                  "$ref" : "#/components/schemas/com.campus.student.api.AdminStudentController.PageResponse"
                 }
               }
             }
@@ -1843,7 +1843,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Request"
+                "$ref" : "#/components/schemas/com.campus.student.api.AdminStudentController.Request"
               }
             }
           },
@@ -1855,7 +1855,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.student.api.AdminStudentController.Response"
                 }
               }
             }
@@ -1914,7 +1914,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageResponse"
+                  "$ref" : "#/components/schemas/com.campus.organization.api.AdminOrganizationUnitController.PageResponse"
                 }
               }
             }
@@ -1928,7 +1928,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Request"
+                "$ref" : "#/components/schemas/com.campus.organization.api.AdminOrganizationUnitController.Request"
               }
             }
           },
@@ -1940,7 +1940,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.organization.api.AdminOrganizationUnitController.Response"
                 }
               }
             }
@@ -2028,7 +2028,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/NotificationTemplate"
+                  "$ref" : "#/components/schemas/com.campus.notification.domain.NotificationTemplate"
                 }
               }
             }
@@ -2119,7 +2119,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Notice"
+                  "$ref" : "#/components/schemas/com.campus.notification.domain.Notice"
                 }
               }
             }
@@ -2159,7 +2159,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Notice"
+                  "$ref" : "#/components/schemas/com.campus.notification.domain.Notice"
                 }
               }
             }
@@ -2250,7 +2250,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/BookTitle"
+                  "$ref" : "#/components/schemas/com.campus.library.domain.BookTitle"
                 }
               }
             }
@@ -2350,7 +2350,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/BookLoan"
+                  "$ref" : "#/components/schemas/com.campus.library.domain.BookLoan"
                 }
               }
             }
@@ -2449,7 +2449,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/BookCopy"
+                  "$ref" : "#/components/schemas/com.campus.library.domain.BookCopy"
                 }
               }
             }
@@ -2549,7 +2549,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ManualPayment"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.ManualPayment"
                 }
               }
             }
@@ -2641,7 +2641,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/FeeDefinition"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.FeeDefinition"
                 }
               }
             }
@@ -2749,7 +2749,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StudentCharge"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.StudentCharge"
                 }
               }
             }
@@ -2818,7 +2818,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageResponse"
+                  "$ref" : "#/components/schemas/com.campus.personnel.api.AdminFacultyStaffController.PageResponse"
                 }
               }
             }
@@ -2832,7 +2832,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Request"
+                "$ref" : "#/components/schemas/com.campus.personnel.api.AdminFacultyStaffController.Request"
               }
             }
           },
@@ -2844,7 +2844,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.personnel.api.AdminFacultyStaffController.Response"
                 }
               }
             }
@@ -2932,7 +2932,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/CampusEvent"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.CampusEvent"
                 }
               }
             }
@@ -2972,7 +2972,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/EventRegistration"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.EventRegistration"
                 }
               }
             }
@@ -3088,7 +3088,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/InventoryItem"
+                  "$ref" : "#/components/schemas/com.campus.dormitory.domain.InventoryItem"
                 }
               }
             }
@@ -3189,7 +3189,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AccommodationAssignment"
+                  "$ref" : "#/components/schemas/com.campus.dormitory.domain.AccommodationAssignment"
                 }
               }
             }
@@ -3253,7 +3253,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageResponseAcademicTerm"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.AcademicTerm"
                 }
               }
             }
@@ -3272,7 +3272,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/CreateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.delivery.AdminAcademicTermController.CreateRequest"
               }
             }
           },
@@ -3284,7 +3284,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AcademicTerm"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.AcademicTerm"
                 }
               }
             }
@@ -3356,7 +3356,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageResponseClassSection"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.ClassSection"
                 }
               }
             }
@@ -3375,7 +3375,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/CreateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.delivery.AdminClassSectionController.CreateRequest"
               }
             }
           },
@@ -3387,7 +3387,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ClassSection"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.ClassSection"
                 }
               }
             }
@@ -3451,7 +3451,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageResponse"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicProgramController.PageResponse"
                 }
               }
             }
@@ -3469,7 +3469,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Request"
+                "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicProgramController.Request"
               }
             }
           },
@@ -3481,7 +3481,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicProgramController.Response"
                 }
               }
             }
@@ -3554,7 +3554,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageResponseCourseOffering"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.CourseOffering"
                 }
               }
             }
@@ -3573,7 +3573,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/CreateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.delivery.AdminCourseOfferingController.CreateRequest"
               }
             }
           },
@@ -3585,7 +3585,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/CourseOffering"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.CourseOffering"
                 }
               }
             }
@@ -3659,7 +3659,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageResponseEnrollment"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.Enrollment"
                 }
               }
             }
@@ -3678,7 +3678,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/CreateRequest"
+                "$ref" : "#/components/schemas/com.campus.academic.api.enrollment.AdminEnrollmentController.CreateRequest"
               }
             }
           },
@@ -3690,7 +3690,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Enrollment"
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.Enrollment"
                 }
               }
             }
@@ -3754,7 +3754,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PageResponse"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicCourseController.PageResponse"
                 }
               }
             }
@@ -3772,7 +3772,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Request"
+                "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicCourseController.Request"
               }
             }
           },
@@ -3784,7 +3784,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response"
+                  "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicCourseController.Response"
                 }
               }
             }
@@ -3812,7 +3812,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/StatusRequest"
+                "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.StatusRequest"
               }
             }
           },
@@ -3824,7 +3824,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AdminUserResponse"
+                  "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.AdminUserResponse"
                 }
               }
             }
@@ -3906,7 +3906,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/InboxItem"
+                  "$ref" : "#/components/schemas/com.campus.notification.domain.InboxItem"
                 }
               }
             }
@@ -3998,7 +3998,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/CampusEvent"
+                  "$ref" : "#/components/schemas/com.campus.event.domain.CampusEvent"
                 }
               }
             }
@@ -4082,7 +4082,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/UserResponse"
+                  "$ref" : "#/components/schemas/com.campus.identity.api.AuthController.UserResponse"
                 }
               }
             }
@@ -4109,7 +4109,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AdminUserResponse"
+                  "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.AdminUserResponse"
                 }
               }
             }
@@ -4209,7 +4209,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ReportPage"
+                  "$ref" : "#/components/schemas/com.campus.reporting.application.DetailReportService.ReportPage"
                 }
               }
             }
@@ -4316,7 +4316,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Dashboard"
+                  "$ref" : "#/components/schemas/com.campus.reporting.application.DashboardService.Dashboard"
                 }
               }
             }
@@ -4346,7 +4346,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/BookLoan"
+                  "$ref" : "#/components/schemas/com.campus.library.domain.BookLoan"
                 }
               }
             }
@@ -4376,7 +4376,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ChargeBalance"
+                  "$ref" : "#/components/schemas/com.campus.finance.domain.ChargeBalance"
                 }
               }
             }
@@ -4587,7 +4587,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/AuditView"
+                  "$ref" : "#/components/schemas/com.campus.shared.application.audit.AuditView"
                 }
               }
             }
@@ -4611,7 +4611,7 @@
         },
         "required" : [ "expectedVersion" ]
       },
-      "NotificationDelivery" : {
+      "com.campus.notification.domain.NotificationDelivery" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -4666,7 +4666,7 @@
         },
         "required" : [ "action", "expectedVersion" ]
       },
-      "EventRegistration" : {
+      "com.campus.event.domain.EventRegistration" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -4711,7 +4711,7 @@
           }
         }
       },
-      "RolesRequest" : {
+      "com.campus.identity.api.AdminUserController.RolesRequest" : {
         "type" : "object",
         "properties" : {
           "roles" : {
@@ -4728,7 +4728,7 @@
         },
         "required" : [ "expectedVersion", "roles" ]
       },
-      "AdminUserResponse" : {
+      "com.campus.identity.api.AdminUserController.AdminUserResponse" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -4768,7 +4768,7 @@
           }
         }
       },
-      "UpdateRequest" : {
+      "com.campus.student.api.AdminStudentController.UpdateRequest" : {
         "type" : "object",
         "properties" : {
           "studentNumber" : {
@@ -4801,7 +4801,7 @@
         },
         "required" : [ "expectedVersion", "fullName", "organizationUnitId", "status", "studentNumber" ]
       },
-      "Response" : {
+      "com.campus.student.api.AdminStudentController.Response" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -4824,6 +4824,65 @@
           "organizationUnitId" : {
             "type" : "string",
             "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "rowVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "com.campus.organization.api.AdminOrganizationUnitController.UpdateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "name" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "unitType" : {
+            "type" : "string",
+            "enum" : [ "FACULTY", "DEPARTMENT", "ADMINISTRATIVE" ]
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          },
+          "expectedVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "required" : [ "code", "expectedVersion", "name", "status", "unitType" ]
+      },
+      "com.campus.organization.api.AdminOrganizationUnitController.Response" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "unitType" : {
+            "type" : "string"
           },
           "status" : {
             "type" : "string"
@@ -4872,7 +4931,7 @@
         },
         "required" : [ "body", "code", "expectedVersion", "name", "status", "title" ]
       },
-      "NotificationTemplate" : {
+      "com.campus.notification.domain.NotificationTemplate" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -4927,7 +4986,7 @@
         },
         "required" : [ "body", "expectedVersion", "title" ]
       },
-      "Notice" : {
+      "com.campus.notification.domain.Notice" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -4992,7 +5051,7 @@
         },
         "required" : [ "author", "code", "expectedVersion", "status", "title" ]
       },
-      "BookTitle" : {
+      "com.campus.library.domain.BookTitle" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5036,7 +5095,7 @@
         },
         "required" : [ "expectedVersion" ]
       },
-      "BookLoan" : {
+      "com.campus.library.domain.BookLoan" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5099,7 +5158,7 @@
         },
         "required" : [ "code", "expectedVersion", "status" ]
       },
-      "BookCopy" : {
+      "com.campus.library.domain.BookCopy" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5152,7 +5211,7 @@
         },
         "required" : [ "expectedChargeVersion", "expectedVersion", "reason", "status" ]
       },
-      "ManualPayment" : {
+      "com.campus.finance.domain.ManualPayment" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5224,7 +5283,7 @@
         },
         "required" : [ "amount", "code", "expectedVersion", "name", "status" ]
       },
-      "FeeDefinition" : {
+      "com.campus.finance.domain.FeeDefinition" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5275,7 +5334,7 @@
         },
         "required" : [ "expectedVersion", "status" ]
       },
-      "StudentCharge" : {
+      "com.campus.finance.domain.StudentCharge" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5312,6 +5371,87 @@
           "status" : {
             "type" : "string",
             "enum" : [ "OPEN", "CANCELLED" ]
+          },
+          "rowVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "com.campus.personnel.api.AdminFacultyStaffController.UpdateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "personnelNumber" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "fullName" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "identityUserId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "personnelType" : {
+            "type" : "string",
+            "enum" : [ "FACULTY", "STAFF" ]
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          },
+          "expectedVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "required" : [ "expectedVersion", "fullName", "organizationUnitId", "personnelNumber", "personnelType", "status" ]
+      },
+      "com.campus.personnel.api.AdminFacultyStaffController.Response" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "personnelNumber" : {
+            "type" : "string"
+          },
+          "fullName" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "identityUserId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "personnelType" : {
+            "type" : "string"
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string"
           },
           "rowVersion" : {
             "type" : "integer",
@@ -5365,7 +5505,7 @@
         },
         "required" : [ "capacity", "code", "description", "endsAt", "expectedVersion", "startsAt", "status", "title" ]
       },
-      "CampusEvent" : {
+      "com.campus.event.domain.CampusEvent" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5433,7 +5573,7 @@
         },
         "required" : [ "code", "expectedVersion", "name", "status" ]
       },
-      "InventoryItem" : {
+      "com.campus.dormitory.domain.InventoryItem" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5486,7 +5626,7 @@
         },
         "required" : [ "expectedVersion", "status" ]
       },
-      "AccommodationAssignment" : {
+      "com.campus.dormitory.domain.AccommodationAssignment" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5527,7 +5667,37 @@
           }
         }
       },
-      "AcademicTerm" : {
+      "com.campus.academic.api.delivery.AdminAcademicTermController.UpdateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "name" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "startDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "endDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "PLANNED", "ACTIVE", "CLOSED", "CANCELLED" ]
+          },
+          "expectedVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "required" : [ "code", "endDate", "expectedVersion", "name", "startDate", "status" ]
+      },
+      "com.campus.academic.domain.AcademicTerm" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5566,7 +5736,34 @@
           }
         }
       },
-      "ClassSection" : {
+      "com.campus.academic.api.delivery.AdminClassSectionController.UpdateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "capacity" : {
+            "type" : "integer",
+            "format" : "int32",
+            "minimum" : 1
+          },
+          "facultyId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "DRAFT", "OPEN", "CLOSED", "CANCELLED" ]
+          },
+          "expectedVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "required" : [ "code", "expectedVersion", "status" ]
+      },
+      "com.campus.academic.domain.ClassSection" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5606,7 +5803,81 @@
           }
         }
       },
-      "CourseOffering" : {
+      "com.campus.academic.api.AdminAcademicProgramController.UpdateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "name" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          },
+          "expectedVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "required" : [ "code", "expectedVersion", "name", "organizationUnitId", "status" ]
+      },
+      "com.campus.academic.api.AdminAcademicProgramController.Response" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "rowVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "com.campus.academic.api.delivery.AdminCourseOfferingController.UpdateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "DRAFT", "OPEN", "CLOSED", "CANCELLED" ]
+          },
+          "expectedVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "required" : [ "expectedVersion", "status" ]
+      },
+      "com.campus.academic.domain.CourseOffering" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5643,47 +5914,124 @@
           }
         }
       },
-      "Enrollment" : {
-        "allOf" : [ {
-          "$ref" : "#/components/schemas/ReportRow"
-        }, {
-          "type" : "object",
-          "properties" : {
-            "id" : {
-              "type" : "string",
-              "format" : "uuid"
-            },
-            "studentId" : {
-              "type" : "string",
-              "format" : "uuid"
-            },
-            "sectionId" : {
-              "type" : "string",
-              "format" : "uuid"
-            },
-            "offeringId" : {
-              "type" : "string",
-              "format" : "uuid"
-            },
-            "termId" : {
-              "type" : "string",
-              "format" : "uuid"
-            },
-            "courseId" : {
-              "type" : "string",
-              "format" : "uuid"
-            },
-            "status" : {
-              "type" : "string"
-            },
-            "updatedAt" : {
-              "type" : "string",
-              "format" : "date-time"
-            }
+      "com.campus.academic.api.enrollment.AdminEnrollmentController.UpdateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ENROLLED", "WITHDRAWN" ]
+          },
+          "expectedVersion" : {
+            "type" : "integer",
+            "format" : "int64"
           }
-        } ]
+        },
+        "required" : [ "expectedVersion", "status" ]
       },
-      "RefreshResponse" : {
+      "com.campus.academic.domain.Enrollment" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "studentId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "sectionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ENROLLED", "WITHDRAWN" ]
+          },
+          "rowVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "com.campus.academic.api.AdminAcademicCourseController.UpdateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "title" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "credits" : {
+            "type" : "integer",
+            "format" : "int32",
+            "maximum" : 30,
+            "minimum" : 1
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          },
+          "expectedVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "required" : [ "code", "credits", "expectedVersion", "organizationUnitId", "status", "title" ]
+      },
+      "com.campus.academic.api.AdminAcademicCourseController.Response" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "credits" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "rowVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "com.campus.identity.api.AuthController.RefreshResponse" : {
         "type" : "object",
         "properties" : {
           "accessToken" : {
@@ -5698,7 +6046,7 @@
           }
         }
       },
-      "LoginRequest" : {
+      "com.campus.identity.api.AuthController.LoginRequest" : {
         "type" : "object",
         "properties" : {
           "email" : {
@@ -5712,7 +6060,7 @@
         },
         "required" : [ "email", "password" ]
       },
-      "LoginResponse" : {
+      "com.campus.identity.api.AuthController.LoginResponse" : {
         "type" : "object",
         "properties" : {
           "accessToken" : {
@@ -5726,11 +6074,11 @@
             "format" : "int64"
           },
           "user" : {
-            "$ref" : "#/components/schemas/UserResponse"
+            "$ref" : "#/components/schemas/com.campus.identity.api.AuthController.UserResponse"
           }
         }
       },
-      "UserResponse" : {
+      "com.campus.identity.api.AuthController.UserResponse" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -5752,7 +6100,7 @@
           }
         }
       },
-      "CreateAdminUserRequest" : {
+      "com.campus.identity.api.AdminUserController.CreateAdminUserRequest" : {
         "type" : "object",
         "properties" : {
           "email" : {
@@ -5781,7 +6129,7 @@
         },
         "required" : [ "displayName", "email", "initialPassword", "roles" ]
       },
-      "PasswordResetRequest" : {
+      "com.campus.identity.api.AdminUserController.PasswordResetRequest" : {
         "type" : "object",
         "properties" : {
           "newPassword" : {
@@ -5795,7 +6143,7 @@
         },
         "required" : [ "expectedVersion", "newPassword" ]
       },
-      "Request" : {
+      "com.campus.student.api.AdminStudentController.Request" : {
         "type" : "object",
         "properties" : {
           "studentNumber" : {
@@ -5823,6 +6171,28 @@
           }
         },
         "required" : [ "fullName", "organizationUnitId", "studentNumber" ]
+      },
+      "com.campus.organization.api.AdminOrganizationUnitController.Request" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "name" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "unitType" : {
+            "type" : "string",
+            "enum" : [ "FACULTY", "DEPARTMENT", "ADMINISTRATIVE" ]
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          }
+        },
+        "required" : [ "code", "name", "unitType" ]
       },
       "NotificationTemplateCreate" : {
         "type" : "object",
@@ -5977,6 +6347,39 @@
         },
         "required" : [ "chargeNumber", "dueDate", "feeId", "studentId" ]
       },
+      "com.campus.personnel.api.AdminFacultyStaffController.Request" : {
+        "type" : "object",
+        "properties" : {
+          "personnelNumber" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "fullName" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "identityUserId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "personnelType" : {
+            "type" : "string",
+            "enum" : [ "FACULTY", "STAFF" ]
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          }
+        },
+        "required" : [ "fullName", "organizationUnitId", "personnelNumber", "personnelType" ]
+      },
       "CampusEventCreate" : {
         "type" : "object",
         "properties" : {
@@ -6049,7 +6452,7 @@
         },
         "required" : [ "bedId", "studentId" ]
       },
-      "CreateRequest" : {
+      "com.campus.academic.api.delivery.AdminAcademicTermController.CreateRequest" : {
         "type" : "object",
         "properties" : {
           "code" : {
@@ -6071,7 +6474,108 @@
         },
         "required" : [ "code", "endDate", "name", "startDate" ]
       },
-      "StatusRequest" : {
+      "com.campus.academic.api.delivery.AdminClassSectionController.CreateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "offeringId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "code" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "capacity" : {
+            "type" : "integer",
+            "format" : "int32",
+            "minimum" : 1
+          },
+          "facultyId" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        },
+        "required" : [ "code", "offeringId" ]
+      },
+      "com.campus.academic.api.AdminAcademicProgramController.Request" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "name" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          }
+        },
+        "required" : [ "code", "name", "organizationUnitId" ]
+      },
+      "com.campus.academic.api.delivery.AdminCourseOfferingController.CreateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "termId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "courseId" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        },
+        "required" : [ "courseId", "termId" ]
+      },
+      "com.campus.academic.api.enrollment.AdminEnrollmentController.CreateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "studentId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "sectionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        },
+        "required" : [ "sectionId", "studentId" ]
+      },
+      "com.campus.academic.api.AdminAcademicCourseController.Request" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "title" : {
+            "type" : "string",
+            "minLength" : 1
+          },
+          "credits" : {
+            "type" : "integer",
+            "format" : "int32",
+            "maximum" : 30,
+            "minimum" : 1
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          }
+        },
+        "required" : [ "code", "credits", "organizationUnitId", "title" ]
+      },
+      "com.campus.identity.api.AdminUserController.StatusRequest" : {
         "type" : "object",
         "properties" : {
           "status" : {
@@ -6085,27 +6589,13 @@
         },
         "required" : [ "expectedVersion", "status" ]
       },
-      "InboxItem" : {
-        "type" : "object",
-        "properties" : {
-          "delivery" : {
-            "$ref" : "#/components/schemas/NotificationDelivery"
-          },
-          "title" : {
-            "type" : "string"
-          },
-          "body" : {
-            "type" : "string"
-          }
-        }
-      },
       "NotificationInboxPage" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/InboxItem"
+              "$ref" : "#/components/schemas/com.campus.notification.domain.InboxItem"
             }
           },
           "page" : {
@@ -6126,13 +6616,27 @@
           }
         }
       },
+      "com.campus.notification.domain.InboxItem" : {
+        "type" : "object",
+        "properties" : {
+          "delivery" : {
+            "$ref" : "#/components/schemas/com.campus.notification.domain.NotificationDelivery"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "body" : {
+            "type" : "string"
+          }
+        }
+      },
       "CampusEventPage" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/CampusEvent"
+              "$ref" : "#/components/schemas/com.campus.event.domain.CampusEvent"
             }
           },
           "page" : {
@@ -6159,7 +6663,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/EventRegistration"
+              "$ref" : "#/components/schemas/com.campus.event.domain.EventRegistration"
             }
           },
           "page" : {
@@ -6180,13 +6684,13 @@
           }
         }
       },
-      "AdminUserPageResponse" : {
+      "com.campus.identity.api.AdminUserController.AdminUserPageResponse" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/AdminUserResponse"
+              "$ref" : "#/components/schemas/com.campus.identity.api.AdminUserController.AdminUserResponse"
             }
           },
           "page" : {
@@ -6207,13 +6711,13 @@
           }
         }
       },
-      "PageResponse" : {
+      "com.campus.student.api.AdminStudentController.PageResponse" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/Response"
+              "$ref" : "#/components/schemas/com.campus.student.api.AdminStudentController.Response"
             }
           },
           "page" : {
@@ -6234,9 +6738,61 @@
           }
         }
       },
-      "Accommodation" : {
+      "com.campus.reporting.application.DetailReportService.ReportPage" : {
+        "type" : "object",
+        "properties" : {
+          "report" : {
+            "type" : "string",
+            "enum" : [ "STUDENT_DEBT", "CURRENT_ACCOMMODATION", "SECTION_ENROLLMENT", "EVENT_MEMBERSHIP", "LIBRARY_LOANS" ]
+          },
+          "asOf" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "columns" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "oneOf" : [ {
+                "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow.Accommodation"
+              }, {
+                "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow.Debt"
+              }, {
+                "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow.Enrollment"
+              }, {
+                "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow.Loan"
+              }, {
+                "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow.Membership"
+              } ]
+            }
+          },
+          "page" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "com.campus.shared.application.reporting.ReportRow" : { },
+      "com.campus.shared.application.reporting.ReportRow.Accommodation" : {
         "allOf" : [ {
-          "$ref" : "#/components/schemas/ReportRow"
+          "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow"
         }, {
           "type" : "object",
           "properties" : {
@@ -6267,9 +6823,9 @@
           }
         } ]
       },
-      "Debt" : {
+      "com.campus.shared.application.reporting.ReportRow.Debt" : {
         "allOf" : [ {
-          "$ref" : "#/components/schemas/ReportRow"
+          "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow"
         }, {
           "type" : "object",
           "properties" : {
@@ -6293,9 +6849,49 @@
           }
         } ]
       },
-      "Loan" : {
+      "com.campus.shared.application.reporting.ReportRow.Enrollment" : {
         "allOf" : [ {
-          "$ref" : "#/components/schemas/ReportRow"
+          "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "id" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "studentId" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "sectionId" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "offeringId" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "termId" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "courseId" : {
+              "type" : "string",
+              "format" : "uuid"
+            },
+            "status" : {
+              "type" : "string"
+            },
+            "updatedAt" : {
+              "type" : "string",
+              "format" : "date-time"
+            }
+          }
+        } ]
+      },
+      "com.campus.shared.application.reporting.ReportRow.Loan" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow"
         }, {
           "type" : "object",
           "properties" : {
@@ -6335,9 +6931,9 @@
           }
         } ]
       },
-      "Membership" : {
+      "com.campus.shared.application.reporting.ReportRow.Membership" : {
         "allOf" : [ {
-          "$ref" : "#/components/schemas/ReportRow"
+          "$ref" : "#/components/schemas/com.campus.shared.application.reporting.ReportRow"
         }, {
           "type" : "object",
           "properties" : {
@@ -6377,59 +6973,7 @@
           }
         } ]
       },
-      "ReportPage" : {
-        "type" : "object",
-        "properties" : {
-          "report" : {
-            "type" : "string",
-            "enum" : [ "STUDENT_DEBT", "CURRENT_ACCOMMODATION", "SECTION_ENROLLMENT", "EVENT_MEMBERSHIP", "LIBRARY_LOANS" ]
-          },
-          "asOf" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "columns" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "content" : {
-            "type" : "array",
-            "items" : {
-              "oneOf" : [ {
-                "$ref" : "#/components/schemas/Accommodation"
-              }, {
-                "$ref" : "#/components/schemas/Debt"
-              }, {
-                "$ref" : "#/components/schemas/Enrollment"
-              }, {
-                "$ref" : "#/components/schemas/Loan"
-              }, {
-                "$ref" : "#/components/schemas/Membership"
-              } ]
-            }
-          },
-          "page" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "size" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "totalElements" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "totalPages" : {
-            "type" : "integer",
-            "format" : "int64"
-          }
-        }
-      },
-      "ReportRow" : { },
-      "Dashboard" : {
+      "com.campus.reporting.application.DashboardService.Dashboard" : {
         "type" : "object",
         "properties" : {
           "asOf" : {
@@ -6450,13 +6994,40 @@
           }
         }
       },
+      "com.campus.organization.api.AdminOrganizationUnitController.PageResponse" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.organization.api.AdminOrganizationUnitController.Response"
+            }
+          },
+          "page" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
       "NotificationTemplatePage" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/NotificationTemplate"
+              "$ref" : "#/components/schemas/com.campus.notification.domain.NotificationTemplate"
             }
           },
           "page" : {
@@ -6483,7 +7054,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/Notice"
+              "$ref" : "#/components/schemas/com.campus.notification.domain.Notice"
             }
           },
           "page" : {
@@ -6510,7 +7081,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/BookTitle"
+              "$ref" : "#/components/schemas/com.campus.library.domain.BookTitle"
             }
           },
           "page" : {
@@ -6537,7 +7108,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/BookLoan"
+              "$ref" : "#/components/schemas/com.campus.library.domain.BookLoan"
             }
           },
           "page" : {
@@ -6564,7 +7135,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/BookCopy"
+              "$ref" : "#/components/schemas/com.campus.library.domain.BookCopy"
             }
           },
           "page" : {
@@ -6591,7 +7162,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/ManualPayment"
+              "$ref" : "#/components/schemas/com.campus.finance.domain.ManualPayment"
             }
           },
           "page" : {
@@ -6618,7 +7189,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/FeeDefinition"
+              "$ref" : "#/components/schemas/com.campus.finance.domain.FeeDefinition"
             }
           },
           "page" : {
@@ -6645,7 +7216,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/StudentCharge"
+              "$ref" : "#/components/schemas/com.campus.finance.domain.StudentCharge"
             }
           },
           "page" : {
@@ -6666,7 +7237,7 @@
           }
         }
       },
-      "ChargeBalance" : {
+      "com.campus.finance.domain.ChargeBalance" : {
         "type" : "object",
         "properties" : {
           "chargeId" : {
@@ -6695,13 +7266,40 @@
           }
         }
       },
+      "com.campus.personnel.api.AdminFacultyStaffController.PageResponse" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.personnel.api.AdminFacultyStaffController.Response"
+            }
+          },
+          "page" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
       "DormitoryInventoryPage" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/InventoryItem"
+              "$ref" : "#/components/schemas/com.campus.dormitory.domain.InventoryItem"
             }
           },
           "page" : {
@@ -6728,7 +7326,7 @@
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/AccommodationAssignment"
+              "$ref" : "#/components/schemas/com.campus.dormitory.domain.AccommodationAssignment"
             }
           },
           "page" : {
@@ -6749,7 +7347,34 @@
           }
         }
       },
-      "AuditView" : {
+      "AuditViewingPage" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.shared.application.audit.AuditView"
+            }
+          },
+          "page" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "com.campus.shared.application.audit.AuditView" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -6790,13 +7415,13 @@
           }
         }
       },
-      "AuditViewingPage" : {
+      "com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.AcademicTerm" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/AuditView"
+              "$ref" : "#/components/schemas/com.campus.academic.domain.AcademicTerm"
             }
           },
           "page" : {
@@ -6817,13 +7442,13 @@
           }
         }
       },
-      "PageResponseAcademicTerm" : {
+      "com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.ClassSection" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/AcademicTerm"
+              "$ref" : "#/components/schemas/com.campus.academic.domain.ClassSection"
             }
           },
           "page" : {
@@ -6844,13 +7469,13 @@
           }
         }
       },
-      "PageResponseClassSection" : {
+      "com.campus.academic.api.AdminAcademicProgramController.PageResponse" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/ClassSection"
+              "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicProgramController.Response"
             }
           },
           "page" : {
@@ -6871,13 +7496,13 @@
           }
         }
       },
-      "PageResponseCourseOffering" : {
+      "com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.CourseOffering" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/CourseOffering"
+              "$ref" : "#/components/schemas/com.campus.academic.domain.CourseOffering"
             }
           },
           "page" : {
@@ -6898,13 +7523,40 @@
           }
         }
       },
-      "PageResponseEnrollment" : {
+      "com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.Enrollment" : {
         "type" : "object",
         "properties" : {
           "content" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/Enrollment"
+              "$ref" : "#/components/schemas/com.campus.academic.domain.Enrollment"
+            }
+          },
+          "page" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalElements" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "com.campus.academic.api.AdminAcademicCourseController.PageResponse" : {
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.academic.api.AdminAcademicCourseController.Response"
             }
           },
           "page" : {

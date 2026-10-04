@@ -4,8 +4,8 @@ import { requireTokens, requireUser } from './auth-contract'
 import { ApiError, SessionChanged, type ErrorBody } from './errors'
 export { ApiError, SessionChanged } from './errors'
 
-export type User = Required<components['schemas']['UserResponse']>
-type Tokens = Required<Pick<components['schemas']['RefreshResponse'], 'accessToken'>>
+export type User = Required<components['schemas']['com.campus.identity.api.AuthController.UserResponse']>
+type Tokens = Required<Pick<components['schemas']['com.campus.identity.api.AuthController.RefreshResponse'], 'accessToken'>>
 type LoginResponse = Tokens & { user: User }
 export type Session = { status: 'loading' | 'anonymous' | 'authenticated'; user: User | null }
 

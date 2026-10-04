@@ -1187,7 +1187,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        NotificationDelivery: {
+        "com.campus.notification.domain.NotificationDelivery": {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1213,7 +1213,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        EventRegistration: {
+        "com.campus.event.domain.EventRegistration": {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1235,12 +1235,12 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
-        RolesRequest: {
+        "com.campus.identity.api.AdminUserController.RolesRequest": {
             roles: string[];
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        AdminUserResponse: {
+        "com.campus.identity.api.AdminUserController.AdminUserResponse": {
             /** Format: uuid */
             id?: string;
             email?: string;
@@ -1256,7 +1256,7 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
-        UpdateRequest: {
+        "com.campus.student.api.AdminStudentController.UpdateRequest": {
             studentNumber: string;
             fullName: string;
             email?: string;
@@ -1269,7 +1269,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        Response: {
+        "com.campus.student.api.AdminStudentController.Response": {
             /** Format: uuid */
             id?: string;
             studentNumber?: string;
@@ -1279,6 +1279,30 @@ export interface components {
             identityUserId?: string;
             /** Format: uuid */
             organizationUnitId?: string;
+            status?: string;
+            /** Format: int64 */
+            rowVersion?: number | bigint;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        "com.campus.organization.api.AdminOrganizationUnitController.UpdateRequest": {
+            code: string;
+            name: string;
+            /** @enum {string} */
+            unitType: "FACULTY" | "DEPARTMENT" | "ADMINISTRATIVE";
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE";
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.organization.api.AdminOrganizationUnitController.Response": {
+            /** Format: uuid */
+            id?: string;
+            code?: string;
+            name?: string;
+            unitType?: string;
             status?: string;
             /** Format: int64 */
             rowVersion?: number | bigint;
@@ -1297,7 +1321,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        NotificationTemplate: {
+        "com.campus.notification.domain.NotificationTemplate": {
             /** Format: uuid */
             id?: string;
             code?: string;
@@ -1319,7 +1343,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        Notice: {
+        "com.campus.notification.domain.Notice": {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1346,7 +1370,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        BookTitle: {
+        "com.campus.library.domain.BookTitle": {
             /** Format: uuid */
             id?: string;
             code?: string;
@@ -1365,7 +1389,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        BookLoan: {
+        "com.campus.library.domain.BookLoan": {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1394,7 +1418,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        BookCopy: {
+        "com.campus.library.domain.BookCopy": {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1418,7 +1442,7 @@ export interface components {
             expectedChargeVersion: number | bigint;
             reason: string;
         };
-        ManualPayment: {
+        "com.campus.finance.domain.ManualPayment": {
             /** Format: uuid */
             id?: string;
             receiptNumber?: string;
@@ -1449,7 +1473,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        FeeDefinition: {
+        "com.campus.finance.domain.FeeDefinition": {
             /** Format: uuid */
             id?: string;
             code?: string;
@@ -1471,7 +1495,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        StudentCharge: {
+        "com.campus.finance.domain.StudentCharge": {
             /** Format: uuid */
             id?: string;
             chargeNumber?: string;
@@ -1494,6 +1518,40 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
+        "com.campus.personnel.api.AdminFacultyStaffController.UpdateRequest": {
+            personnelNumber: string;
+            fullName: string;
+            email?: string;
+            /** Format: uuid */
+            identityUserId?: string;
+            /** @enum {string} */
+            personnelType: "FACULTY" | "STAFF";
+            /** Format: uuid */
+            organizationUnitId: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE";
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.personnel.api.AdminFacultyStaffController.Response": {
+            /** Format: uuid */
+            id?: string;
+            personnelNumber?: string;
+            fullName?: string;
+            email?: string;
+            /** Format: uuid */
+            identityUserId?: string;
+            personnelType?: string;
+            /** Format: uuid */
+            organizationUnitId?: string;
+            status?: string;
+            /** Format: int64 */
+            rowVersion?: number | bigint;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
         CampusEventUpdate: {
             code: string;
             title: string;
@@ -1509,7 +1567,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        CampusEvent: {
+        "com.campus.event.domain.CampusEvent": {
             /** Format: uuid */
             id?: string;
             code?: string;
@@ -1538,7 +1596,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        InventoryItem: {
+        "com.campus.dormitory.domain.InventoryItem": {
             /** Format: uuid */
             id?: string;
             /** @enum {string} */
@@ -1562,7 +1620,7 @@ export interface components {
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        AccommodationAssignment: {
+        "com.campus.dormitory.domain.AccommodationAssignment": {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1582,7 +1640,19 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
-        AcademicTerm: {
+        "com.campus.academic.api.delivery.AdminAcademicTermController.UpdateRequest": {
+            code: string;
+            name: string;
+            /** Format: date */
+            startDate: string;
+            /** Format: date */
+            endDate: string;
+            /** @enum {string} */
+            status: "PLANNED" | "ACTIVE" | "CLOSED" | "CANCELLED";
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.academic.domain.AcademicTerm": {
             /** Format: uuid */
             id?: string;
             code?: string;
@@ -1600,7 +1670,18 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
-        ClassSection: {
+        "com.campus.academic.api.delivery.AdminClassSectionController.UpdateRequest": {
+            code: string;
+            /** Format: int32 */
+            capacity?: number;
+            /** Format: uuid */
+            facultyId?: string;
+            /** @enum {string} */
+            status: "DRAFT" | "OPEN" | "CLOSED" | "CANCELLED";
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.academic.domain.ClassSection": {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1619,7 +1700,38 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
-        CourseOffering: {
+        "com.campus.academic.api.AdminAcademicProgramController.UpdateRequest": {
+            code: string;
+            name: string;
+            /** Format: uuid */
+            organizationUnitId: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE";
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.academic.api.AdminAcademicProgramController.Response": {
+            /** Format: uuid */
+            id?: string;
+            code?: string;
+            name?: string;
+            /** Format: uuid */
+            organizationUnitId?: string;
+            status?: string;
+            /** Format: int64 */
+            rowVersion?: number | bigint;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        "com.campus.academic.api.delivery.AdminCourseOfferingController.UpdateRequest": {
+            /** @enum {string} */
+            status: "DRAFT" | "OPEN" | "CLOSED" | "CANCELLED";
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.academic.domain.CourseOffering": {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1637,48 +1749,82 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
-        Enrollment: components["schemas"]["ReportRow"] & {
+        "com.campus.academic.api.enrollment.AdminEnrollmentController.UpdateRequest": {
+            /** @enum {string} */
+            status: "ENROLLED" | "WITHDRAWN";
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.academic.domain.Enrollment": {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
             studentId?: string;
             /** Format: uuid */
             sectionId?: string;
-            /** Format: uuid */
-            offeringId?: string;
-            /** Format: uuid */
-            termId?: string;
-            /** Format: uuid */
-            courseId?: string;
-            status?: string;
+            /** @enum {string} */
+            status?: "ENROLLED" | "WITHDRAWN";
+            /** Format: int64 */
+            rowVersion?: number | bigint;
+            /** Format: date-time */
+            createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
         };
-        RefreshResponse: {
+        "com.campus.academic.api.AdminAcademicCourseController.UpdateRequest": {
+            code: string;
+            title: string;
+            /** Format: int32 */
+            credits: number;
+            /** Format: uuid */
+            organizationUnitId: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE";
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.academic.api.AdminAcademicCourseController.Response": {
+            /** Format: uuid */
+            id?: string;
+            code?: string;
+            title?: string;
+            /** Format: int32 */
+            credits?: number;
+            /** Format: uuid */
+            organizationUnitId?: string;
+            status?: string;
+            /** Format: int64 */
+            rowVersion?: number | bigint;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        "com.campus.identity.api.AuthController.RefreshResponse": {
             accessToken?: string;
             tokenType?: string;
             /** Format: int64 */
             expiresIn?: number | bigint;
         };
-        LoginRequest: {
+        "com.campus.identity.api.AuthController.LoginRequest": {
             email: string;
             password: string;
         };
-        LoginResponse: {
+        "com.campus.identity.api.AuthController.LoginResponse": {
             accessToken?: string;
             tokenType?: string;
             /** Format: int64 */
             expiresIn?: number | bigint;
-            user?: components["schemas"]["UserResponse"];
+            user?: components["schemas"]["com.campus.identity.api.AuthController.UserResponse"];
         };
-        UserResponse: {
+        "com.campus.identity.api.AuthController.UserResponse": {
             /** Format: uuid */
             id?: string;
             email?: string;
             status?: string;
             roles?: string[];
         };
-        CreateAdminUserRequest: {
+        "com.campus.identity.api.AdminUserController.CreateAdminUserRequest": {
             email: string;
             displayName: string;
             initialPassword: string;
@@ -1686,12 +1832,12 @@ export interface components {
             /** @enum {string} */
             status?: "ACTIVE" | "SUSPENDED" | "DISABLED";
         };
-        PasswordResetRequest: {
+        "com.campus.identity.api.AdminUserController.PasswordResetRequest": {
             newPassword: string;
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        Request: {
+        "com.campus.student.api.AdminStudentController.Request": {
             studentNumber: string;
             fullName: string;
             email?: string;
@@ -1699,6 +1845,14 @@ export interface components {
             identityUserId?: string;
             /** Format: uuid */
             organizationUnitId: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+        };
+        "com.campus.organization.api.AdminOrganizationUnitController.Request": {
+            code: string;
+            name: string;
+            /** @enum {string} */
+            unitType: "FACULTY" | "DEPARTMENT" | "ADMINISTRATIVE";
             /** @enum {string} */
             status?: "ACTIVE" | "INACTIVE";
         };
@@ -1755,6 +1909,19 @@ export interface components {
             /** Format: date */
             dueDate: string;
         };
+        "com.campus.personnel.api.AdminFacultyStaffController.Request": {
+            personnelNumber: string;
+            fullName: string;
+            email?: string;
+            /** Format: uuid */
+            identityUserId?: string;
+            /** @enum {string} */
+            personnelType: "FACULTY" | "STAFF";
+            /** Format: uuid */
+            organizationUnitId: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+        };
         CampusEventCreate: {
             code: string;
             title: string;
@@ -1782,7 +1949,7 @@ export interface components {
             /** Format: uuid */
             bedId: string;
         };
-        CreateRequest: {
+        "com.campus.academic.api.delivery.AdminAcademicTermController.CreateRequest": {
             code: string;
             name: string;
             /** Format: date */
@@ -1790,19 +1957,53 @@ export interface components {
             /** Format: date */
             endDate: string;
         };
-        StatusRequest: {
+        "com.campus.academic.api.delivery.AdminClassSectionController.CreateRequest": {
+            /** Format: uuid */
+            offeringId: string;
+            code: string;
+            /** Format: int32 */
+            capacity?: number;
+            /** Format: uuid */
+            facultyId?: string;
+        };
+        "com.campus.academic.api.AdminAcademicProgramController.Request": {
+            code: string;
+            name: string;
+            /** Format: uuid */
+            organizationUnitId: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+        };
+        "com.campus.academic.api.delivery.AdminCourseOfferingController.CreateRequest": {
+            /** Format: uuid */
+            termId: string;
+            /** Format: uuid */
+            courseId: string;
+        };
+        "com.campus.academic.api.enrollment.AdminEnrollmentController.CreateRequest": {
+            /** Format: uuid */
+            studentId: string;
+            /** Format: uuid */
+            sectionId: string;
+        };
+        "com.campus.academic.api.AdminAcademicCourseController.Request": {
+            code: string;
+            title: string;
+            /** Format: int32 */
+            credits: number;
+            /** Format: uuid */
+            organizationUnitId: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+        };
+        "com.campus.identity.api.AdminUserController.StatusRequest": {
             /** @enum {string} */
             status: "ACTIVE" | "SUSPENDED" | "DISABLED";
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
-        InboxItem: {
-            delivery?: components["schemas"]["NotificationDelivery"];
-            title?: string;
-            body?: string;
-        };
         NotificationInboxPage: {
-            content?: components["schemas"]["InboxItem"][];
+            content?: components["schemas"]["com.campus.notification.domain.InboxItem"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1812,8 +2013,13 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
+        "com.campus.notification.domain.InboxItem": {
+            delivery?: components["schemas"]["com.campus.notification.domain.NotificationDelivery"];
+            title?: string;
+            body?: string;
+        };
         CampusEventPage: {
-            content?: components["schemas"]["CampusEvent"][];
+            content?: components["schemas"]["com.campus.event.domain.CampusEvent"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1824,7 +2030,7 @@ export interface components {
             totalPages?: number;
         };
         EventRegistrationPage: {
-            content?: components["schemas"]["EventRegistration"][];
+            content?: components["schemas"]["com.campus.event.domain.EventRegistration"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1834,8 +2040,8 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        AdminUserPageResponse: {
-            content?: components["schemas"]["AdminUserResponse"][];
+        "com.campus.identity.api.AdminUserController.AdminUserPageResponse": {
+            content?: components["schemas"]["com.campus.identity.api.AdminUserController.AdminUserResponse"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1845,8 +2051,8 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        PageResponse: {
-            content?: components["schemas"]["Response"][];
+        "com.campus.student.api.AdminStudentController.PageResponse": {
+            content?: components["schemas"]["com.campus.student.api.AdminStudentController.Response"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1856,7 +2062,24 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        Accommodation: components["schemas"]["ReportRow"] & {
+        "com.campus.reporting.application.DetailReportService.ReportPage": {
+            /** @enum {string} */
+            report?: "STUDENT_DEBT" | "CURRENT_ACCOMMODATION" | "SECTION_ENROLLMENT" | "EVENT_MEMBERSHIP" | "LIBRARY_LOANS";
+            /** Format: date-time */
+            asOf?: string;
+            columns?: string[];
+            content?: (components["schemas"]["com.campus.shared.application.reporting.ReportRow.Accommodation"] | components["schemas"]["com.campus.shared.application.reporting.ReportRow.Debt"] | components["schemas"]["com.campus.shared.application.reporting.ReportRow.Enrollment"] | components["schemas"]["com.campus.shared.application.reporting.ReportRow.Loan"] | components["schemas"]["com.campus.shared.application.reporting.ReportRow.Membership"])[];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number | bigint;
+            /** Format: int64 */
+            totalPages?: number | bigint;
+        };
+        "com.campus.shared.application.reporting.ReportRow": unknown;
+        "com.campus.shared.application.reporting.ReportRow.Accommodation": components["schemas"]["com.campus.shared.application.reporting.ReportRow"] & {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1870,7 +2093,7 @@ export interface components {
             /** Format: date-time */
             assignedAt?: string;
         };
-        Debt: components["schemas"]["ReportRow"] & {
+        "com.campus.shared.application.reporting.ReportRow.Debt": components["schemas"]["com.campus.shared.application.reporting.ReportRow"] & {
             /** Format: uuid */
             studentId?: string;
             /** Format: int64 */
@@ -1879,7 +2102,24 @@ export interface components {
             paidVnd?: number | bigint | LosslessNumber;
             outstandingVnd?: number | bigint | LosslessNumber;
         };
-        Loan: components["schemas"]["ReportRow"] & {
+        "com.campus.shared.application.reporting.ReportRow.Enrollment": components["schemas"]["com.campus.shared.application.reporting.ReportRow"] & {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            studentId?: string;
+            /** Format: uuid */
+            sectionId?: string;
+            /** Format: uuid */
+            offeringId?: string;
+            /** Format: uuid */
+            termId?: string;
+            /** Format: uuid */
+            courseId?: string;
+            status?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        "com.campus.shared.application.reporting.ReportRow.Loan": components["schemas"]["com.campus.shared.application.reporting.ReportRow"] & {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1896,7 +2136,7 @@ export interface components {
             dueAt?: string;
             overdue?: boolean;
         };
-        Membership: components["schemas"]["ReportRow"] & {
+        "com.campus.shared.application.reporting.ReportRow.Membership": components["schemas"]["com.campus.shared.application.reporting.ReportRow"] & {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -1913,24 +2153,7 @@ export interface components {
             /** Format: date-time */
             attendedAt?: string;
         };
-        ReportPage: {
-            /** @enum {string} */
-            report?: "STUDENT_DEBT" | "CURRENT_ACCOMMODATION" | "SECTION_ENROLLMENT" | "EVENT_MEMBERSHIP" | "LIBRARY_LOANS";
-            /** Format: date-time */
-            asOf?: string;
-            columns?: string[];
-            content?: (components["schemas"]["Accommodation"] | components["schemas"]["Debt"] | components["schemas"]["Enrollment"] | components["schemas"]["Loan"] | components["schemas"]["Membership"])[];
-            /** Format: int32 */
-            page?: number;
-            /** Format: int32 */
-            size?: number;
-            /** Format: int64 */
-            totalElements?: number | bigint;
-            /** Format: int64 */
-            totalPages?: number | bigint;
-        };
-        ReportRow: unknown;
-        Dashboard: {
+        "com.campus.reporting.application.DashboardService.Dashboard": {
             /** Format: date-time */
             asOf?: string;
             currency?: string;
@@ -1940,8 +2163,19 @@ export interface components {
                 };
             };
         };
+        "com.campus.organization.api.AdminOrganizationUnitController.PageResponse": {
+            content?: components["schemas"]["com.campus.organization.api.AdminOrganizationUnitController.Response"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number | bigint;
+            /** Format: int32 */
+            totalPages?: number;
+        };
         NotificationTemplatePage: {
-            content?: components["schemas"]["NotificationTemplate"][];
+            content?: components["schemas"]["com.campus.notification.domain.NotificationTemplate"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1952,7 +2186,7 @@ export interface components {
             totalPages?: number;
         };
         NotificationNoticePage: {
-            content?: components["schemas"]["Notice"][];
+            content?: components["schemas"]["com.campus.notification.domain.Notice"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1963,7 +2197,7 @@ export interface components {
             totalPages?: number;
         };
         LibraryTitlePage: {
-            content?: components["schemas"]["BookTitle"][];
+            content?: components["schemas"]["com.campus.library.domain.BookTitle"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1974,7 +2208,7 @@ export interface components {
             totalPages?: number;
         };
         LibraryLoanPage: {
-            content?: components["schemas"]["BookLoan"][];
+            content?: components["schemas"]["com.campus.library.domain.BookLoan"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1985,7 +2219,7 @@ export interface components {
             totalPages?: number;
         };
         LibraryCopyPage: {
-            content?: components["schemas"]["BookCopy"][];
+            content?: components["schemas"]["com.campus.library.domain.BookCopy"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -1996,7 +2230,7 @@ export interface components {
             totalPages?: number;
         };
         FinancePaymentPage: {
-            content?: components["schemas"]["ManualPayment"][];
+            content?: components["schemas"]["com.campus.finance.domain.ManualPayment"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2007,7 +2241,7 @@ export interface components {
             totalPages?: number;
         };
         FinanceFeePage: {
-            content?: components["schemas"]["FeeDefinition"][];
+            content?: components["schemas"]["com.campus.finance.domain.FeeDefinition"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2018,7 +2252,7 @@ export interface components {
             totalPages?: number;
         };
         FinanceChargePage: {
-            content?: components["schemas"]["StudentCharge"][];
+            content?: components["schemas"]["com.campus.finance.domain.StudentCharge"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2028,7 +2262,7 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        ChargeBalance: {
+        "com.campus.finance.domain.ChargeBalance": {
             /** Format: uuid */
             chargeId?: string;
             amount?: number | bigint | LosslessNumber;
@@ -2040,8 +2274,19 @@ export interface components {
             paidAmount?: number | bigint | LosslessNumber;
             outstandingAmount?: number | bigint | LosslessNumber;
         };
+        "com.campus.personnel.api.AdminFacultyStaffController.PageResponse": {
+            content?: components["schemas"]["com.campus.personnel.api.AdminFacultyStaffController.Response"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number | bigint;
+            /** Format: int32 */
+            totalPages?: number;
+        };
         DormitoryInventoryPage: {
-            content?: components["schemas"]["InventoryItem"][];
+            content?: components["schemas"]["com.campus.dormitory.domain.InventoryItem"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2052,7 +2297,7 @@ export interface components {
             totalPages?: number;
         };
         AccommodationAssignmentPage: {
-            content?: components["schemas"]["AccommodationAssignment"][];
+            content?: components["schemas"]["com.campus.dormitory.domain.AccommodationAssignment"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2062,7 +2307,18 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        AuditView: {
+        AuditViewingPage: {
+            content?: components["schemas"]["com.campus.shared.application.audit.AuditView"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number | bigint;
+            /** Format: int32 */
+            totalPages?: number;
+        };
+        "com.campus.shared.application.audit.AuditView": {
             /** Format: uuid */
             id?: string;
             /** @enum {string} */
@@ -2081,8 +2337,8 @@ export interface components {
                 [key: string]: string;
             };
         };
-        AuditViewingPage: {
-            content?: components["schemas"]["AuditView"][];
+        "com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.AcademicTerm": {
+            content?: components["schemas"]["com.campus.academic.domain.AcademicTerm"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2092,8 +2348,8 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        PageResponseAcademicTerm: {
-            content?: components["schemas"]["AcademicTerm"][];
+        "com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.ClassSection": {
+            content?: components["schemas"]["com.campus.academic.domain.ClassSection"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2103,8 +2359,8 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        PageResponseClassSection: {
-            content?: components["schemas"]["ClassSection"][];
+        "com.campus.academic.api.AdminAcademicProgramController.PageResponse": {
+            content?: components["schemas"]["com.campus.academic.api.AdminAcademicProgramController.Response"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2114,8 +2370,8 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        PageResponseCourseOffering: {
-            content?: components["schemas"]["CourseOffering"][];
+        "com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.CourseOffering": {
+            content?: components["schemas"]["com.campus.academic.domain.CourseOffering"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2125,8 +2381,19 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        PageResponseEnrollment: {
-            content?: components["schemas"]["Enrollment"][];
+        "com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.Enrollment": {
+            content?: components["schemas"]["com.campus.academic.domain.Enrollment"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number | bigint;
+            /** Format: int32 */
+            totalPages?: number;
+        };
+        "com.campus.academic.api.AdminAcademicCourseController.PageResponse": {
+            content?: components["schemas"]["com.campus.academic.api.AdminAcademicCourseController.Response"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -2166,7 +2433,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["NotificationDelivery"];
+                    "*/*": components["schemas"]["com.campus.notification.domain.NotificationDelivery"];
                 };
             };
         };
@@ -2188,7 +2455,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["EventRegistration"];
+                    "*/*": components["schemas"]["com.campus.event.domain.EventRegistration"];
                 };
             };
         };
@@ -2214,7 +2481,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["EventRegistration"];
+                    "*/*": components["schemas"]["com.campus.event.domain.EventRegistration"];
                 };
             };
         };
@@ -2230,7 +2497,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["RolesRequest"];
+                "application/json": components["schemas"]["com.campus.identity.api.AdminUserController.RolesRequest"];
             };
         };
         responses: {
@@ -2240,7 +2507,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AdminUserResponse"];
+                    "*/*": components["schemas"]["com.campus.identity.api.AdminUserController.AdminUserResponse"];
                 };
             };
         };
@@ -2262,7 +2529,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.student.api.AdminStudentController.Response"];
                 };
             };
         };
@@ -2278,7 +2545,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateRequest"];
+                "application/json": components["schemas"]["com.campus.student.api.AdminStudentController.UpdateRequest"];
             };
         };
         responses: {
@@ -2288,7 +2555,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.student.api.AdminStudentController.Response"];
                 };
             };
         };
@@ -2310,7 +2577,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.organization.api.AdminOrganizationUnitController.Response"];
                 };
             };
         };
@@ -2326,7 +2593,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateRequest"];
+                "application/json": components["schemas"]["com.campus.organization.api.AdminOrganizationUnitController.UpdateRequest"];
             };
         };
         responses: {
@@ -2336,7 +2603,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.organization.api.AdminOrganizationUnitController.Response"];
                 };
             };
         };
@@ -2358,7 +2625,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["NotificationTemplate"];
+                    "*/*": components["schemas"]["com.campus.notification.domain.NotificationTemplate"];
                 };
             };
         };
@@ -2384,7 +2651,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["NotificationTemplate"];
+                    "*/*": components["schemas"]["com.campus.notification.domain.NotificationTemplate"];
                 };
             };
         };
@@ -2406,7 +2673,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Notice"];
+                    "*/*": components["schemas"]["com.campus.notification.domain.Notice"];
                 };
             };
         };
@@ -2432,7 +2699,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Notice"];
+                    "*/*": components["schemas"]["com.campus.notification.domain.Notice"];
                 };
             };
         };
@@ -2454,7 +2721,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BookTitle"];
+                    "*/*": components["schemas"]["com.campus.library.domain.BookTitle"];
                 };
             };
         };
@@ -2480,7 +2747,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BookTitle"];
+                    "*/*": components["schemas"]["com.campus.library.domain.BookTitle"];
                 };
             };
         };
@@ -2506,7 +2773,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BookLoan"];
+                    "*/*": components["schemas"]["com.campus.library.domain.BookLoan"];
                 };
             };
         };
@@ -2528,7 +2795,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BookCopy"];
+                    "*/*": components["schemas"]["com.campus.library.domain.BookCopy"];
                 };
             };
         };
@@ -2554,7 +2821,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BookCopy"];
+                    "*/*": components["schemas"]["com.campus.library.domain.BookCopy"];
                 };
             };
         };
@@ -2576,7 +2843,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ManualPayment"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.ManualPayment"];
                 };
             };
         };
@@ -2602,7 +2869,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ManualPayment"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.ManualPayment"];
                 };
             };
         };
@@ -2624,7 +2891,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["FeeDefinition"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.FeeDefinition"];
                 };
             };
         };
@@ -2650,7 +2917,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["FeeDefinition"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.FeeDefinition"];
                 };
             };
         };
@@ -2672,7 +2939,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["StudentCharge"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.StudentCharge"];
                 };
             };
         };
@@ -2698,7 +2965,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["StudentCharge"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.StudentCharge"];
                 };
             };
         };
@@ -2720,7 +2987,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.personnel.api.AdminFacultyStaffController.Response"];
                 };
             };
         };
@@ -2736,7 +3003,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateRequest"];
+                "application/json": components["schemas"]["com.campus.personnel.api.AdminFacultyStaffController.UpdateRequest"];
             };
         };
         responses: {
@@ -2746,7 +3013,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.personnel.api.AdminFacultyStaffController.Response"];
                 };
             };
         };
@@ -2768,7 +3035,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CampusEvent"];
+                    "*/*": components["schemas"]["com.campus.event.domain.CampusEvent"];
                 };
             };
         };
@@ -2794,7 +3061,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CampusEvent"];
+                    "*/*": components["schemas"]["com.campus.event.domain.CampusEvent"];
                 };
             };
         };
@@ -2816,7 +3083,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["EventRegistration"];
+                    "*/*": components["schemas"]["com.campus.event.domain.EventRegistration"];
                 };
             };
         };
@@ -2842,7 +3109,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["EventRegistration"];
+                    "*/*": components["schemas"]["com.campus.event.domain.EventRegistration"];
                 };
             };
         };
@@ -2865,7 +3132,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["InventoryItem"];
+                    "*/*": components["schemas"]["com.campus.dormitory.domain.InventoryItem"];
                 };
             };
         };
@@ -2892,7 +3159,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["InventoryItem"];
+                    "*/*": components["schemas"]["com.campus.dormitory.domain.InventoryItem"];
                 };
             };
         };
@@ -2914,7 +3181,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AccommodationAssignment"];
+                    "*/*": components["schemas"]["com.campus.dormitory.domain.AccommodationAssignment"];
                 };
             };
         };
@@ -2940,7 +3207,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AccommodationAssignment"];
+                    "*/*": components["schemas"]["com.campus.dormitory.domain.AccommodationAssignment"];
                 };
             };
         };
@@ -2962,7 +3229,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AcademicTerm"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.AcademicTerm"];
                 };
             };
         };
@@ -2978,7 +3245,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.delivery.AdminAcademicTermController.UpdateRequest"];
             };
         };
         responses: {
@@ -2988,7 +3255,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AcademicTerm"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.AcademicTerm"];
                 };
             };
         };
@@ -3010,7 +3277,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ClassSection"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.ClassSection"];
                 };
             };
         };
@@ -3026,7 +3293,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.delivery.AdminClassSectionController.UpdateRequest"];
             };
         };
         responses: {
@@ -3036,7 +3303,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ClassSection"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.ClassSection"];
                 };
             };
         };
@@ -3058,7 +3325,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicProgramController.Response"];
                 };
             };
         };
@@ -3074,7 +3341,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.AdminAcademicProgramController.UpdateRequest"];
             };
         };
         responses: {
@@ -3084,7 +3351,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicProgramController.Response"];
                 };
             };
         };
@@ -3106,7 +3373,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CourseOffering"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.CourseOffering"];
                 };
             };
         };
@@ -3122,7 +3389,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.delivery.AdminCourseOfferingController.UpdateRequest"];
             };
         };
         responses: {
@@ -3132,7 +3399,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CourseOffering"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.CourseOffering"];
                 };
             };
         };
@@ -3154,7 +3421,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Enrollment"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.Enrollment"];
                 };
             };
         };
@@ -3170,7 +3437,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.enrollment.AdminEnrollmentController.UpdateRequest"];
             };
         };
         responses: {
@@ -3180,7 +3447,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Enrollment"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.Enrollment"];
                 };
             };
         };
@@ -3202,7 +3469,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicCourseController.Response"];
                 };
             };
         };
@@ -3218,7 +3485,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.AdminAcademicCourseController.UpdateRequest"];
             };
         };
         responses: {
@@ -3228,7 +3495,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicCourseController.Response"];
                 };
             };
         };
@@ -3250,7 +3517,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["EventRegistration"];
+                    "*/*": components["schemas"]["com.campus.event.domain.EventRegistration"];
                 };
             };
         };
@@ -3270,7 +3537,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["RefreshResponse"];
+                    "*/*": components["schemas"]["com.campus.identity.api.AuthController.RefreshResponse"];
                 };
             };
         };
@@ -3302,7 +3569,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["LoginRequest"];
+                "application/json": components["schemas"]["com.campus.identity.api.AuthController.LoginRequest"];
             };
         };
         responses: {
@@ -3312,7 +3579,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["LoginResponse"];
+                    "*/*": components["schemas"]["com.campus.identity.api.AuthController.LoginResponse"];
                 };
             };
         };
@@ -3339,7 +3606,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AdminUserPageResponse"];
+                    "*/*": components["schemas"]["com.campus.identity.api.AdminUserController.AdminUserPageResponse"];
                 };
             };
         };
@@ -3353,7 +3620,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateAdminUserRequest"];
+                "application/json": components["schemas"]["com.campus.identity.api.AdminUserController.CreateAdminUserRequest"];
             };
         };
         responses: {
@@ -3363,7 +3630,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AdminUserResponse"];
+                    "*/*": components["schemas"]["com.campus.identity.api.AdminUserController.AdminUserResponse"];
                 };
             };
         };
@@ -3379,7 +3646,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PasswordResetRequest"];
+                "application/json": components["schemas"]["com.campus.identity.api.AdminUserController.PasswordResetRequest"];
             };
         };
         responses: {
@@ -3413,7 +3680,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponse"];
+                    "*/*": components["schemas"]["com.campus.student.api.AdminStudentController.PageResponse"];
                 };
             };
         };
@@ -3427,7 +3694,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Request"];
+                "application/json": components["schemas"]["com.campus.student.api.AdminStudentController.Request"];
             };
         };
         responses: {
@@ -3437,7 +3704,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.student.api.AdminStudentController.Response"];
                 };
             };
         };
@@ -3463,7 +3730,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponse"];
+                    "*/*": components["schemas"]["com.campus.organization.api.AdminOrganizationUnitController.PageResponse"];
                 };
             };
         };
@@ -3477,7 +3744,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Request"];
+                "application/json": components["schemas"]["com.campus.organization.api.AdminOrganizationUnitController.Request"];
             };
         };
         responses: {
@@ -3487,7 +3754,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.organization.api.AdminOrganizationUnitController.Response"];
                 };
             };
         };
@@ -3537,7 +3804,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["NotificationTemplate"];
+                    "*/*": components["schemas"]["com.campus.notification.domain.NotificationTemplate"];
                 };
             };
         };
@@ -3587,7 +3854,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Notice"];
+                    "*/*": components["schemas"]["com.campus.notification.domain.Notice"];
                 };
             };
         };
@@ -3613,7 +3880,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Notice"];
+                    "*/*": components["schemas"]["com.campus.notification.domain.Notice"];
                 };
             };
         };
@@ -3663,7 +3930,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BookTitle"];
+                    "*/*": components["schemas"]["com.campus.library.domain.BookTitle"];
                 };
             };
         };
@@ -3714,7 +3981,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BookLoan"];
+                    "*/*": components["schemas"]["com.campus.library.domain.BookLoan"];
                 };
             };
         };
@@ -3765,7 +4032,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BookCopy"];
+                    "*/*": components["schemas"]["com.campus.library.domain.BookCopy"];
                 };
             };
         };
@@ -3816,7 +4083,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ManualPayment"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.ManualPayment"];
                 };
             };
         };
@@ -3866,7 +4133,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["FeeDefinition"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.FeeDefinition"];
                 };
             };
         };
@@ -3918,7 +4185,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["StudentCharge"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.StudentCharge"];
                 };
             };
         };
@@ -3945,7 +4212,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponse"];
+                    "*/*": components["schemas"]["com.campus.personnel.api.AdminFacultyStaffController.PageResponse"];
                 };
             };
         };
@@ -3959,7 +4226,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Request"];
+                "application/json": components["schemas"]["com.campus.personnel.api.AdminFacultyStaffController.Request"];
             };
         };
         responses: {
@@ -3969,7 +4236,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.personnel.api.AdminFacultyStaffController.Response"];
                 };
             };
         };
@@ -4019,7 +4286,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CampusEvent"];
+                    "*/*": components["schemas"]["com.campus.event.domain.CampusEvent"];
                 };
             };
         };
@@ -4045,7 +4312,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["EventRegistration"];
+                    "*/*": components["schemas"]["com.campus.event.domain.EventRegistration"];
                 };
             };
         };
@@ -4100,7 +4367,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["InventoryItem"];
+                    "*/*": components["schemas"]["com.campus.dormitory.domain.InventoryItem"];
                 };
             };
         };
@@ -4151,7 +4418,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AccommodationAssignment"];
+                    "*/*": components["schemas"]["com.campus.dormitory.domain.AccommodationAssignment"];
                 };
             };
         };
@@ -4177,7 +4444,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponseAcademicTerm"];
+                    "*/*": components["schemas"]["com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.AcademicTerm"];
                 };
             };
         };
@@ -4191,7 +4458,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.delivery.AdminAcademicTermController.CreateRequest"];
             };
         };
         responses: {
@@ -4201,7 +4468,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AcademicTerm"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.AcademicTerm"];
                 };
             };
         };
@@ -4228,7 +4495,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponseClassSection"];
+                    "*/*": components["schemas"]["com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.ClassSection"];
                 };
             };
         };
@@ -4242,7 +4509,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.delivery.AdminClassSectionController.CreateRequest"];
             };
         };
         responses: {
@@ -4252,7 +4519,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ClassSection"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.ClassSection"];
                 };
             };
         };
@@ -4278,7 +4545,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponse"];
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicProgramController.PageResponse"];
                 };
             };
         };
@@ -4292,7 +4559,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Request"];
+                "application/json": components["schemas"]["com.campus.academic.api.AdminAcademicProgramController.Request"];
             };
         };
         responses: {
@@ -4302,7 +4569,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicProgramController.Response"];
                 };
             };
         };
@@ -4329,7 +4596,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponseCourseOffering"];
+                    "*/*": components["schemas"]["com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.CourseOffering"];
                 };
             };
         };
@@ -4343,7 +4610,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.delivery.AdminCourseOfferingController.CreateRequest"];
             };
         };
         responses: {
@@ -4353,7 +4620,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CourseOffering"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.CourseOffering"];
                 };
             };
         };
@@ -4380,7 +4647,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponseEnrollment"];
+                    "*/*": components["schemas"]["com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.Enrollment"];
                 };
             };
         };
@@ -4394,7 +4661,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateRequest"];
+                "application/json": components["schemas"]["com.campus.academic.api.enrollment.AdminEnrollmentController.CreateRequest"];
             };
         };
         responses: {
@@ -4404,7 +4671,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Enrollment"];
+                    "*/*": components["schemas"]["com.campus.academic.domain.Enrollment"];
                 };
             };
         };
@@ -4430,7 +4697,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponse"];
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicCourseController.PageResponse"];
                 };
             };
         };
@@ -4444,7 +4711,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Request"];
+                "application/json": components["schemas"]["com.campus.academic.api.AdminAcademicCourseController.Request"];
             };
         };
         responses: {
@@ -4454,7 +4721,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Response"];
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicCourseController.Response"];
                 };
             };
         };
@@ -4470,7 +4737,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["StatusRequest"];
+                "application/json": components["schemas"]["com.campus.identity.api.AdminUserController.StatusRequest"];
             };
         };
         responses: {
@@ -4480,7 +4747,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AdminUserResponse"];
+                    "*/*": components["schemas"]["com.campus.identity.api.AdminUserController.AdminUserResponse"];
                 };
             };
         };
@@ -4527,7 +4794,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["InboxItem"];
+                    "*/*": components["schemas"]["com.campus.notification.domain.InboxItem"];
                 };
             };
         };
@@ -4575,7 +4842,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CampusEvent"];
+                    "*/*": components["schemas"]["com.campus.event.domain.CampusEvent"];
                 };
             };
         };
@@ -4621,7 +4888,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["UserResponse"];
+                    "*/*": components["schemas"]["com.campus.identity.api.AuthController.UserResponse"];
                 };
             };
         };
@@ -4643,7 +4910,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AdminUserResponse"];
+                    "*/*": components["schemas"]["com.campus.identity.api.AdminUserController.AdminUserResponse"];
                 };
             };
         };
@@ -4675,7 +4942,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ReportPage"];
+                    "*/*": components["schemas"]["com.campus.reporting.application.DetailReportService.ReportPage"];
                 };
             };
         };
@@ -4725,7 +4992,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["Dashboard"];
+                    "*/*": components["schemas"]["com.campus.reporting.application.DashboardService.Dashboard"];
                 };
             };
         };
@@ -4747,7 +5014,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BookLoan"];
+                    "*/*": components["schemas"]["com.campus.library.domain.BookLoan"];
                 };
             };
         };
@@ -4769,7 +5036,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ChargeBalance"];
+                    "*/*": components["schemas"]["com.campus.finance.domain.ChargeBalance"];
                 };
             };
         };
@@ -4851,7 +5118,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["AuditView"];
+                    "*/*": components["schemas"]["com.campus.shared.application.audit.AuditView"];
                 };
             };
         };
