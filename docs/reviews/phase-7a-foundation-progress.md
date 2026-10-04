@@ -35,6 +35,6 @@ Review covered changed source, auth DTO/security filters, generated declarations
 
 No production HTTPS hosting, all-browser certification or full accessibility audit is claimed. Multi-tab behavior is verified on Chromium localhost with Web Locks/BroadcastChannel; unsupported browsers retain single-tab fallback. Largest production chunk now **407.33 kB** minified (135.49 kB gzip), no size warning; route splitting is measured rather than a latency claim.
 
-CI jobs are configured; remote runner outcome must be checked after push. Linux runner uses sh for the backend Maven Wrapper because that repo tracks it as mode 100644; no backend chmod/history modification is needed. Local verification is Windows.
+Both GitHub jobs verify and backend-browser passed after push: https://github.com/cdanh11/campus-client/actions/runs/37214290802. The Linux integration runner was therefore verified too. Linux runner uses sh for the backend Maven Wrapper because that repo tracks it as mode 100644; no backend chmod/history modification is needed. Additional 7B1 inspection identified pre-existing nested DTO schema-name collisions in Organization/Student/FacultyStaff contracts. Auth contracts used by 7A are unaffected; correct those owner schemas before typed business forms. See ../plans/phase-7b1-identity-people.md.
 
 ADMIN/portal landing shells have no business features yet. Proceed to 7B1 Identity/People; then separate 7B2 Academic, 7B3 Dormitory/Finance, 7B4 supporting/reporting, 7C personal inbox/Event and 7D whole-phase closure reviews.
