@@ -17,3 +17,5 @@ Final npm run verify PASS: contracts, lint, TypeScript/build, 61 tests/19 files,
 Earlier real run failed because catalog sort startsAt was retained on registration navigation, where that sort is unsupported. Fixed route keys and added a navigation regression before final verification; no assertion or timeout weakened. Reviewed tracked/untracked source and payloads; no blocker/major remains in this slice. Post-push CI remains a separate gate. Library, Audit/Reporting, Student portal and full Phase 7 closure remain incomplete.
 
 Post-push GitHub CI 37228035728 PASS both verify and backend-browser at exact head 5d5ea0aa6bf269c5368df2e6a753d476e4d91589. Notification replacement gate also resolved.
+
+Whole 7B4 regression exposed a browser-only navigation race: EVUI also appeared in the old membership table before destination render. Test now waits for catalog heading and OPEN detail; timeout and business assertions unchanged. Final full real suite PASS 12 journeys; harness BUILD SUCCESS 3m55s at 2026-10-05T03:16:07+07:00.

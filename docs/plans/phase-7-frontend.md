@@ -41,3 +41,5 @@ Status: 7A and 7B1 reviewed PASS locally and on GitHub CI (runs 37214290802 and 
 7B4b Event local PASS: catalog/registration/attendance; 61 tests/19 files, two mocked/ten real Chromium journeys; harness BUILD SUCCESS 3m07s at 2026-10-05T02:19:52+07:00. See ../reviews/phase-7b4b-event-review.md. Notification CI accessible-name defect fixed, replacement CI pending. Next approved slice Library after CI gate; 7B4d/7C/7D remain incomplete.
 
 7B4a/b replacement CI both jobs PASS run 37228035728. 7B4c Library local PASS: typed catalogs and explicit owner return/history, 65 tests/21 files, two mocked/eleven real journeys, harness BUILD SUCCESS 3m30s at 2026-10-05T02:37:38+07:00. Next 7B4d Audit/Reporting after Library CI; 7C/7D incomplete.
+
+7B4 supporting services COMPLETE PASS locally: all four ADMIN slices and full current regression. Final 78 tests/24 files, two mocked/twelve real journeys; harness BUILD SUCCESS 3m55s at 2026-10-05T03:16:07+07:00. See ../reviews/phase-7b4-final-review.md; post-push Insights CI pending. Next approved 7C own inbox/Event portal; 7D and full Phase 7 incomplete.
