@@ -26,7 +26,7 @@ export function PublishNotice({ id, onClose }: { id: string; onClose: () => void
  const conflict = mutation.error instanceof ApiError && mutation.error.detail.code === 'CONCURRENT_MODIFICATION'
  const locked = mutation.isPending || conflict
  const blocked = locked || detail.isFetching || !!detail.error || detail.data?.status !== 'DRAFT' || !recipients.length
- return <Modal open title="Phát hành thông báo" onCancel={mutation.isPending ? undefined : onClose} destroyOnHidden footer={<Space><Button aria-label="Đóng biểu mẫu" disabled={mutation.isPending} onClick={onClose}>Đóng</Button><Button type="primary" disabled={blocked} loading={mutation.isPending} onClick={() => mutation.mutate()}>Xác nhận phát hành</Button></Space>}>
+ return <Modal open title="Phát hành thông báo" onCancel={mutation.isPending ? undefined : onClose} destroyOnHidden footer={<Space><Button aria-label="Đóng biểu mẫu" disabled={mutation.isPending} onClick={onClose}>Đóng</Button><Button aria-label="Xác nhận phát hành" type="primary" disabled={blocked} loading={mutation.isPending} onClick={() => mutation.mutate()}>Xác nhận phát hành</Button></Space>}>
   <Alert type="info" showIcon title="Phát hành ngay cho các tài khoản đã chọn; nội dung sau phát hành không thể sửa." />
   {detail.isFetching && <p role="status">Đang tải bản nháp mới nhất…</p>}
   {detail.error && <ErrorNotice error={detail.error} onRetry={() => { void detail.refetch() }} />}

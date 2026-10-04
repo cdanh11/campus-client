@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { App as AntApp } from 'antd'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -20,7 +20,9 @@ function show(status = 'DRAFT') {
  render(<AntApp><QueryClientProvider client={client}><PublishNotice id="n" onClose={() => {}} /></QueryClientProvider></AntApp>)
 }
 it('deduplicates recipients, publishes the freshly read exact version and blocks stale replay', async () => {
- const mutation = vi.spyOn(api, 'mutation').mockRejectedValue(new ApiError(409, { code: 'CONCURRENT_MODIFICATION' }))
+ let rejectPublication!: (error: Error) => void
+ const pending = new Promise<unknown>((_, reject) => { rejectPublication = reject })
+ const mutation = vi.spyOn(api, 'mutation').mockReturnValue(pending)
  show()
  const dialog = within(screen.getByRole('dialog'))
  await dialog.findByText(notice.title)
@@ -36,6 +38,8 @@ it('deduplicates recipients, publishes the freshly read exact version and blocks
  expect(dialog.getByRole('button', { name: 'Thêm người nhận' })).toBeDisabled()
  await userEvent.click(dialog.getByRole('button', { name: 'Xác nhận phát hành' }))
  await waitFor(() => expect(mutation).toHaveBeenCalledWith('/api/v1/admin/notifications/notices/n/publish', 'POST', { recipientIds: ['u'], expectedVersion: notice.rowVersion }))
+ expect(dialog.getByRole('button', { name: 'Xác nhận phát hành' })).toBeDisabled()
+ await act(async () => { rejectPublication(new ApiError(409, { code: 'CONCURRENT_MODIFICATION' })); await pending.catch(() => {}) })
  await dialog.findByText(/Đóng và mở lại/)
  expect(dialog.getByRole('button', { name: 'Xác nhận phát hành' })).toBeDisabled()
  expect(mutation).toHaveBeenCalledOnce()
