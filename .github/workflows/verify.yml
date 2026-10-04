@@ -1,0 +1,66 @@
+name: Frontend verification
+on:
+  push:
+    branches: [main, 'feature/**']
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: mocked-playwright-results
+          path: test-results/
+          retention-days: 7
+  backend-browser:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: campus-client
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: campus-client
+      - uses: actions/checkout@v4
+        with:
+          repository: cdanh11/campus-service
+          ref: 7d130f41525e3692eb19087b90918abad3e156ab
+          path: campus-service
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: campus-client/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: campus-service/pom.xml
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: ./scripts/test-backend.ps1 -BackendPath ../campus-service
+      - run: npm run contracts:check
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: real-backend-test-results
+          path: |
+            campus-client/test-results/
+            campus-service/target/campus-client-browser.log
+            campus-service/target/surefire-reports/
+          retention-days: 7
