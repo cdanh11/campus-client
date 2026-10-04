@@ -30,10 +30,10 @@ export class ApiClient {
   this.onSessionChange()
   this.publish('anonymous', null)
  }
- private async send<T>(path: string, options: RequestInit, token: string | null): Promise<T> {
+ private async send<T>(path: string, options: RequestInit, token: string | null, format: 'json' | 'csv' = 'json'): Promise<T> {
   if (!path.startsWith('/api/v1/')) throw new Error('API path must be same-origin /api/v1/.')
   const headers = new Headers(options.headers)
-  headers.set('Accept', 'application/json')
+  headers.set('Accept', format === 'csv' ? 'text/csv, application/json' : 'application/json')
   if (token) headers.set('Authorization', 'Bearer ' + token)
   const timeout = AbortSignal.timeout(20_000)
   const signal = options.signal ? AbortSignal.any([options.signal, timeout]) : timeout
@@ -44,6 +44,10 @@ export class ApiClient {
    ? await navigator.locks.request('campus-auth-cookie', { signal }, perform)
    : await perform()
   const text = await response.text()
+  if (response.ok && format === 'csv') {
+   if (response.headers.get('Content-Type')?.split(';')[0].trim().toLowerCase() !== 'text/csv') throw new ApiError(502, { code: 'INVALID_CSV_RESPONSE', message: 'Máy chủ không trả về CSV hợp lệ.' })
+   return text as T
+  }
   const value = text ? parseJson(text) : undefined
   if (!response.ok) {
    const detail = value && typeof value === 'object' ? value as ErrorBody : {}
@@ -109,12 +113,17 @@ export class ApiClient {
    await this.send<void>('/api/v1/auth/logout', { method: 'POST' }, null)
   })
  }
- async request<T>(path: string, options: RequestInit = {}): Promise<T> {
+ request<T>(path: string, options: RequestInit = {}): Promise<T> { return this.authorized<T>(path, options, 'json') }
+ downloadCsv(path: string): Promise<string> {
+  if (!/^\/api\/v1\/admin\/reports\/(STUDENT_DEBT|CURRENT_ACCOMMODATION|SECTION_ENROLLMENT|EVENT_MEMBERSHIP|LIBRARY_LOANS)\/export(?:\?|$)/.test(path)) return Promise.reject(new Error('CSV path không hợp lệ.'))
+  return this.authorized<string>(path, { method: 'GET' }, 'csv')
+ }
+ private async authorized<T>(path: string, options: RequestInit, format: 'json' | 'csv'): Promise<T> {
   if (!this.token) throw new ApiError(401, { code: 'SESSION_REQUIRED', message: 'Vui lòng đăng nhập lại.' })
   const epoch = this.epoch
   const token = this.token
   try {
-   const result = await this.send<T>(path, options, token)
+   const result = await this.send<T>(path, options, token, format)
    if (epoch !== this.epoch) throw new SessionChanged()
    return result
   } catch (error) {
@@ -123,7 +132,7 @@ export class ApiClient {
    if (this.token === token) await this.refresh()
    if (epoch !== this.epoch) throw new SessionChanged()
    try {
-    const result = await this.send<T>(path, options, this.token)
+    const result = await this.send<T>(path, options, this.token, format)
     if (epoch !== this.epoch) throw new SessionChanged()
     return result
    } catch (retryError) {
