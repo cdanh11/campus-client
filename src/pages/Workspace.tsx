@@ -1,9 +1,11 @@
+import { lazy, Suspense } from 'react'
 import { Button, Card, Layout, Result, Space, Tag, Typography } from 'antd'
 import { LogoutOutlined } from '@ant-design/icons'
 import { Link, Navigate, Route, Routes } from 'react-router-dom'
 import type { User } from '../api/client'
 import { AccessBoundary } from '../components/AccessBoundary'
 
+const AdminPeople = lazy(() => import('../features/people/AdminPeople'))
 const { Title, Paragraph, Text } = Typography
 export default function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
  const admin = user.roles.includes('ADMIN')
@@ -25,7 +27,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
      <Paragraph>Chào mừng bạn đến Campus Platform.</Paragraph>
      <Card title="Thông tin tài khoản"><Space wrap>{user.roles.map((role) => <Tag key={role}>{role}</Tag>)}</Space><Paragraph className="account-note">{user.email}</Paragraph></Card>
     </>} />
-    <Route path="/admin" element={<AccessBoundary user={user} role="ADMIN"><Title level={1}>Không gian quản trị</Title><Paragraph>Quản lý hoạt động và dịch vụ trong khuôn viên.</Paragraph></AccessBoundary>} />
+    <Route path="/admin/*" element={<AccessBoundary user={user} role="ADMIN"><Suspense fallback={<p role="status">Đang tải…</p>}><AdminPeople /></Suspense></AccessBoundary>} />
     <Route path="/portal" element={<><Title level={1}>Cổng cá nhân</Title><Paragraph>Thông tin và hoạt động dành cho tài khoản của bạn.</Paragraph></>} />
     <Route path="/login" element={<Navigate to="/" replace />} />
     <Route path="*" element={<Result status="404" title="Không tìm thấy trang" extra={<Link to="/"><Button>Về trang chủ</Button></Link>} />} />
