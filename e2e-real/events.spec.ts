@@ -71,7 +71,9 @@ test('real Event enforces stale catalog and capacity, retains restored membershi
  for (const [action, expected] of [['CANCEL', 'CANCELLED'], ['RESTORE', 'REGISTERED'], ['ATTEND', 'ATTENDED']]) {
   if (action === 'ATTEND') {
    await page.getByRole('navigation', { name: 'Quản trị sự kiện' }).getByRole('link', { name: 'Danh mục sự kiện', exact: true }).click()
+   await expect(page.getByRole('heading', { name: 'Danh mục sự kiện', exact: true })).toBeVisible()
    await page.getByRole('row').filter({ hasText: 'EVUI' }).getByRole('button', { name: 'Xem / sửa' }).click()
+   await expect(dialog.getByText(/Trạng thái hiện tại: OPEN/)).toBeVisible()
    await dialog.getByLabel('Trạng thái', { exact: true }).click()
    await page.getByTitle('CLOSED', { exact: true }).click()
    expect((await save(page, '/api/v1/admin/events/' + event.id, 'PUT')).status()).toBe(200)
