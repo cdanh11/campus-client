@@ -1,6 +1,6 @@
 # Phase 7B1 — Identity and People review
 
-Status: PASS (local). Date: 2026-10-04. Branch: feature/identity-people. GitHub CI after push remains a separate verification.
+Status: PASS (local). Date: 2026-10-04. Branch: feature/identity-people. GitHub CI also PASS: both verify/backend-browser jobs in run 37218317374 for commit 6262e8f58176ca0e21395dab80a9be303fda301e.
 
 Implementation reviewed against production owner controllers and the generated backend contract at 795588e6cb2e315eac8d3bb41155ccbcd37aa1af:
 - ADMIN account list/search/status/role/sort, create/detail, status PATCH, roles PUT and password-reset POST. No unsupported profile update or public registration. Fresh detail version; current actor actions disabled; backend retains final-active-admin protection.

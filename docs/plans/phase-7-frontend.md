@@ -32,4 +32,4 @@ Responsive/error/loading/empty states, accessibility baseline, component/API con
 
 Every slice requires inspect/plan/implementation/verification/diff/PASS review before moving on. Branches use feature/ prefixes. User owns PR/merge. Repository baseline initialization will be a small separate commit before feature/frontend-foundation so an empty remote has a main branch to compare PRs against.
 
-Status: 7A reviewed PASS locally on 2026-10-04: npm ci, contract drift/lint/build, 21 unit/component tests, 2 mocked browser tests and 3 real-backend browser journeys passed. Backend harness BUILD SUCCESS 1m10s. See ../reviews/phase-7a-foundation-progress.md. Next: 7B1 Identity/People. 7B–7D remain unimplemented; whole Phase 7 is incomplete.
+Status: 7A and 7B1 reviewed PASS locally and on GitHub CI (runs 37214290802 and 37218317374). 7B2 Academic reviewed PASS locally, 2026-10-05: contracts/lint/build, 41 tests/11 files, 2 mocked and 6 real Chromium journeys; harness BUILD SUCCESS 1m43s. See ../reviews/phase-7b2-academic-review.md. Next 7B3; 7B3/7B4/7C/7D remain incomplete. Whole Phase 7 is not complete.
