@@ -15,7 +15,7 @@ test('real owner forms create profiles and require reload after stale organizati
  await dialog.getByLabel('Mã đơn vị', { exact: true }).fill('UIORG')
  await dialog.getByLabel('Tên đơn vị', { exact: true }).fill('Khoa thử nghiệm UI')
  await dialog.getByLabel('Loại đơn vị', { exact: true }).click()
- await page.getByText('Khoa', { exact: true }).click()
+ await page.getByTitle('Khoa', { exact: true }).click()
  const create = page.waitForResponse((response) => new URL(response.url()).pathname === '/api/v1/admin/organization-units' && response.request().method() === 'POST')
  await dialog.getByRole('button', { name: 'Lưu', exact: true }).click()
  const created = await (await create).json()
@@ -59,7 +59,7 @@ test('real owner forms create profiles and require reload after stale organizati
   await dialog.getByLabel('Họ tên', { exact: true }).fill(profile.name)
   if (profile.personnel) {
    await dialog.getByLabel('Loại hồ sơ', { exact: true }).click()
-   await page.getByText('Giảng viên', { exact: true }).click()
+   await page.getByTitle('Giảng viên', { exact: true }).click()
   }
   await dialog.getByRole('combobox', { name: 'Đơn vị', exact: true }).click()
   await page.getByText('UIORG · Khoa dữ liệu mới', { exact: true }).click()
