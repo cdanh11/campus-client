@@ -19,3 +19,5 @@ Final verification: contracts/lint/TypeScript/build passed; Vitest 41 tests/11 f
 Review corrections: bound and retain selected reference filters; match createdAt,desc default for offerings/enrollments; validate codes before and after uppercase expansion; reject fractional credits rather than round them; constrain term/offering choices while leaving server admission authoritative; require deliberate enrollment action. The first combined browser run failed because a broad text selector matched an existing table cell and dropdown option, fixed by selecting the option title.
 
 Limitations retained: no Academic Student self-service, registration windows, waitlist, grades, automatic billing or deployment. Reference labels use cached per-ID owner reads bounded by visible pages; no unsupported bulk API was introduced. Comprehensive all-domain responsive/accessibility/browser closure is 7D. GitHub CI after push is reported separately.
+
+GitHub CI both jobs PASS in run 37220302533 (verified 2026-10-05).
