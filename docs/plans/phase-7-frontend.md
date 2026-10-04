@@ -39,3 +39,5 @@ Status: 7A and 7B1 reviewed PASS locally and on GitHub CI (runs 37214290802 and 
 7B3 GitHub CI both jobs PASS run 37221857088. 7B4a Notification PASS local: templates/drafts/explicit bounded publication, 53 tests/16 files, two mocked and nine real journeys; Maven harness BUILD SUCCESS 2m30s at 2026-10-05T01:01:53+07:00. 7B4b Event, 7B4c Library, 7B4d Audit/Reporting, 7C and 7D remain incomplete.
 
 7B4b Event local PASS: catalog/registration/attendance; 61 tests/19 files, two mocked/ten real Chromium journeys; harness BUILD SUCCESS 3m07s at 2026-10-05T02:19:52+07:00. See ../reviews/phase-7b4b-event-review.md. Notification CI accessible-name defect fixed, replacement CI pending. Next approved slice Library after CI gate; 7B4d/7C/7D remain incomplete.
+
+7B4a/b replacement CI both jobs PASS run 37228035728. 7B4c Library local PASS: typed catalogs and explicit owner return/history, 65 tests/21 files, two mocked/eleven real journeys, harness BUILD SUCCESS 3m30s at 2026-10-05T02:37:38+07:00. Next 7B4d Audit/Reporting after Library CI; 7C/7D incomplete.

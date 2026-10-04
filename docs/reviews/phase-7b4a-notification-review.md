@@ -18,3 +18,5 @@ Diff reviewed: no credentials, persistent token, public provisioning, SMTP/SMS/s
 Post-push CI run 37222905737 at head 4199e32: verify PASS; backend-browser FAIL at integration runner. Artifact inspection with user-approved GitHub authentication proved the loading icon changed the accessible button name. Added a stable aria-label and a pending/rejected publication regression; local PASS does not claim CI PASS. This CI gate must be resolved before whole supporting-services closure.
 
 Final corrective verification: npm verify PASS 61 tests/19 files; two mocked and ten real Chromium journeys PASS. Maven harness BUILD SUCCESS 3m07s, finished 2026-10-05T02:19:52+07:00. Replacement CI remains pending until pushed.
+
+Replacement GitHub CI 37228035728 PASS both jobs at 5d5ea0a; the prior failed run remains historical evidence, not the current gate.
