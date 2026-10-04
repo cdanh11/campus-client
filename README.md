@@ -48,3 +48,5 @@ Verified locally on 2026-10-04: clean npm ci, contracts/lint/build passed; 21 te
 7B2 GitHub CI both jobs PASS in run 37220302533. 7B3 local final: 49 tests/14 files, 2 mocked and 8 real Chromium journeys passed; real harness BUILD SUCCESS 2m06s, finished 2026-10-05T00:40:23+07:00. 7B4/7C/7D remain incomplete; post-push CI is reported separately.
 
 7B3 GitHub CI both jobs PASS run 37221857088. 7B4a local final: 53 tests/16 files, 2 mocked and 9 real Chromium journeys passed; harness BUILD SUCCESS 2m30s, finished 2026-10-05T01:01:53+07:00. Full Phase 7 is incomplete.
+
+7B4b Event local PASS: ADMIN catalog, capacity/lifecycle and retained registration/attendance with fresh versions. Final contracts/lint/build and 61 tests/19 files passed; two mocked and ten real Chromium journeys passed. Maven harness BUILD SUCCESS 3m07s, finished 2026-10-05T02:19:52+07:00. Notification accessible-name CI defect corrected and included in this regression. See [Event review](docs/reviews/phase-7b4b-event-review.md). Library/Audit/Reporting/Student portal and whole Phase 7 closure remain incomplete; replacement GitHub CI is pending.
