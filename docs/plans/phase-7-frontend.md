@@ -35,3 +35,5 @@ Every slice requires inspect/plan/implementation/verification/diff/PASS review b
 Status: 7A and 7B1 reviewed PASS locally and on GitHub CI (runs 37214290802 and 37218317374). 7B2 Academic reviewed PASS locally, 2026-10-05: contracts/lint/build, 41 tests/11 files, 2 mocked and 6 real Chromium journeys; harness BUILD SUCCESS 1m43s. See ../reviews/phase-7b2-academic-review.md. Next 7B3; 7B3/7B4/7C/7D remain incomplete. Whole Phase 7 is not complete.
 
 7B2 GitHub CI both jobs PASS run 37220302533. 7B3 local PASS: inventory/accommodation and exact VND fee/snapshot/partial receipt/reversal/balance screens; 49 tests/14 files, two mocked and eight real journeys; Maven harness BUILD SUCCESS 2m06s. See ../reviews/phase-7b3-campus-operations-review.md. Next 7B4 supporting services/Reporting; 7C/7D also incomplete.
+
+7B3 GitHub CI both jobs PASS run 37221857088. 7B4a Notification PASS local: templates/drafts/explicit bounded publication, 53 tests/16 files, two mocked and nine real journeys; Maven harness BUILD SUCCESS 2m30s at 2026-10-05T01:01:53+07:00. 7B4b Event, 7B4c Library, 7B4d Audit/Reporting, 7C and 7D remain incomplete.

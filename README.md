@@ -4,7 +4,7 @@ Web frontend of Campus Platform, maintained independently from [Campus Service](
 
 ## Current status
 
-Phase 7A foundation/authentication reviewed PASS on `feature/frontend-foundation`: React/TypeScript/Vite, Ant Design, React Router, TanStack Query, login/session UI and regression tooling. 7B1 ADMIN accounts/organization/Student/personnel screens are reviewed PASS locally on feature/identity-people. See [7B1 review](docs/reviews/phase-7b1-identity-people-review.md). 7B2 Academic screens are reviewed PASS locally; see [Academic review](docs/reviews/phase-7b2-academic-review.md). 7B3 Dormitory/Finance is reviewed PASS locally; supporting services/Reporting screens and Student portal remain planned. See [operations review](docs/reviews/phase-7b3-campus-operations-review.md). See [Phase 7 plan](docs/plans/phase-7-frontend.md) and [foundation review](docs/reviews/phase-7a-foundation-progress.md).
+Phase 7A foundation/authentication reviewed PASS on `feature/frontend-foundation`: React/TypeScript/Vite, Ant Design, React Router, TanStack Query, login/session UI and regression tooling. 7B1 ADMIN accounts/organization/Student/personnel screens are reviewed PASS locally on feature/identity-people. See [7B1 review](docs/reviews/phase-7b1-identity-people-review.md). 7B2 Academic screens are reviewed PASS locally; see [Academic review](docs/reviews/phase-7b2-academic-review.md). 7B3 Dormitory/Finance is reviewed PASS locally; 7B4a ADMIN Notification is reviewed PASS locally; Event/Library/Audit/Reporting screens and Student portal remain planned. See [Notification review](docs/reviews/phase-7b4a-notification-review.md). See [operations review](docs/reviews/phase-7b3-campus-operations-review.md). See [Phase 7 plan](docs/plans/phase-7-frontend.md) and [foundation review](docs/reviews/phase-7a-foundation-progress.md).
 
 Backend contract reference: `795588e` (reviewed owner-schema correction on feature/api-contracts). OpenAPI snapshot/types and real-backend browser integration are verified. Mocked and real browser suites are reported separately.
 
@@ -46,3 +46,5 @@ Verified locally on 2026-10-04: clean npm ci, contracts/lint/build passed; 21 te
 7B1 GitHub CI passed both jobs in run 37218317374. 7B2 local final: 41 tests/11 files, 2 mocked and 6 real Chromium journeys passed; harness BUILD SUCCESS 1m43s, finished 2026-10-05T00:20:36+07:00. Next is 7B3 Dormitory/Finance; post-push Academic CI remains separate.
 
 7B2 GitHub CI both jobs PASS in run 37220302533. 7B3 local final: 49 tests/14 files, 2 mocked and 8 real Chromium journeys passed; real harness BUILD SUCCESS 2m06s, finished 2026-10-05T00:40:23+07:00. 7B4/7C/7D remain incomplete; post-push CI is reported separately.
+
+7B3 GitHub CI both jobs PASS run 37221857088. 7B4a local final: 53 tests/16 files, 2 mocked and 9 real Chromium journeys passed; harness BUILD SUCCESS 2m30s, finished 2026-10-05T01:01:53+07:00. Full Phase 7 is incomplete.
