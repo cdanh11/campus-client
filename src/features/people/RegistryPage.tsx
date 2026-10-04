@@ -64,7 +64,7 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
  })
  useEffect(() => { if (detail.data && !detail.isFetching) form.setFieldsValue(resource.editValues?.(detail.data) ?? detail.data) }, [detail.data, detail.isFetching, form, resource])
  const mutation = useMutation({
-  mutationFn: (values: Values) => api.mutation<RegistryRow>(resource.path + (id ? '/' + id : ''), id ? 'PUT' : 'POST', resource.body(values, id ? detail.data : undefined)),
+  mutationFn: (values: Values) => api.mutation<RegistryRow>((id ? resource.path + '/' + id : resource.createPath?.(values) ?? resource.path), id ? 'PUT' : 'POST', resource.body(values, id ? detail.data : undefined)),
   onSuccess: () => {
    void queryClient.invalidateQueries({ queryKey: ['registry', resource.path] })
    void queryClient.invalidateQueries({ queryKey: ['reference'] })
@@ -95,7 +95,7 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
       referenceKind(field.type) ? <ReferencePicker kind={field.type} label={field.label} disabled={disabled || busy} allowClear={!field.required} /> :
       field.type === 'textarea' ? <Input.TextArea rows={5} disabled={disabled || busy} /> :
        field.type === 'integer' ? <InputNumber min={field.min} max={field.max} disabled={disabled || busy} style={{ width: '100%' }} /> :
-      <Input inputMode={field.inputMode} maxLength={field.maxLength} type={field.type === 'date' ? 'date' : 'text'} autoComplete="off" disabled={disabled || busy} />}
+      <Input placeholder={field.placeholder} inputMode={field.inputMode} maxLength={field.maxLength} type={field.type === 'date' ? 'date' : 'text'} autoComplete="off" disabled={disabled || busy} />}
     </Form.Item>
    })}
   </Form>

@@ -8,7 +8,7 @@ export type RegistryRow = { id: string; rowVersion: Version; [key: string]: unkn
 export type Values = Record<string, unknown>
 export interface Field {
  name: string; label: string; type: 'text' | 'textarea' | 'email' | 'enum' | 'integer' | 'date' | ReferenceKind
- inputMode?: 'numeric'; maxLength?: number; min?: number; max?: number; updateOnly?: boolean; dependencies?: string[]
+ placeholder?: string; inputMode?: 'numeric'; maxLength?: number; min?: number; max?: number; updateOnly?: boolean; dependencies?: string[]
  required?: boolean; rules?: Rule[]; options?: { value: string; label: string }[]
 }
 export interface Resource {
@@ -19,6 +19,7 @@ export interface Resource {
  disabled?: (field: Field, current: RegistryRow) => boolean
  choices?: (field: Field, current: RegistryRow) => Field['options']
  editValues?: (current: RegistryRow) => Values
+ createPath?: (values: Values) => string
  body: (values: Values, current?: RegistryRow) => unknown
 }
 const states = [{ value: 'ACTIVE', label: 'Đang hoạt động' }, { value: 'INACTIVE', label: 'Ngừng hoạt động' }]

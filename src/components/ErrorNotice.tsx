@@ -2,6 +2,11 @@ import { Alert, Button, Space } from 'antd'
 import { ApiError } from '../api/client'
 
 const domainMessages: Record<string, string> = {
+ EVENT_CODE_ALREADY_EXISTS: 'Mã sự kiện đã được sử dụng.',
+ INVALID_EVENT_STATE: 'Sự kiện hoặc đăng ký không cho phép thao tác này.',
+ EVENT_REGISTRATION_ALREADY_EXISTS: 'Sinh viên đã có đăng ký; mở bản ghi cũ để khôi phục nếu đã hủy.',
+ EVENT_STUDENT_UNAVAILABLE: 'Hồ sơ sinh viên chưa đủ điều kiện đăng ký sự kiện.',
+ EVENT_CAPACITY_EXCEEDED: 'Sự kiện đã đủ số chỗ. Chưa có đăng ký mới được lưu.',
  NOTIFICATION_CODE_ALREADY_EXISTS: 'Mã mẫu thông báo đã được sử dụng.',
  NOTIFICATION_REFERENCE_UNAVAILABLE: 'Mẫu hoặc một tài khoản nhận không còn ACTIVE; chưa có thông báo nào được gửi.',
  INVALID_NOTIFICATION_STATE: 'Thông báo đã phát hành và không thể sửa hoặc phát hành lại.',

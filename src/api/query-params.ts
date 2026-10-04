@@ -15,6 +15,7 @@ export interface PageFilters {
  bedId?: string
  feeId?: string
  chargeId?: string
+ eventId?: string
 }
 export function queryParams(filters: PageFilters): string {
  if (!Number.isSafeInteger(filters.page) || filters.page < 0 ||
@@ -23,7 +24,7 @@ export function queryParams(filters: PageFilters): string {
  const params = new URLSearchParams({
   page: String(filters.page), size: String(filters.size), sort: filters.sort,
  })
- for (const key of ['q', 'status', 'role', 'personnelType', 'termId', 'courseId', 'offeringId', 'studentId', 'sectionId', 'parentId', 'bedId', 'feeId', 'chargeId'] as const) {
+ for (const key of ['q', 'status', 'role', 'personnelType', 'termId', 'courseId', 'offeringId', 'studentId', 'sectionId', 'parentId', 'bedId', 'feeId', 'chargeId', 'eventId'] as const) {
   const value = filters[key]
   if (value !== undefined && value !== '') params.set(key, value)
  }
