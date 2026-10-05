@@ -1,6 +1,8 @@
 # Phase 7B2 — Academic administration
-Status: PASS local, 2026-10-05. See ../reviews/phase-7b2-academic-review.md.
-Approved scope: phase-7-frontend.md. Stack feature/academic-ui from locally reviewed 7B1; do not merge PRs. Backend revision 795588e remains authoritative.
+
+Delivery status: COMPLETE, included in merged Phase 7. Detailed historical evidence is linked below.
+
+Approved scope: [Phase 7](phase-7-frontend.md). Backend revision 795588e remains authoritative.
 
 Implement Programs, Courses, Terms, Offerings, Sections and ADMIN Enrollment through existing owner APIs. Extend the existing paginated/version-aware editor only where the six resources need numeric/date/reference/lifecycle controls; keep People behavior covered by regression tests. Each resource whitelists its actual create/update DTO fields with generated types.
 
@@ -14,4 +16,4 @@ Implement Programs, Courses, Terms, Offerings, Sections and ADMIN Enrollment thr
 
 Verification: typed payload/immutable-field/transition/form/query tests, People/auth regression, real-browser create/open/enroll/full/withdraw/restore/history/error journeys against isolated backend Flyway + Hibernate validation. Query/cache/session errors and stale writes must not auto-resubmit. Run verify, mocked and real suites, diff review, PASS/FAIL document, then functional commits/push if PASS. CI outcomes reported separately. No production provisioning/deployment.
 
-Final gate: contract drift/lint/TypeScript/build, 41 tests/11 files, 2 mocked and 6 real Chromium journeys passed. Real harness BUILD SUCCESS 1m43s at 00:20:36 +07. No backend source/migration changes. GitHub CI after push remains separate; user handles PR/merge. Next: 7B3 Dormitory and Finance.
+Completed and included in merged Phase 7. Checkpoint verification is in the [Academic review](../reviews/phase-7b2-academic-review.md); current totals/CI are in the [final review](../reviews/phase-7-final-review.md).

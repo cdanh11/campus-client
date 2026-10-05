@@ -1,8 +1,9 @@
 # Phase 7 whole-phase closure review
 
-Status: PASS (local), 2026-10-05; post-push CI PASS (37312616255). Branch feature/frontend-experience. Backend pinned to 795588e6cb2e315eac8d3bb41155ccbcd37aa1af.
+Status: PASS (local), 2026-10-05; post-push CI PASS (37312616255). Reviewed on feature/frontend-experience; merged into main through [PR #1](https://github.com/cdanh11/campus-client/pull/1), merge commit 268e4b9. Backend pinned to 795588e6cb2e315eac8d3bb41155ccbcd37aa1af.
 
 ## Requirement matrix
+
 | Requirement | Current implementation and verified evidence |
 | --- | --- |
 | 7A foundation/authentication | Separate React/TypeScript/Vite/Ant Design repository; reproducible lock/CI, lazy routes and versioned generated contract check. ApiClient memory-only tokens, HttpOnly-cookie flow, bounded single-flight refresh, epoch guards and cache clearing. Unit API/session tests plus real cookie/reload/Origin/USER/two-tab journeys. |
@@ -17,14 +18,18 @@ Status: PASS (local), 2026-10-05; post-push CI PASS (37312616255). Branch featur
 | 7D integration and boundaries | All 14 critical ADMIN/USER Chromium journeys use one disposable PostgreSQL 17.6 database, production Flyway V1-V25 and Hibernate validation. Frontend accesses owner APIs only, no tables. Clean managed backend checkout after fixture cleanup; primary user config changes preserved. |
 
 ## Final local verification
+
 - npm run verify: contracts/lint/build PASS; 92 unit/component tests, 27 files, 90.09s (start 19:29:51 +07). Later changes are browser synchronization and documentation; final ESLint also PASS.
 - npm run test:e2e: 13/13 mocked Chromium journeys PASS, 1.6m. Mock coverage is reported separately from integration.
 - scripts/test-backend.ps1 against the clean frontend-integration checkout: 14/14 real Chromium journeys PASS, 3.2m. Maven BUILD SUCCESS 4m19s at 2026-10-05T19:49:30+07:00; one harness, zero failures/errors/skips, 248.5s. This is a browser integration harness, not a rerun of all backend unit/integration suites.
 - git diff --check PASS. Review covers current scope, source, API contracts, tests, rendered screenshots and per-slice reviews. No unresolved blocker/major found in the approved Phase 7 scope.
 
 ## Resolved findings and limits
+
 Contrast and dialog return-focus findings were corrected and checked in real browser rendering. Pointer reference tests wait for dropdown entrance animation and assert submitted UUID; three repeated five-cycle runs and the full mock suite pass. Real owner flows wait for selected values before submission. Assertions were retained and no arbitrary sleep/retry was added.
 Scope is local frontend readiness on Chromium. No production deployment, first-admin runtime provisioning, SMTP/SMS, payment gateway or unapproved personal Academic/Dormitory/Finance/Library APIs. USER registration still requires an ACTIVE linked Student; server authorization is authoritative. Product demo/release packaging and any future workflow/AI work require later scope approval.
-Post-push source gate PASS; user owns PR and merge.
+Post-push source gate PASS; the user completed PR #1 and merged it into main.
 
 GitHub CI run 37312616255 at b70c585026ba3ae41bc476404b7c47d2ce329bc0 completed SUCCESS for both verify and backend-browser. https://github.com/cdanh11/campus-client/actions/runs/37312616255 . Subsequent evidence-recording commit changes documentation only; tested runtime/test/configuration source is unchanged.
+
+The merged main revision 268e4b9001a79f3323136b86b879374a281fac3a passed both verify and backend-browser in [run 37314653968](https://github.com/cdanh11/campus-client/actions/runs/37314653968). Post-merge documentation corrections and fresh frontend checks are recorded in the [repository review](phase-7-repository-review.md).

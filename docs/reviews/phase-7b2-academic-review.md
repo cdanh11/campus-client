@@ -1,4 +1,7 @@
 # Phase 7B2 — Academic review
+
+> Historical slice review: results below apply to this checkpoint. Phase 7 is complete; use the [final review](phase-7-final-review.md) for current completion evidence.
+
 Status: PASS (local), 2026-10-05. Final explicit-action verification passed. Branch: feature/academic-ui, stacked from 7B1 commit 6262e8f.
 
 Owner source inspected: all six Academic controllers, AcademicProgram/Term/ClassSection, AcademicLifecycle, AcademicDeliveryService, domain error handlers and docs/api/academic.md on backend 795588e6cb2e315eac8d3bb41155ccbcd37aa1af. This slice changes frontend only; no API, entities or migrations.
