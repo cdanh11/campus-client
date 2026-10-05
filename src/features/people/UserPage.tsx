@@ -5,12 +5,13 @@ import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import { queryParams, safePageTotal } from '../../api/query-params'
 import { ErrorNotice } from '../../components/ErrorNotice'
+import { roleCodes } from '../../api/administration'
 import { nameRule, passwordRule } from '../../forms/validation'
 import type { AdminUser, PageResult, UserCreate, UserPassword, UserRoles, UserStatus } from './contracts'
 
 const path = '/api/v1/admin/users'
 const statuses = ['ACTIVE', 'SUSPENDED', 'DISABLED'].map((value) => ({ value, label: value }))
-const roles = ['USER', 'ADMIN'].map((value) => ({ value, label: value }))
+const roles = roleCodes.map((value) => ({ value, label: value }))
 type Action = 'create' | 'detail' | 'status' | 'roles' | 'password'
 interface Values { email: string; displayName: string; initialPassword: string; newPassword: string; roles: string[]; status: 'ACTIVE' | 'SUSPENDED' | 'DISABLED' }
 
@@ -26,6 +27,7 @@ export function UserPage() {
  })
  return <>
   <div className="page-heading"><Typography.Title level={1}>Tài khoản</Typography.Title><Button type="primary" onClick={() => setEdit({ action: 'create' })}>Thêm tài khoản</Button></div>
+  <Typography.Paragraph type="secondary">ADMIN quản trị toàn hệ thống; các quyền khác giới hạn theo chức năng. Nhiều quyền kết hợp phạm vi truy cập; quyền tham chiếu không cho phép sửa hồ sơ.</Typography.Paragraph>
   <Space wrap className="list-filters">
    <Input.Search aria-label="Tìm tài khoản" maxLength={100} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} allowClear />
    <Select aria-label="Lọc trạng thái" value={filters.status} options={[{ value: '', label: 'Tất cả trạng thái' }, ...statuses]} onChange={(status) => setFilters({ ...filters, status, page: 0 })} />

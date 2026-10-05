@@ -170,7 +170,7 @@ export interface paths {
         };
         get: operations["get_2"];
         /**
-         * Reverse an entire receipt (ADMIN)
+         * Reverse an entire receipt (administrative permission)
          * @description REVERSED is terminal; original amount/references remain immutable.
          */
         put: operations["reverse"];
@@ -206,7 +206,7 @@ export interface paths {
         };
         get: operations["charge"];
         /**
-         * Cancel an obligation (ADMIN)
+         * Cancel an obligation (administrative permission)
          * @description CANCELLED is terminal; financial snapshot is immutable.
          */
         put: operations["cancel"];
@@ -274,7 +274,7 @@ export interface paths {
         };
         get: operations["get_6"];
         /**
-         * Update Dormitory inventory (ADMIN)
+         * Update Dormitory inventory (administrative permission)
          * @description expectedVersion required; parents immutable; deactivate active children before their parent.
          */
         put: operations["update_4"];
@@ -294,7 +294,7 @@ export interface paths {
         };
         get: operations["get_7"];
         /**
-         * Release accommodation (ADMIN)
+         * Release accommodation (administrative permission)
          * @description RELEASED is terminal; expectedVersion required; references immutable.
          */
         put: operations["release"];
@@ -314,7 +314,7 @@ export interface paths {
         };
         get: operations["get_8"];
         /**
-         * Update term (ADMIN)
+         * Update term (administrative permission)
          * @description Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.
          */
         put: operations["update_5"];
@@ -334,7 +334,7 @@ export interface paths {
         };
         get: operations["get_9"];
         /**
-         * Update section (ADMIN)
+         * Update section (administrative permission)
          * @description Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.
          */
         put: operations["update_6"];
@@ -354,7 +354,7 @@ export interface paths {
         };
         get: operations["get_10"];
         /**
-         * Update an academic program (ADMIN)
+         * Update an academic program (administrative permission)
          * @description Requires expectedVersion from the last read; stale versions and duplicate codes return 409.
          */
         put: operations["update_7"];
@@ -374,7 +374,7 @@ export interface paths {
         };
         get: operations["get_11"];
         /**
-         * Update offering (ADMIN)
+         * Update offering (administrative permission)
          * @description Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.
          */
         put: operations["update_8"];
@@ -394,7 +394,7 @@ export interface paths {
         };
         get: operations["get_12"];
         /**
-         * Withdraw or re-enroll (ADMIN)
+         * Withdraw or re-enroll (administrative permission)
          * @description Requires expectedVersion. Withdrawal releases capacity and is allowed after closure. Re-enrollment rechecks eligibility and capacity. Identifiers cannot change; repeating the current status returns 409.
          */
         put: operations["update_9"];
@@ -414,7 +414,7 @@ export interface paths {
         };
         get: operations["get_13"];
         /**
-         * Update an academic course (ADMIN)
+         * Update an academic course (administrative permission)
          * @description Requires expectedVersion from the last read; stale versions and duplicate codes return 409.
          */
         put: operations["update_10"];
@@ -658,7 +658,7 @@ export interface paths {
         };
         get: operations["list_2"];
         put?: never;
-        /** Record a manual VND payment (ADMIN) */
+        /** Record a manual VND payment (administrative permission) */
         post: operations["record"];
         delete?: never;
         options?: never;
@@ -675,7 +675,7 @@ export interface paths {
         };
         get: operations["fees"];
         put?: never;
-        /** Create a VND fee definition (ADMIN) */
+        /** Create a VND fee definition (administrative permission) */
         post: operations["createFee"];
         delete?: never;
         options?: never;
@@ -692,7 +692,7 @@ export interface paths {
         };
         get: operations["charges"];
         put?: never;
-        /** Create a Student obligation from an active fee snapshot (ADMIN) */
+        /** Create a Student obligation from an active fee snapshot (administrative permission) */
         post: operations["createCharge"];
         delete?: never;
         options?: never;
@@ -758,7 +758,7 @@ export interface paths {
         get: operations["list_5"];
         put?: never;
         /**
-         * Create Dormitory inventory (ADMIN)
+         * Create Dormitory inventory (administrative permission)
          * @description ACTIVE initially; rooms/beds require immutable parentId and active ancestors.
          */
         post: operations["create_5"];
@@ -777,7 +777,7 @@ export interface paths {
         };
         get: operations["list_6"];
         put?: never;
-        /** Assign a current bed (ADMIN) */
+        /** Assign a current bed (administrative permission) */
         post: operations["create_6"];
         delete?: never;
         options?: never;
@@ -793,13 +793,13 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Query terms (ADMIN)
+         * Query terms (administrative permission)
          * @description Zero-based page; size 1–100; allowlisted field,asc/desc sort with ID tie-breaker.
          */
         get: operations["list_7"];
         put?: never;
         /**
-         * Create term (ADMIN)
+         * Create term (administrative permission)
          * @description New resources start in PLANNED; lifecycle transitions require PUT and expectedVersion.
          */
         post: operations["create_7"];
@@ -817,13 +817,13 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Query sections (ADMIN)
+         * Query sections (administrative permission)
          * @description Zero-based page; size 1–100; allowlisted field,asc/desc sort with ID tie-breaker.
          */
         get: operations["list_8"];
         put?: never;
         /**
-         * Create section (ADMIN)
+         * Create section (administrative permission)
          * @description New resources start in DRAFT; lifecycle transitions require PUT and expectedVersion.
          */
         post: operations["create_8"];
@@ -841,12 +841,12 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Search academic programs (ADMIN)
+         * Search academic programs (administrative permission)
          * @description Zero-based page, size 1–100 (default 20), q up to 100 characters matched literally against code/name, optional ACTIVE/INACTIVE status; sort field,direction with id tie-breaker.
          */
         get: operations["list_9"];
         put?: never;
-        /** Create an academic program (ADMIN) */
+        /** Create an academic program (administrative permission) */
         post: operations["create_9"];
         delete?: never;
         options?: never;
@@ -862,13 +862,13 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Query offerings (ADMIN)
+         * Query offerings (administrative permission)
          * @description Zero-based page; size 1–100; allowlisted field,asc/desc sort with ID tie-breaker.
          */
         get: operations["list_10"];
         put?: never;
         /**
-         * Create offering (ADMIN)
+         * Create offering (administrative permission)
          * @description New resources start in DRAFT; lifecycle transitions require PUT and expectedVersion.
          */
         post: operations["create_10"];
@@ -886,13 +886,13 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Query enrollments (ADMIN)
+         * Query enrollments (administrative permission)
          * @description Page >= 0, size 1–100; studentId/sectionId/status filters; status/createdAt/updatedAt sort with stable ID tie-breaker.
          */
         get: operations["list_11"];
         put?: never;
         /**
-         * Enroll an active student (ADMIN)
+         * Enroll an active student (administrative permission)
          * @description Requires open section/offering, active term and available capacity. Duplicate membership returns 409; use PUT to re-enroll withdrawn membership.
          */
         post: operations["create_11"];
@@ -910,12 +910,12 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Search academic courses (ADMIN)
+         * Search academic courses (administrative permission)
          * @description Zero-based page, size 1–100 (default 20), q up to 100 characters matched literally against code/title, optional ACTIVE/INACTIVE status; sort field,direction with id tie-breaker.
          */
         get: operations["list_12"];
         put?: never;
-        /** Create an academic course (ADMIN) */
+        /** Create an academic course (administrative permission) */
         post: operations["create_12"];
         delete?: never;
         options?: never;

@@ -46,6 +46,11 @@ class CampusClientBrowserIntegrationTest {
         String password = UUID.randomUUID().toString();
         seed("browser-admin@example.test", RoleCode.ADMIN, password);
         seed("browser-user@example.test", RoleCode.USER, password);
+        for (RoleCode role : RoleCode.values()) {
+            if (role != RoleCode.USER && role != RoleCode.ADMIN) {
+                seed("browser-" + role.name().toLowerCase(java.util.Locale.ROOT) + "@example.test", role, password);
+            }
+        }
         var response = http.getForEntity("/v3/api-docs", String.class);
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         var schema = mapper.readTree(response.getBody());

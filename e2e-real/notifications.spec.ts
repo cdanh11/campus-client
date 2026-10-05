@@ -38,6 +38,7 @@ test('real Notification preserves snapshots, rejects stale publication and retai
  await page.getByRole('row').filter({ hasText: 'Thông báo UI' }).getByRole('button', { name: 'Phát hành', exact: true }).click()
  await expect(dialog.getByText('<script>văn bản thuần</script>\nDòng thứ hai', { exact: true })).toBeVisible()
  await dialog.getByRole('combobox', { name: 'Tài khoản nhận', exact: true }).click()
+ await dialog.getByRole('combobox', { name: 'Tài khoản nhận', exact: true }).fill('browser-user@example.test')
  await page.getByTitle('browser-user@example.test · Browser test account', { exact: true }).click()
  await dialog.getByRole('button', { name: 'Thêm người nhận', exact: true }).click()
  const updatedStatus = await page.evaluate(async (record) => {
@@ -54,6 +55,7 @@ test('real Notification preserves snapshots, rejects stale publication and retai
  await page.getByRole('row').filter({ hasText: 'Thông báo phiên mới' }).getByRole('button', { name: 'Phát hành', exact: true }).click()
  await expect(dialog.getByText('Nội dung đã chỉnh', { exact: true })).toBeVisible()
  await dialog.getByRole('combobox', { name: 'Tài khoản nhận', exact: true }).click()
+ await dialog.getByRole('combobox', { name: 'Tài khoản nhận', exact: true }).fill('browser-user@example.test')
  await page.getByTitle('browser-user@example.test · Browser test account', { exact: true }).click()
  await dialog.getByRole('button', { name: 'Thêm người nhận', exact: true }).click()
  const publishedResponse = page.waitForResponse((response) => response.url().includes('/notices/' + notice.id + '/publish') && response.request().method() === 'POST')

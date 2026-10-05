@@ -2,6 +2,7 @@
   "openapi" : "3.1.0",
   "info" : {
     "title" : "Campus Service API",
+    "description" : "Bearer JWT authorization. Global ADMIN manages accounts/roles; functional operators access their own domains with explicit read references. AUDIT_VIEWER and REPORTING_VIEWER are read-only. See docs/permissions.md for the full method/path matrix and scope limits.",
     "version" : "v1"
   },
   "servers" : [ {
@@ -620,7 +621,7 @@
       },
       "put" : {
         "tags" : [ "admin-manual-payment-controller" ],
-        "summary" : "Reverse an entire receipt (ADMIN)",
+        "summary" : "Reverse an entire receipt (administrative permission)",
         "description" : "REVERSED is terminal; original amount/references remain immutable.",
         "operationId" : "reverse",
         "parameters" : [ {
@@ -758,7 +759,7 @@
       },
       "put" : {
         "tags" : [ "admin-finance-controller" ],
-        "summary" : "Cancel an obligation (ADMIN)",
+        "summary" : "Cancel an obligation (administrative permission)",
         "description" : "CANCELLED is terminal; financial snapshot is immutable.",
         "operationId" : "cancel",
         "parameters" : [ {
@@ -1033,7 +1034,7 @@
       },
       "put" : {
         "tags" : [ "admin-dormitory-inventory-controller" ],
-        "summary" : "Update Dormitory inventory (ADMIN)",
+        "summary" : "Update Dormitory inventory (administrative permission)",
         "description" : "expectedVersion required; parents immutable; deactivate active children before their parent.",
         "operationId" : "update_4",
         "parameters" : [ {
@@ -1110,7 +1111,7 @@
       },
       "put" : {
         "tags" : [ "admin-accommodation-assignment-controller" ],
-        "summary" : "Release accommodation (ADMIN)",
+        "summary" : "Release accommodation (administrative permission)",
         "description" : "RELEASED is terminal; expectedVersion required; references immutable.",
         "operationId" : "release",
         "parameters" : [ {
@@ -1180,7 +1181,7 @@
       },
       "put" : {
         "tags" : [ "admin-academic-term-controller" ],
-        "summary" : "Update term (ADMIN)",
+        "summary" : "Update term (administrative permission)",
         "description" : "Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.",
         "operationId" : "update_5",
         "parameters" : [ {
@@ -1250,7 +1251,7 @@
       },
       "put" : {
         "tags" : [ "admin-class-section-controller" ],
-        "summary" : "Update section (ADMIN)",
+        "summary" : "Update section (administrative permission)",
         "description" : "Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.",
         "operationId" : "update_6",
         "parameters" : [ {
@@ -1320,7 +1321,7 @@
       },
       "put" : {
         "tags" : [ "admin-academic-program-controller" ],
-        "summary" : "Update an academic program (ADMIN)",
+        "summary" : "Update an academic program (administrative permission)",
         "description" : "Requires expectedVersion from the last read; stale versions and duplicate codes return 409.",
         "operationId" : "update_7",
         "parameters" : [ {
@@ -1390,7 +1391,7 @@
       },
       "put" : {
         "tags" : [ "admin-course-offering-controller" ],
-        "summary" : "Update offering (ADMIN)",
+        "summary" : "Update offering (administrative permission)",
         "description" : "Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.",
         "operationId" : "update_8",
         "parameters" : [ {
@@ -1460,7 +1461,7 @@
       },
       "put" : {
         "tags" : [ "admin-enrollment-controller" ],
-        "summary" : "Withdraw or re-enroll (ADMIN)",
+        "summary" : "Withdraw or re-enroll (administrative permission)",
         "description" : "Requires expectedVersion. Withdrawal releases capacity and is allowed after closure. Re-enrollment rechecks eligibility and capacity. Identifiers cannot change; repeating the current status returns 409.",
         "operationId" : "update_9",
         "parameters" : [ {
@@ -1530,7 +1531,7 @@
       },
       "put" : {
         "tags" : [ "admin-academic-course-controller" ],
-        "summary" : "Update an academic course (ADMIN)",
+        "summary" : "Update an academic course (administrative permission)",
         "description" : "Requires expectedVersion from the last read; stale versions and duplicate codes return 409.",
         "operationId" : "update_10",
         "parameters" : [ {
@@ -2531,7 +2532,7 @@
       },
       "post" : {
         "tags" : [ "admin-manual-payment-controller" ],
-        "summary" : "Record a manual VND payment (ADMIN)",
+        "summary" : "Record a manual VND payment (administrative permission)",
         "operationId" : "record",
         "requestBody" : {
           "content" : {
@@ -2623,7 +2624,7 @@
       },
       "post" : {
         "tags" : [ "admin-finance-controller" ],
-        "summary" : "Create a VND fee definition (ADMIN)",
+        "summary" : "Create a VND fee definition (administrative permission)",
         "operationId" : "createFee",
         "requestBody" : {
           "content" : {
@@ -2731,7 +2732,7 @@
       },
       "post" : {
         "tags" : [ "admin-finance-controller" ],
-        "summary" : "Create a Student obligation from an active fee snapshot (ADMIN)",
+        "summary" : "Create a Student obligation from an active fee snapshot (administrative permission)",
         "operationId" : "createCharge",
         "requestBody" : {
           "content" : {
@@ -3061,7 +3062,7 @@
       },
       "post" : {
         "tags" : [ "admin-dormitory-inventory-controller" ],
-        "summary" : "Create Dormitory inventory (ADMIN)",
+        "summary" : "Create Dormitory inventory (administrative permission)",
         "description" : "ACTIVE initially; rooms/beds require immutable parentId and active ancestors.",
         "operationId" : "create_5",
         "parameters" : [ {
@@ -3171,7 +3172,7 @@
       },
       "post" : {
         "tags" : [ "admin-accommodation-assignment-controller" ],
-        "summary" : "Assign a current bed (ADMIN)",
+        "summary" : "Assign a current bed (administrative permission)",
         "operationId" : "create_6",
         "requestBody" : {
           "content" : {
@@ -3203,7 +3204,7 @@
     "/api/v1/admin/academic/terms" : {
       "get" : {
         "tags" : [ "admin-academic-term-controller" ],
-        "summary" : "Query terms (ADMIN)",
+        "summary" : "Query terms (administrative permission)",
         "description" : "Zero-based page; size 1–100; allowlisted field,asc/desc sort with ID tie-breaker.",
         "operationId" : "list_7",
         "parameters" : [ {
@@ -3265,7 +3266,7 @@
       },
       "post" : {
         "tags" : [ "admin-academic-term-controller" ],
-        "summary" : "Create term (ADMIN)",
+        "summary" : "Create term (administrative permission)",
         "description" : "New resources start in PLANNED; lifecycle transitions require PUT and expectedVersion.",
         "operationId" : "create_7",
         "requestBody" : {
@@ -3298,7 +3299,7 @@
     "/api/v1/admin/academic/sections" : {
       "get" : {
         "tags" : [ "admin-class-section-controller" ],
-        "summary" : "Query sections (ADMIN)",
+        "summary" : "Query sections (administrative permission)",
         "description" : "Zero-based page; size 1–100; allowlisted field,asc/desc sort with ID tie-breaker.",
         "operationId" : "list_8",
         "parameters" : [ {
@@ -3368,7 +3369,7 @@
       },
       "post" : {
         "tags" : [ "admin-class-section-controller" ],
-        "summary" : "Create section (ADMIN)",
+        "summary" : "Create section (administrative permission)",
         "description" : "New resources start in DRAFT; lifecycle transitions require PUT and expectedVersion.",
         "operationId" : "create_8",
         "requestBody" : {
@@ -3401,7 +3402,7 @@
     "/api/v1/admin/academic/programs" : {
       "get" : {
         "tags" : [ "admin-academic-program-controller" ],
-        "summary" : "Search academic programs (ADMIN)",
+        "summary" : "Search academic programs (administrative permission)",
         "description" : "Zero-based page, size 1–100 (default 20), q up to 100 characters matched literally against code/name, optional ACTIVE/INACTIVE status; sort field,direction with id tie-breaker.",
         "operationId" : "list_9",
         "parameters" : [ {
@@ -3463,7 +3464,7 @@
       },
       "post" : {
         "tags" : [ "admin-academic-program-controller" ],
-        "summary" : "Create an academic program (ADMIN)",
+        "summary" : "Create an academic program (administrative permission)",
         "operationId" : "create_9",
         "requestBody" : {
           "content" : {
@@ -3495,7 +3496,7 @@
     "/api/v1/admin/academic/offerings" : {
       "get" : {
         "tags" : [ "admin-course-offering-controller" ],
-        "summary" : "Query offerings (ADMIN)",
+        "summary" : "Query offerings (administrative permission)",
         "description" : "Zero-based page; size 1–100; allowlisted field,asc/desc sort with ID tie-breaker.",
         "operationId" : "list_10",
         "parameters" : [ {
@@ -3566,7 +3567,7 @@
       },
       "post" : {
         "tags" : [ "admin-course-offering-controller" ],
-        "summary" : "Create offering (ADMIN)",
+        "summary" : "Create offering (administrative permission)",
         "description" : "New resources start in DRAFT; lifecycle transitions require PUT and expectedVersion.",
         "operationId" : "create_10",
         "requestBody" : {
@@ -3599,7 +3600,7 @@
     "/api/v1/admin/academic/enrollments" : {
       "get" : {
         "tags" : [ "admin-enrollment-controller" ],
-        "summary" : "Query enrollments (ADMIN)",
+        "summary" : "Query enrollments (administrative permission)",
         "description" : "Page >= 0, size 1–100; studentId/sectionId/status filters; status/createdAt/updatedAt sort with stable ID tie-breaker.",
         "operationId" : "list_11",
         "parameters" : [ {
@@ -3671,7 +3672,7 @@
       },
       "post" : {
         "tags" : [ "admin-enrollment-controller" ],
-        "summary" : "Enroll an active student (ADMIN)",
+        "summary" : "Enroll an active student (administrative permission)",
         "description" : "Requires open section/offering, active term and available capacity. Duplicate membership returns 409; use PUT to re-enroll withdrawn membership.",
         "operationId" : "create_11",
         "requestBody" : {
@@ -3704,7 +3705,7 @@
     "/api/v1/admin/academic/courses" : {
       "get" : {
         "tags" : [ "admin-academic-course-controller" ],
-        "summary" : "Search academic courses (ADMIN)",
+        "summary" : "Search academic courses (administrative permission)",
         "description" : "Zero-based page, size 1–100 (default 20), q up to 100 characters matched literally against code/title, optional ACTIVE/INACTIVE status; sort field,direction with id tie-breaker.",
         "operationId" : "list_12",
         "parameters" : [ {
@@ -3766,7 +3767,7 @@
       },
       "post" : {
         "tags" : [ "admin-academic-course-controller" ],
-        "summary" : "Create an academic course (ADMIN)",
+        "summary" : "Create an academic course (administrative permission)",
         "operationId" : "create_12",
         "requestBody" : {
           "content" : {

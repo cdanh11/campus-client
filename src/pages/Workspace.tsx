@@ -3,6 +3,7 @@ import { Button, Card, Drawer, Layout, Result, Space, Tag, Typography } from 'an
 import { ApartmentOutlined, BookOutlined, CalendarOutlined, HomeOutlined, LogoutOutlined, MenuOutlined, NotificationOutlined, PieChartOutlined, ReadOutlined, TeamOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons'
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import type { User } from '../api/client'
+import { administrationRoles, canAdminister, canEnterAdministration } from '../api/administration'
 import { AccessBoundary } from '../components/AccessBoundary'
 
 const Portal = lazy(() => import('../features/portal/Portal'))
@@ -22,11 +23,18 @@ const adminLinks = [
  { path: '/admin/insights', label: 'Audit & báo cáo', icon: <PieChartOutlined /> },
 ]
 export default function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
- const admin = user.roles.includes('ADMIN')
+ const admin = canEnterAdministration(user)
+ const visibleAdminLinks = adminLinks.filter((link) => {
+  const segment = link.path.split('/')[2]
+  if (!segment) return admin
+  if (segment === 'operations') return canAdminister(user, 'dormitory') || canAdminister(user, 'finance')
+  if (segment === 'insights') return canAdminister(user, 'audit') || canAdminister(user, 'reporting')
+  return canAdminister(user, segment as keyof typeof administrationRoles)
+ })
  const [open, setOpen] = useState(false)
  const location = useLocation()
  const links = [{ path: '/', label: 'Trang chủ', icon: <HomeOutlined /> },
-  ...(admin ? adminLinks : []), { path: '/portal', label: 'Cổng cá nhân', icon: <UserOutlined /> }]
+  ...visibleAdminLinks, { path: '/portal', label: 'Cổng cá nhân', icon: <UserOutlined /> }]
  const active = [...links].reverse().find((link) => link.path === location.pathname || (link.path !== '/' && location.pathname.startsWith(link.path + '/')))
  const navigation = <nav className="sidebar-navigation" aria-label="Điều hướng chính">
   <p className="nav-caption">KHÔNG GIAN LÀM VIỆC</p>
@@ -57,7 +65,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
        {admin && <Card title="Quản trị khuôn viên"><Paragraph>Hồ sơ, học vụ và các dịch vụ trong cùng một không gian.</Paragraph><Link className="text-action" to="/admin">Mở không gian quản trị →</Link></Card>}
       </div>
      </>} />
-     <Route path="/admin/*" element={<AccessBoundary user={user} role="ADMIN"><Suspense fallback={<p role="status">Đang tải…</p>}><AdminPeople /></Suspense></AccessBoundary>} />
+     <Route path="/admin/*" element={<AccessBoundary user={user} roles={Object.values(administrationRoles).flat()}><Suspense fallback={<p role="status">Đang tải…</p>}><AdminPeople user={user} /></Suspense></AccessBoundary>} />
      <Route path="/portal/*" element={<Suspense fallback={<p role="status">Đang tải…</p>}><Portal /></Suspense>} />
      <Route path="/login" element={<Navigate to="/" replace />} />
      <Route path="*" element={<Result status="404" title="Không tìm thấy trang" extra={<Link to="/"><Button>Về trang chủ</Button></Link>} />} />
