@@ -1,6 +1,6 @@
 # Phase 7 — Frontend Product
 
-Current gate: all approved Phase 7 slices and closure PASS locally; post-push CI pending. See ../reviews/phase-7-final-review.md. Status entries below are historical checkpoints.
+Current gate: all approved Phase 7 slices and closure PASS locally; post-push CI PASS (37312616255). See ../reviews/phase-7-final-review.md. Status entries below are historical checkpoints.
 
 User-approved direction: independent campus-client repository beside campus-service. React + TypeScript + Vite, Ant Design, React Router, TanStack Query; npm lockfile. Preserve backend layout and identifiers. Phase 6 backend merged at 7d130f4.
 
@@ -46,4 +46,6 @@ Status: 7A and 7B1 reviewed PASS locally and on GitHub CI (runs 37214290802 and 
 
 7B4 supporting services COMPLETE PASS locally: all four ADMIN slices and full current regression. Final 78 tests/24 files, two mocked/twelve real journeys; harness BUILD SUCCESS 3m55s at 2026-10-05T03:16:07+07:00. See ../reviews/phase-7b4-final-review.md; post-push Insights CI pending. Next approved 7C own inbox/Event portal; 7D and full Phase 7 incomplete.
 
-Latest checkpoint: all approved Phase 7 slices and 7D closure PASS locally. Final 92 unit/component, 13 mock and 14 real journeys PASS; harness BUILD SUCCESS 4m19s at 19:49:30 +07. Earlier incomplete statements above are historical checkpoints. Post-push CI remains pending. See ../reviews/phase-7-final-review.md.
+Latest checkpoint: all approved Phase 7 slices and 7D closure PASS locally. Final 92 unit/component, 13 mock and 14 real journeys PASS; harness BUILD SUCCESS 4m19s at 19:49:30 +07. Earlier incomplete statements above are historical checkpoints. Post-push CI PASS (37312616255). See ../reviews/phase-7-final-review.md.
+
+GitHub CI run 37312616255 at b70c585026ba3ae41bc476404b7c47d2ce329bc0 completed SUCCESS for both verify and backend-browser. https://github.com/cdanh11/campus-client/actions/runs/37312616255 . Subsequent evidence-recording commit changes documentation only; tested runtime/test/configuration source is unchanged.

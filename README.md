@@ -4,7 +4,7 @@ Web frontend of Campus Platform, maintained independently from [Campus Service](
 
 ## Current status
 
-Phase 7A, all 7B ADMIN slices, the shared UI UX Pro Max refactor, 7C personal inbox/Event portal and 7D closure are reviewed PASS locally. Final 92 unit/component tests (27 files), 13 mocked and 14 real Chromium journeys PASS; real harness BUILD SUCCESS 4m19s at 2026-10-05T19:49:30+07:00. See [whole-phase review](docs/reviews/phase-7-final-review.md), [portal contract](docs/api/portal.md) and [design system](design-system/campus-platform/MASTER.md). Post-push CI remains pending; this does not claim production deployment.
+Phase 7A, all 7B ADMIN slices, the shared UI UX Pro Max refactor, 7C personal inbox/Event portal and 7D closure are reviewed PASS locally. Final 92 unit/component tests (27 files), 13 mocked and 14 real Chromium journeys PASS; real harness BUILD SUCCESS 4m19s at 2026-10-05T19:49:30+07:00. See [whole-phase review](docs/reviews/phase-7-final-review.md), [portal contract](docs/api/portal.md) and [design system](design-system/campus-platform/MASTER.md). Post-push CI PASS (37312616255); this does not claim production deployment.
 
 Backend contract reference: `795588e` (reviewed owner-schema correction on feature/api-contracts). OpenAPI snapshot/types and real-backend browser integration are verified. Mocked and real browser suites are reported separately.
 
@@ -54,3 +54,5 @@ Verified locally on 2026-10-04: clean npm ci, contracts/lint/build passed; 21 te
 7B4a/b replacement CI both jobs PASS in run 37228035728 at 5d5ea0a. 7B4c Library local PASS: titles/copies, explicit fresh-version borrow/return and retained history. Final 65 tests/21 files, two mocked/eleven real Chromium journeys passed; harness BUILD SUCCESS 3m30s at 2026-10-05T02:37:38+07:00. See [Library review](docs/reviews/phase-7b4c-library-review.md). Library post-push CI remains separate; Audit/Reporting, Student portal and closure are pending.
 
 Shared 7A/7B experience refactor PASS locally, 2026-10-05: UI UX Pro Max curated theme, responsive navigation and consistent ADMIN surfaces. 80 unit/component tests, 10 mocked and 12 real browser journeys PASS; real harness BUILD SUCCESS 5m01s, 18:26:54 +07. See [experience review](docs/reviews/phase-7-experience-review.md). Portal 7C and whole-phase closure 7D remain incomplete; post-push CI separate.
+
+GitHub CI run 37312616255 at b70c585026ba3ae41bc476404b7c47d2ce329bc0 completed SUCCESS for both verify and backend-browser. https://github.com/cdanh11/campus-client/actions/runs/37312616255 . Subsequent evidence-recording commit changes documentation only; tested runtime/test/configuration source is unchanged.

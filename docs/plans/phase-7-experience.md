@@ -1,6 +1,6 @@
 # Phase 7 experience, portal and closure
 
-Current gate: all approved Phase 7 slices and closure PASS locally; post-push CI pending. See ../reviews/phase-7-final-review.md. Status entries below are historical checkpoints.
+Current gate: all approved Phase 7 slices and closure PASS locally; post-push CI PASS (37312616255). See ../reviews/phase-7-final-review.md. Status entries below are historical checkpoints.
 User-approved: use UI UX Pro Max to refactor 7A/7B and finish 7C/7D.
 Inspect: 7B4 CI run 37231603933 both jobs succeeded. Baseline branch feature/supporting-services-ui, clean before local skill installation.
 1. Shared experience: semantic theme, responsive sidebar, login/account/admin overview, dashboard, shared table/form/navigation surfaces. Preserve all routes, contracts and security logic. Review before portal.
@@ -19,4 +19,6 @@ Refactor post-push CI both jobs PASS run 37303384628 at cf19c4a. 7C implementati
 
 7C final-source verification checkpoint: 92 unit/component tests in 27 files PASS (90.09s); replacement 13 mocked browser tests PASS (1.6m). Description contrast fixed and >=4.5 checked; modal focus return checked. Reference dropdown animation synchronization passed three repeated five-cycle submissions, then aggregate regression. Final-source real backend rerun is active; 7C gate, 7D closure and portal post-push CI remain pending. See ../reviews/phase-7c-portal-review.md.
 
-Latest checkpoint: all approved Phase 7 slices and 7D closure PASS locally. Final 92 unit/component, 13 mock and 14 real journeys PASS; harness BUILD SUCCESS 4m19s at 19:49:30 +07. Earlier incomplete statements above are historical checkpoints. Post-push CI remains pending. See ../reviews/phase-7-final-review.md.
+Latest checkpoint: all approved Phase 7 slices and 7D closure PASS locally. Final 92 unit/component, 13 mock and 14 real journeys PASS; harness BUILD SUCCESS 4m19s at 19:49:30 +07. Earlier incomplete statements above are historical checkpoints. Post-push CI PASS (37312616255). See ../reviews/phase-7-final-review.md.
+
+GitHub CI run 37312616255 at b70c585026ba3ae41bc476404b7c47d2ce329bc0 completed SUCCESS for both verify and backend-browser. https://github.com/cdanh11/campus-client/actions/runs/37312616255 . Subsequent evidence-recording commit changes documentation only; tested runtime/test/configuration source is unchanged.

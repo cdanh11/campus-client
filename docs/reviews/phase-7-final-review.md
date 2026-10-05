@@ -1,6 +1,6 @@
 # Phase 7 whole-phase closure review
 
-Status: PASS (local), 2026-10-05; post-push CI pending. Branch feature/frontend-experience. Backend pinned to 795588e6cb2e315eac8d3bb41155ccbcd37aa1af.
+Status: PASS (local), 2026-10-05; post-push CI PASS (37312616255). Branch feature/frontend-experience. Backend pinned to 795588e6cb2e315eac8d3bb41155ccbcd37aa1af.
 
 ## Requirement matrix
 | Requirement | Current implementation and verified evidence |
@@ -25,4 +25,6 @@ Status: PASS (local), 2026-10-05; post-push CI pending. Branch feature/frontend-
 ## Resolved findings and limits
 Contrast and dialog return-focus findings were corrected and checked in real browser rendering. Pointer reference tests wait for dropdown entrance animation and assert submitted UUID; three repeated five-cycle runs and the full mock suite pass. Real owner flows wait for selected values before submission. Assertions were retained and no arbitrary sleep/retry was added.
 Scope is local frontend readiness on Chromium. No production deployment, first-admin runtime provisioning, SMTP/SMS, payment gateway or unapproved personal Academic/Dormitory/Finance/Library APIs. USER registration still requires an ACTIVE linked Student; server authorization is authoritative. Product demo/release packaging and any future workflow/AI work require later scope approval.
-Post-push CI must still validate the pushed source before claiming remote PASS. User owns PR and merge.
+Post-push source gate PASS; user owns PR and merge.
+
+GitHub CI run 37312616255 at b70c585026ba3ae41bc476404b7c47d2ce329bc0 completed SUCCESS for both verify and backend-browser. https://github.com/cdanh11/campus-client/actions/runs/37312616255 . Subsequent evidence-recording commit changes documentation only; tested runtime/test/configuration source is unchanged.
