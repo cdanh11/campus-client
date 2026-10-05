@@ -1,9 +1,11 @@
 # Phase 7A — Foundation and authentication review
 
+> Historical slice review: results below apply to this checkpoint. Phase 7 is complete; use the [final review](phase-7-final-review.md) for current completion evidence.
+
 Date: 2026-10-04. Branch: feature/frontend-foundation.
 Backend contract: 7d130f41525e3692eb19087b90918abad3e156ab.
 
-**PASS — approved local foundation/authentication scope.** No remaining blocker/major found in this slice. 7B–7D remain unimplemented and the whole Phase 7 is not complete.
+**PASS — approved local foundation/authentication scope.** No remaining blocker/major found in this slice. This checkpoint covered foundation/authentication only.
 
 ## Requirement audit
 
@@ -31,10 +33,10 @@ Backend contract: 7d130f41525e3692eb19087b90918abad3e156ab.
 
 Review covered changed source, auth DTO/security filters, generated declarations, schema provenance, runner cleanup, workflow commands, package/lock and diff. Initial findings (button accessible name, duplicate email locator, restoration 403, late login/logout cookie race, exact-number types and runner script) were fixed and rerun.
 
-## Limits and next gate
+## Checkpoint limits
 
 No production HTTPS hosting, all-browser certification or full accessibility audit is claimed. Multi-tab behavior is verified on Chromium localhost with Web Locks/BroadcastChannel; unsupported browsers retain single-tab fallback. Largest production chunk now **407.33 kB** minified (135.49 kB gzip), no size warning; route splitting is measured rather than a latency claim.
 
-Both GitHub jobs verify and backend-browser passed after push: https://github.com/cdanh11/campus-client/actions/runs/37214290802. The Linux integration runner was therefore verified too. Linux runner uses sh for the backend Maven Wrapper because that repo tracks it as mode 100644; no backend chmod/history modification is needed. Additional 7B1 inspection identified pre-existing nested DTO schema-name collisions in Organization/Student/FacultyStaff contracts. Auth contracts used by 7A are unaffected; correct those owner schemas before typed business forms. See ../plans/phase-7b1-identity-people.md.
+Both GitHub jobs verify and backend-browser passed after push: https://github.com/cdanh11/campus-client/actions/runs/37214290802. The Linux integration runner was therefore verified too. Linux runner uses sh for the backend Maven Wrapper because that repo tracks it as mode 100644; no backend chmod/history modification is needed. Additional 7B1 inspection identified pre-existing nested DTO schema-name collisions in Organization/Student/FacultyStaff contracts. Auth contracts used by 7A were unaffected; the owner-schema correction was subsequently delivered at backend 795588e. See ../plans/phase-7b1-identity-people.md.
 
-ADMIN/portal landing shells have no business features yet. Proceed to 7B1 Identity/People; then separate 7B2 Academic, 7B3 Dormitory/Finance, 7B4 supporting/reporting, 7C personal inbox/Event and 7D whole-phase closure reviews.
+Business screens and portal were reviewed in later slices; see the final review.

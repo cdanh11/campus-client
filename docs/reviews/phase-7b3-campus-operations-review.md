@@ -1,4 +1,7 @@
 # Phase 7B3 — Campus operations review
+
+> Historical slice review: results below apply to this checkpoint. Phase 7 is complete; use the [final review](phase-7-final-review.md) for current completion evidence.
+
 Status: PASS (local), 2026-10-05. Branch feature/campus-operations-ui stacked from Academic c717076.
 Backend owner revision: 795588e6cb2e315eac8d3bb41155ccbcd37aa1af. Production controllers, domain contracts, docs/api/dormitory.md and docs/api/finance.md inspected; no backend/API/schema change.
 
@@ -14,6 +17,6 @@ Backend owner revision: 795588e6cb2e315eac8d3bb41155ccbcd37aa1af. Production con
 Final frontend verification: npm run verify passed contract drift, ESLint, TypeScript/production build and 49 tests/14 files, zero failures, 28.35s (00:45:06 +07). npm run test:e2e: two mocked Chromium journeys passed in 10.2s. Production source was unchanged after the final real run; only component tests/documentation were added.
 Real integration: eight Chromium journeys passed (1.4m); isolated PostgreSQL Testcontainers, Flyway V25 and Hibernate validate. Maven harness BUILD SUCCESS, one test, zero failures/errors/skips, 2m06s, finished 2026-10-05T00:40:23+07:00. Pool shut down and temporary fixture removed. Backend Git status only local roadmap; V1–V25/source unchanged. Contract metadata content unchanged; property-order-only export drift removed.
 
-Diff review: no dependencies/secrets/public provisioning/payment gateway/DB access; generated owner schemas checked with satisfies; immutable fields whitelisted, exact integer/version path reviewed end to end. Remaining whole-platform responsiveness/accessibility and combined workflows belong to 7D. No blocker/major remains in this slice. Post-push GitHub CI is a separate gate, not claimed by local PASS.
+Diff review: no dependencies/secrets/public provisioning/payment gateway/DB access; generated owner schemas checked with satisfies; immutable fields whitelisted, exact integer/version path reviewed end to end. Whole-platform responsiveness/accessibility and combined workflows are recorded in the later 7D review. No blocker/major remains in this slice. This local checkpoint is distinct from source CI evidence in the final review.
 
 GitHub CI both jobs PASS in run 37221857088 for exact pushed head 2b3b26cec1db53c09d5edaba9daad8cff03a189f (verified 2026-10-05).
