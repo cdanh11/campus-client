@@ -19,3 +19,5 @@ Shared login/workspace, responsive sidebar/drawer, ADMIN overview/navigation, da
 Earlier real runs failed on ambiguous option selectors and navigation before the destination rendered. Tests now wait for destination headings and the chosen value before submitting; business assertions remain. The five-minute aggregate harness budget was too short for measured serial runs, so it is bounded at ten minutes; individual test timeouts are unchanged. Browser workers use one for deterministic resource usage.
 The 13:34 run was interrupted without a terminal Maven result (only seven journeys logged); it is incomplete, not BUILD FAILURE. The replacement full run above is authoritative.
 Post-push CI for this branch has not run yet. No deployment or administrator provisioning performed. PASS applies only to this refactor, not portal or whole-phase closure.
+
+Post-push CI verified: run 37303384628 at cf19c4a8cc9266dc4ce6f25c110ab0acff485f89 completed success; both verify and backend-browser jobs success. This CI covers the committed refactor, not subsequent uncommitted portal work.

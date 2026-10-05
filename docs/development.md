@@ -34,3 +34,6 @@ Queries/mutations do not retry business writes automatically. API 401 retries on
 Foundation navigation and session handling are 7A. ADMIN business screens are 7B1–7B4 and personal inbox/Event flows are 7C. Empty foundation landing areas are not claims that those business screens exist.
 
 Vitest uses at most two workers and preserves per-file isolation and existing timeouts. With 16 jsdom files, the unbounded local run timed out a pre-existing password-reset test at 15s; that test passed independently (7.71s total), and the bounded full run passed 53 tests/16 files in 43.86s. This is test-runner resource control; no assertions/timeouts were relaxed.
+
+## Current UI and portal scope
+Shared experience rules: design-system/campus-platform/MASTER.md; personal portal: docs/api/portal.md. Own inbox/Event routes are implemented; regular-user pages use authenticated owner APIs only. Production nullable readAt/cancelledAt/attendedAt fields are represented explicitly in local portal view types. Local UI UX Pro Max tooling is ignored; curated design decisions are versioned. Latest test evidence is in docs/reviews/phase-7-final-review.md; older counts are historical checkpoints.

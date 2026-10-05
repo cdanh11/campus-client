@@ -4,7 +4,7 @@ Web frontend of Campus Platform, maintained independently from [Campus Service](
 
 ## Current status
 
-Phase 7A and 7B1–7B3 are reviewed PASS locally and on GitHub CI. All approved 7B4 ADMIN supporting-service slices are reviewed PASS locally: Notification, Event, Library, selected-source Audit, dashboard/detail Reporting and CSV. See [7B4 closure](docs/reviews/phase-7b4-final-review.md). Final 78 unit/component tests, two mocked/twelve real Chromium journeys PASS; Maven harness BUILD SUCCESS 3m55s at 2026-10-05T03:16:07+07:00. Insights post-push CI run 37231603933 passed both verify and backend-browser jobs. 7C own inbox/Event portal and 7D responsive/accessibility/full frontend closure remain incomplete. See [Phase 7 plan](docs/plans/phase-7-frontend.md).
+Phase 7A, all 7B ADMIN slices, the shared UI UX Pro Max refactor, 7C personal inbox/Event portal and 7D closure are reviewed PASS locally. Final 92 unit/component tests (27 files), 13 mocked and 14 real Chromium journeys PASS; real harness BUILD SUCCESS 4m19s at 2026-10-05T19:49:30+07:00. See [whole-phase review](docs/reviews/phase-7-final-review.md), [portal contract](docs/api/portal.md) and [design system](design-system/campus-platform/MASTER.md). Post-push CI remains pending; this does not claim production deployment.
 
 Backend contract reference: `795588e` (reviewed owner-schema correction on feature/api-contracts). OpenAPI snapshot/types and real-backend browser integration are verified. Mocked and real browser suites are reported separately.
 

@@ -1,5 +1,7 @@
 # Phase 7 — Frontend Product
 
+Current gate: all approved Phase 7 slices and closure PASS locally; post-push CI pending. See ../reviews/phase-7-final-review.md. Status entries below are historical checkpoints.
+
 User-approved direction: independent campus-client repository beside campus-service. React + TypeScript + Vite, Ant Design, React Router, TanStack Query; npm lockfile. Preserve backend layout and identifiers. Phase 6 backend merged at 7d130f4.
 
 ## 7A — Foundation and authentication
@@ -43,3 +45,5 @@ Status: 7A and 7B1 reviewed PASS locally and on GitHub CI (runs 37214290802 and 
 7B4a/b replacement CI both jobs PASS run 37228035728. 7B4c Library local PASS: typed catalogs and explicit owner return/history, 65 tests/21 files, two mocked/eleven real journeys, harness BUILD SUCCESS 3m30s at 2026-10-05T02:37:38+07:00. Next 7B4d Audit/Reporting after Library CI; 7C/7D incomplete.
 
 7B4 supporting services COMPLETE PASS locally: all four ADMIN slices and full current regression. Final 78 tests/24 files, two mocked/twelve real journeys; harness BUILD SUCCESS 3m55s at 2026-10-05T03:16:07+07:00. See ../reviews/phase-7b4-final-review.md; post-push Insights CI pending. Next approved 7C own inbox/Event portal; 7D and full Phase 7 incomplete.
+
+Latest checkpoint: all approved Phase 7 slices and 7D closure PASS locally. Final 92 unit/component, 13 mock and 14 real journeys PASS; harness BUILD SUCCESS 4m19s at 19:49:30 +07. Earlier incomplete statements above are historical checkpoints. Post-push CI remains pending. See ../reviews/phase-7-final-review.md.
