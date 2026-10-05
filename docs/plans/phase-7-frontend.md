@@ -1,6 +1,6 @@
 # Phase 7 — Frontend Product
 
-Current gate: all approved Phase 7 slices and closure PASS locally; post-push CI PASS (37312616255). See ../reviews/phase-7-final-review.md. Status entries below are historical checkpoints.
+Status: COMPLETE, reviewed PASS locally and in [source CI](https://github.com/cdanh11/campus-client/actions/runs/37312616255); merged through PR #1. See [final review](../reviews/phase-7-final-review.md).
 
 User-approved direction: independent campus-client repository beside campus-service. React + TypeScript + Vite, Ant Design, React Router, TanStack Query; npm lockfile. Preserve backend layout and identifiers. Phase 6 backend merged at 7d130f4.
 
@@ -32,20 +32,6 @@ Existing approved authenticated capabilities: own inbox/read, Event catalog and 
 
 Responsive/error/loading/empty states, accessibility baseline, component/API contract checks, browser E2E for critical ADMIN/Student journeys using an isolated real backend database; report mocked tests separately. Security/session/cache/exact-number/optimistic-lock regression, documentation and per-requirement review. No deployment or production first-admin provisioning.
 
-Every slice requires inspect/plan/implementation/verification/diff/PASS review before moving on. Branches use feature/ prefixes. User owns PR/merge. Repository baseline initialization will be a small separate commit before feature/frontend-foundation so an empty remote has a main branch to compare PRs against.
+## Review and delivery rules
 
-Status: 7A and 7B1 reviewed PASS locally and on GitHub CI (runs 37214290802 and 37218317374). 7B2 Academic reviewed PASS locally, 2026-10-05: contracts/lint/build, 41 tests/11 files, 2 mocked and 6 real Chromium journeys; harness BUILD SUCCESS 1m43s. See ../reviews/phase-7b2-academic-review.md. Next 7B3; 7B3/7B4/7C/7D remain incomplete. Whole Phase 7 is not complete.
-
-7B2 GitHub CI both jobs PASS run 37220302533. 7B3 local PASS: inventory/accommodation and exact VND fee/snapshot/partial receipt/reversal/balance screens; 49 tests/14 files, two mocked and eight real journeys; Maven harness BUILD SUCCESS 2m06s. See ../reviews/phase-7b3-campus-operations-review.md. Next 7B4 supporting services/Reporting; 7C/7D also incomplete.
-
-7B3 GitHub CI both jobs PASS run 37221857088. 7B4a Notification PASS local: templates/drafts/explicit bounded publication, 53 tests/16 files, two mocked and nine real journeys; Maven harness BUILD SUCCESS 2m30s at 2026-10-05T01:01:53+07:00. 7B4b Event, 7B4c Library, 7B4d Audit/Reporting, 7C and 7D remain incomplete.
-
-7B4b Event local PASS: catalog/registration/attendance; 61 tests/19 files, two mocked/ten real Chromium journeys; harness BUILD SUCCESS 3m07s at 2026-10-05T02:19:52+07:00. See ../reviews/phase-7b4b-event-review.md. Notification CI accessible-name defect fixed, replacement CI pending. Next approved slice Library after CI gate; 7B4d/7C/7D remain incomplete.
-
-7B4a/b replacement CI both jobs PASS run 37228035728. 7B4c Library local PASS: typed catalogs and explicit owner return/history, 65 tests/21 files, two mocked/eleven real journeys, harness BUILD SUCCESS 3m30s at 2026-10-05T02:37:38+07:00. Next 7B4d Audit/Reporting after Library CI; 7C/7D incomplete.
-
-7B4 supporting services COMPLETE PASS locally: all four ADMIN slices and full current regression. Final 78 tests/24 files, two mocked/twelve real journeys; harness BUILD SUCCESS 3m55s at 2026-10-05T03:16:07+07:00. See ../reviews/phase-7b4-final-review.md; post-push Insights CI pending. Next approved 7C own inbox/Event portal; 7D and full Phase 7 incomplete.
-
-Latest checkpoint: all approved Phase 7 slices and 7D closure PASS locally. Final 92 unit/component, 13 mock and 14 real journeys PASS; harness BUILD SUCCESS 4m19s at 19:49:30 +07. Earlier incomplete statements above are historical checkpoints. Post-push CI PASS (37312616255). See ../reviews/phase-7-final-review.md.
-
-GitHub CI run 37312616255 at b70c585026ba3ae41bc476404b7c47d2ce329bc0 completed SUCCESS for both verify and backend-browser. https://github.com/cdanh11/campus-client/actions/runs/37312616255 . Subsequent evidence-recording commit changes documentation only; tested runtime/test/configuration source is unchanged.
+Each slice requires inspect -> plan -> implement -> verify -> review diff -> PASS/FAIL before the next. Branches use feature/ prefixes; commits are grouped by function after PASS. The user owns PR/merge. Detailed checkpoint evidence is indexed in [documentation](../README.md). Phase 8 requires a separate plan; deployment and production first-admin provisioning remain outside Phase 7.

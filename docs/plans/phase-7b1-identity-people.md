@@ -1,18 +1,16 @@
 # Phase 7B1 — Identity and People
 
-Approved parent scope: Phase 7 independent frontend, see phase-7-frontend.md. Phase 7A is reviewed PASS locally and both jobs of GitHub workflow 37214290802 passed. 7B1 reviewed PASS locally; see ../reviews/phase-7b1-identity-people-review.md.
+Delivery status: COMPLETE, included in merged Phase 7. Detailed historical evidence is linked below.
+
+Approved parent scope: [Phase 7 independent frontend](phase-7-frontend.md). This slice passed its review before Academic implementation; checkpoint evidence is linked below.
 
 ## Prerequisite: reliable owner contracts
 
-Inspection found that production OpenAPI uses the same Request/UpdateRequest/Response/PageResponse names for nested records in different controllers. Organization and Faculty/Staff POST schemas currently resolve to Student Request fields. Do not build typed forms on those incorrect references.
-
-Correct schema naming in the backend on feature/api-contracts, using production configuration/annotations supported by springdoc, with regression tests proving unique request, response and page references for the actual owner controllers. This is a documentation-contract correction, not an API feature/schema migration. Verify and review it before regenerating the frontend snapshot/types and updating the pinned CI backend revision. Keep production JSON field names, routes, authorization and database behavior unchanged.
-
-Reference for the supported configuration approach: https://springdoc.org/v2/ (springdoc.use-fqn). Inspect actual generated names; do not assume their spelling.
+The original backend OpenAPI snapshot collided on nested Request/UpdateRequest/Response/PageResponse record names, causing Organization and Faculty/Staff schemas to resolve to Student fields. Backend commit 795588e corrected naming with springdoc fully qualified names and owner-controller regression tests. Frontend contracts were regenerated and CI was pinned to that revision. The prerequisite is resolved; production JSON fields, routes, authorization and database behavior were preserved.
 
 ## Frontend implementation
 
-Use feature/identity-people after the 7A gate (stack it from the reviewed branch if main has not been merged). Each owner API stays authoritative.
+Implemented after the 7A gate. Each owner API remains authoritative.
 
 - ADMIN users: list/search/status/role filters and approved sort; create with initial password and roles; detail; status, role replacement and password reset using expectedVersion. No public registration or self-service reset API.
 - Organization units: create/get/list/update; real code/name/unitType/status fields; expectedVersion on update.
@@ -36,6 +34,6 @@ Owner source inspection confirms 2–32 Unicode characters for unit/student/pers
 
 Student and Faculty/Staff require an ACTIVE organization on mutation. Optional Identity links check account existence, not ACTIVE status; the picker must not invent an active-account-only policy. Read labels/statuses from the owner APIs and retain a selected reference for edit display, while the server decides whether the current reference is valid.
 
-Current checkpoint: backend owner-schema correction reviewed PASS and pushed at 795588e6cb2e315eac8d3bb41155ccbcd37aa1af. Full clean verify BUILD SUCCESS: 417 tests/75 suites, zero failures/errors/skips, 10m35s. Frontend feature/identity-people now contains organization, Student, personnel and ADMIN account screens. Contract drift/lint/TypeScript/build and 29 tests/7 files passed locally. Browser verification and remaining component/error cases are still in progress; this is not the 7B1 PASS gate.
+## Delivery evidence
 
-Final gate: PASS local. 32 tests/9 files, 2 mocked and 5 expanded real browser journeys passed. Real harness BUILD SUCCESS 1m28s at 23:50:20 +07; contract drift and diff checks passed, temporary backend fixture removed. Commit by function and push are authorized; user handles PR/merge. Next: 7B2 Academic.
+Completed and included in merged Phase 7. See the [7B1 review](../reviews/phase-7b1-identity-people-review.md) for checkpoint results and the [final review](../reviews/phase-7-final-review.md) for current totals/CI. The backend owner-schema correction at 795588e preserves API/database/security behavior.
