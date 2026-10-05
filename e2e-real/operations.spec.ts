@@ -25,6 +25,7 @@ async function select(page: Page, label: string, choice: string) {
 }
 async function navigate(page: Page, title: string) {
  await page.getByRole('navigation', { name: 'Ký túc xá và tài chính' }).getByRole('link', { name: title, exact: true }).click()
+ await expect(page.getByRole('heading', { name: title, exact: true })).toBeVisible()
 }
 async function save(page: Page, path: string, method: string) {
  const response = page.waitForResponse((response) => new URL(response.url()).pathname.startsWith(path) && response.request().method() === method)

@@ -11,6 +11,7 @@ async function save(page: Page, resource: string, method: string) {
 async function select(page: Page, label: string, option: string) {
  await page.getByRole('dialog').getByRole('combobox', { name: label, exact: true }).click()
  await page.getByTitle(option, { exact: true }).click()
+ if (label === 'Đơn vị') await expect(page.getByRole('dialog').getByTitle(option, { exact: true })).toBeVisible()
 }
 test('real Academic catalog and delivery enforce faculty/capacity and preserve restored membership', async ({ page }) => {
  test.setTimeout(120_000)

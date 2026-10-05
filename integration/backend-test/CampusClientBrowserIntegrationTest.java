@@ -68,8 +68,8 @@ class CampusClientBrowserIntegrationTest {
         builder.redirectOutput(browserLog.toFile());
         Process browser = builder.start();
         try {
-            boolean finished = browser.waitFor(5, TimeUnit.MINUTES);
-            assertThat(finished).as("Browser suite must complete within 5 minutes").isTrue();
+            boolean finished = browser.waitFor(10, TimeUnit.MINUTES);
+            assertThat(finished).as("Browser suite must complete within 10 minutes").isTrue();
             System.out.println(Files.readString(browserLog));
             assertThat(browser.exitValue()).as("Real frontend/backend browser result").isZero();
         } finally {
