@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Button, Card, Space, Typography } from 'antd'
+import { Button, Card, Typography } from 'antd'
 import { api } from '../../api/runtime'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import type { Dashboard } from './contracts'
@@ -16,6 +16,6 @@ export function DashboardPage() {
  })
  return <><Typography.Title level={1}>Dashboard</Typography.Title><Typography.Paragraph>Số liệu tại thời điểm đọc; không tái dựng lịch sử. Thanh toán đã đảo không đóng góp vào số thanh toán hiệu lực.</Typography.Paragraph><Button disabled={result.isFetching} onClick={() => { void result.refetch() }}>Làm mới dashboard</Button>
   {result.isFetching && <p role="status">Đang tải dashboard…</p>}{result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
-  {result.data && <><p>Thời điểm UTC: {result.data.asOf}</p><Space wrap align="start">{result.data.groups.map((group) => <Card key={group.group} title={group.label} style={{ width: 310 }}><dl>{group.metrics.map((metric) => <div key={metric.key}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>)}</dl></Card>)}</Space></>}
+  {result.data && <><p>Thời điểm UTC: {result.data.asOf}</p><div className="dashboard-grid">{result.data.groups.map((group) => <Card key={group.group} title={group.label} ><dl className="metric-list">{group.metrics.map((metric) => <div key={metric.key}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>)}</dl></Card>)}</div></>}
  </>
 }

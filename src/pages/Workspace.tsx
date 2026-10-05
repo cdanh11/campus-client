@@ -1,37 +1,67 @@
-import { lazy, Suspense } from 'react'
-import { Button, Card, Layout, Result, Space, Tag, Typography } from 'antd'
-import { LogoutOutlined } from '@ant-design/icons'
-import { Link, Navigate, Route, Routes } from 'react-router-dom'
+import { lazy, Suspense, useState } from 'react'
+import { Button, Card, Drawer, Layout, Result, Space, Tag, Typography } from 'antd'
+import { ApartmentOutlined, BookOutlined, CalendarOutlined, HomeOutlined, LogoutOutlined, MenuOutlined, NotificationOutlined, PieChartOutlined, ReadOutlined, TeamOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons'
+import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import type { User } from '../api/client'
 import { AccessBoundary } from '../components/AccessBoundary'
 
 const AdminPeople = lazy(() => import('../features/people/AdminPeople'))
 const { Title, Paragraph, Text } = Typography
+const adminLinks = [
+ { path: '/admin', label: 'Quản trị', icon: <HomeOutlined /> },
+ { path: '/admin/users', label: 'Tài khoản', icon: <UserOutlined /> },
+ { path: '/admin/organizations', label: 'Đơn vị', icon: <ApartmentOutlined /> },
+ { path: '/admin/students', label: 'Sinh viên', icon: <TeamOutlined /> },
+ { path: '/admin/personnel', label: 'Giảng viên & nhân sự', icon: <TeamOutlined /> },
+ { path: '/admin/academic', label: 'Học vụ', icon: <ReadOutlined /> },
+ { path: '/admin/operations', label: 'Ký túc xá & tài chính', icon: <WalletOutlined /> },
+ { path: '/admin/notifications', label: 'Thông báo', icon: <NotificationOutlined /> },
+ { path: '/admin/events', label: 'Sự kiện', icon: <CalendarOutlined /> },
+ { path: '/admin/library', label: 'Thư viện', icon: <BookOutlined /> },
+ { path: '/admin/insights', label: 'Audit & báo cáo', icon: <PieChartOutlined /> },
+]
 export default function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
  const admin = user.roles.includes('ADMIN')
+ const [open, setOpen] = useState(false)
+ const location = useLocation()
+ const links = [{ path: '/', label: 'Trang chủ', icon: <HomeOutlined /> },
+  ...(admin ? adminLinks : []), { path: '/portal', label: 'Cổng cá nhân', icon: <UserOutlined /> }]
+ const active = [...links].reverse().find((link) => link.path === location.pathname || (link.path !== '/' && location.pathname.startsWith(link.path + '/')))
+ const navigation = <nav className="sidebar-navigation" aria-label="Điều hướng chính">
+  <p className="nav-caption">KHÔNG GIAN LÀM VIỆC</p>
+  {links.map((link) => <NavLink key={link.path} to={link.path} end={link.path === '/' || link.path === '/admin'} onClick={() => setOpen(false)}
+   className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}>
+   <span aria-hidden="true">{link.icon}</span><span>{link.label}</span>
+  </NavLink>)}
+ </nav>
  return <Layout className="workspace">
-  <Layout.Header className="header">
-   <Link className="brand" to="/">C<span>Campus Platform</span></Link>
-   <Space wrap><Text>{user.email}</Text><Button icon={<LogoutOutlined aria-hidden="true" />} onClick={onLogout}>Đăng xuất</Button></Space>
-  </Layout.Header>
-  <nav className="navigation" aria-label="Điều hướng chính">
-   <Link to="/">Tài khoản</Link>
-   {admin && <Link to="/admin">Quản trị</Link>}
-   <Link to="/portal">Cổng cá nhân</Link>
-  </nav>
-  <Layout.Content className="content">
-   <Routes>
-    <Route path="/" element={<>
-     <Tag color="cyan">KHÔNG GIAN LÀM VIỆC</Tag>
-     <Title level={1}>Một khuôn viên. Một kết nối.</Title>
-     <Paragraph>Chào mừng bạn đến Campus Platform.</Paragraph>
-     <Card title="Thông tin tài khoản"><Space wrap>{user.roles.map((role) => <Tag key={role}>{role}</Tag>)}</Space><Paragraph className="account-note">{user.email}</Paragraph></Card>
-    </>} />
-    <Route path="/admin/*" element={<AccessBoundary user={user} role="ADMIN"><Suspense fallback={<p role="status">Đang tải…</p>}><AdminPeople /></Suspense></AccessBoundary>} />
-    <Route path="/portal" element={<><Title level={1}>Cổng cá nhân</Title><Paragraph>Thông tin và hoạt động dành cho tài khoản của bạn.</Paragraph></>} />
-    <Route path="/login" element={<Navigate to="/" replace />} />
-    <Route path="*" element={<Result status="404" title="Không tìm thấy trang" extra={<Link to="/"><Button>Về trang chủ</Button></Link>} />} />
-   </Routes>
-  </Layout.Content>
+  <a className="skip-link" href="#main-content">Đến nội dung chính</a>
+  <aside className="workspace-sidebar">
+   <Link className="brand" to="/"><span className="brand-mark">C</span><span>Campus<span className="brand-subtitle">PLATFORM</span></span></Link>
+   {navigation}<div className="sidebar-footer">Kết nối hoạt động trong khuôn viên</div>
+  </aside>
+  <Layout className="workspace-body">
+   <Layout.Header className="header">
+    <Space><Button className="mobile-menu" aria-label="Mở điều hướng" aria-expanded={open} icon={<MenuOutlined aria-hidden="true" />} onClick={() => setOpen(true)} /><div><Text className="header-eyebrow">CAMPUS PLATFORM</Text><div className="header-title">{active?.label ?? 'Không gian làm việc'}</div></div></Space>
+    <Space wrap className="header-account"><Text className="account-email">{user.email}</Text><Button icon={<LogoutOutlined aria-hidden="true" />} onClick={onLogout}>Đăng xuất</Button></Space>
+   </Layout.Header>
+   <Drawer title="Campus Platform" placement="left" open={open} onClose={() => setOpen(false)} size={288}>{open && navigation}</Drawer>
+   <Layout.Content id="main-content" tabIndex={-1} className="content">
+    <Routes>
+     <Route path="/" element={<>
+      <section className="welcome-panel"><Tag color="purple">KHÔNG GIAN LÀM VIỆC</Tag><Title level={1}>Một khuôn viên. Một kết nối.</Title><Paragraph>Chào mừng bạn đến Campus Platform. Truy cập nhanh các hoạt động phù hợp với vai trò của bạn.</Paragraph></section>
+      <div className="overview-grid">
+       <Card title="Thông tin tài khoản"><Space wrap>{user.roles.map((role) => <Tag key={role}>{role}</Tag>)}</Space><Paragraph className="account-note">{user.email}</Paragraph></Card>
+       <Card title="Cổng cá nhân"><Paragraph>Thông báo và hoạt động dành cho bạn.</Paragraph><Link className="text-action" to="/portal">Mở cổng cá nhân →</Link></Card>
+       {admin && <Card title="Quản trị khuôn viên"><Paragraph>Hồ sơ, học vụ và các dịch vụ trong cùng một không gian.</Paragraph><Link className="text-action" to="/admin">Mở không gian quản trị →</Link></Card>}
+      </div>
+     </>} />
+     <Route path="/admin/*" element={<AccessBoundary user={user} role="ADMIN"><Suspense fallback={<p role="status">Đang tải…</p>}><AdminPeople /></Suspense></AccessBoundary>} />
+     <Route path="/portal" element={<><Title level={1}>Cổng cá nhân</Title><Paragraph>Thông tin và hoạt động dành cho tài khoản của bạn.</Paragraph></>} />
+     <Route path="/login" element={<Navigate to="/" replace />} />
+     <Route path="*" element={<Result status="404" title="Không tìm thấy trang" extra={<Link to="/"><Button>Về trang chủ</Button></Link>} />} />
+    </Routes>
+   </Layout.Content>
+  </Layout>
  </Layout>
 }

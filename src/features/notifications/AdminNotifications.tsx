@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from 'antd'
-import { Link, Route, Routes } from 'react-router-dom'
+import { NavLink as Link, Route, Routes } from 'react-router-dom'
 import { RegistryPage } from '../people/RegistryPage'
 import { notices, templates } from './resources'
 import { PublishNotice } from './PublishNotice'

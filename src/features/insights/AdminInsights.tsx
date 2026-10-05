@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom'
+import { NavLink as Link, Route, Routes } from 'react-router-dom'
 import { DashboardPage } from './DashboardPage'
 import { ReportsPage } from './ReportPage'
 import { AuditsPage } from './AuditPage'

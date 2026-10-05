@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom'
+import { NavLink as Link, Route, Routes } from 'react-router-dom'
 import { RegistryPage } from '../people/RegistryPage'
 import { titles, copies, loans } from './resources'
 export default function AdminLibrary() {

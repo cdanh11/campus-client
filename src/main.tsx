@@ -7,9 +7,10 @@ import { queryClient } from './api/runtime'
 import { App } from './App'
 import 'antd/dist/reset.css'
 import './styles.css'
+import { campusTheme } from './theme'
 
 createRoot(document.getElementById('root')!).render(
- <ConfigProvider locale={viVN} theme={{ token: { colorPrimary: '#15726b', colorText: '#18323d', borderRadius: 10, fontFamily: 'Inter, system-ui, sans-serif' } }}>
+ <ConfigProvider locale={viVN} theme={campusTheme}>
   <AntApp><QueryClientProvider client={queryClient}><BrowserRouter><App /></BrowserRouter></QueryClientProvider></AntApp>
  </ConfigProvider>,
 )
