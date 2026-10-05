@@ -20,10 +20,15 @@ test('pointer-selected owner references survive asynchronous query updates and s
  for (let i = 0; i < 5; i++) {
   await page.getByRole('button', { name: 'Thêm chương trình', exact: true }).click()
   const dialog = page.getByRole('dialog')
+  // The portaled picker must align after the modal entrance transform settles.
+  await expect(dialog).toHaveCSS('transform', 'none')
   await dialog.getByLabel('Mã', { exact: true }).fill('UXP' + i)
   await dialog.getByLabel('Tên chương trình', { exact: true }).fill('Chương trình UX')
   await dialog.getByRole('combobox', { name: 'Đơn vị', exact: true }).click()
-  await page.getByTitle('UXORG · Đơn vị UX', { exact: true }).click()
+  const option = page.getByTitle('UXORG · Đơn vị UX', { exact: true })
+  await expect(option).toBeVisible()
+  await expect(page.locator('.ant-select-dropdown:visible')).toHaveCSS('animation-name', 'none')
+  await option.click()
   await expect(dialog.getByTitle('UXORG · Đơn vị UX', { exact: true })).toBeVisible()
   await dialog.getByRole('button', { name: 'Lưu', exact: true }).click()
   await expect(dialog).not.toBeVisible()

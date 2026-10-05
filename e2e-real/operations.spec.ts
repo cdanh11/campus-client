@@ -22,6 +22,7 @@ async function seed(page: Page, prefix: string) {
 async function select(page: Page, label: string, choice: string) {
  await page.getByRole('dialog').getByRole('combobox', { name: label, exact: true }).click()
  await page.getByTitle(choice, { exact: true }).click()
+ await expect(page.getByRole('dialog').getByTitle(choice, { exact: true })).toBeVisible()
 }
 async function navigate(page: Page, title: string) {
  await page.getByRole('navigation', { name: 'Ký túc xá và tài chính' }).getByRole('link', { name: title, exact: true }).click()
