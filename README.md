@@ -36,7 +36,15 @@ D:\Project\
   campus-client\
 ```
 
-Start the backend using its own README, then run in `campus-client`:
+For the portable Docker demo, run from the sibling `campus-service` in PowerShell 7 with Docker Desktop running:
+
+```powershell
+.\scripts\start-demo.ps1 -Seed
+```
+
+Open http://localhost:3300. Docker builds both applications, generates private per-installation login credentials and loads the substantial fictional dataset; host Java/Node are unnecessary for this route. Read the [backend Docker guide](https://github.com/cdanh11/campus-service/blob/feature/local-demo-test-plan/docs/runbooks/docker-demo.md) and [8A3 local PASS review](https://github.com/cdanh11/campus-service/blob/feature/local-demo-test-plan/docs/reviews/phase-8a3-demo-review.md). This implementation remains on `feature/local-demo-test-plan` until merged; 8B/8C and whole Phase 8 remain incomplete.
+
+For native development, start the backend using its own README, then run in `campus-client`:
 
 ```powershell
 npm ci

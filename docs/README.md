@@ -32,6 +32,6 @@ Phase 7 and its documentation corrections are merged through PR #1 and PR #2. [P
 | Shared UI refactor | [Experience scope](plans/phase-7-experience.md) | [Review](reviews/phase-7-experience-review.md) |
 | 7C personal portal | [Phase 7 scope](plans/phase-7-frontend.md) | [Review](reviews/phase-7c-portal-review.md) |
 
-Current Phase 8A2 functional permissions: [plan](plans/phase-8a-permissions.md), [PASS review](reviews/phase-8a2-permissions-review.md). Whole Phase 8 remains incomplete.
+Current Phase 8A2 functional permissions: [plan](plans/phase-8a-permissions.md), [PASS review](reviews/phase-8a2-permissions-review.md). Portable Docker packaging and substantial owner-API data subsequently passed backend 8A3 local review (see sibling campus-service/docs/reviews/phase-8a3-demo-review.md). Whole Phase 8 remains incomplete.
 
 Historical reviews retain real failures, corrections and measured results. They do not prescribe the next phase or override the current scope/status.
