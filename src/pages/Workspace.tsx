@@ -5,6 +5,7 @@ import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-route
 import type { User } from '../api/client'
 import { AccessBoundary } from '../components/AccessBoundary'
 
+const Portal = lazy(() => import('../features/portal/Portal'))
 const AdminPeople = lazy(() => import('../features/people/AdminPeople'))
 const { Title, Paragraph, Text } = Typography
 const adminLinks = [
@@ -57,7 +58,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
       </div>
      </>} />
      <Route path="/admin/*" element={<AccessBoundary user={user} role="ADMIN"><Suspense fallback={<p role="status">Đang tải…</p>}><AdminPeople /></Suspense></AccessBoundary>} />
-     <Route path="/portal" element={<><Title level={1}>Cổng cá nhân</Title><Paragraph>Thông tin và hoạt động dành cho tài khoản của bạn.</Paragraph></>} />
+     <Route path="/portal/*" element={<Suspense fallback={<p role="status">Đang tải…</p>}><Portal /></Suspense>} />
      <Route path="/login" element={<Navigate to="/" replace />} />
      <Route path="*" element={<Result status="404" title="Không tìm thấy trang" extra={<Link to="/"><Button>Về trang chủ</Button></Link>} />} />
     </Routes>
