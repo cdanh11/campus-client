@@ -4,7 +4,7 @@ Campus Client is the Vietnamese web frontend of Campus Platform. It uses the API
 
 ## Project status
 
-The approved Phase 7 frontend is complete and reviewed PASS locally and on GitHub CI. It was merged into `main` through [PR #1](https://github.com/cdanh11/campus-client/pull/1). The [Phase 7 final review](docs/reviews/phase-7-final-review.md) records the tested revision, results and limits. Phase 8 release/demo preparation has not started; production hosting is not configured or verified.
+The approved Phase 7 frontend is complete and reviewed PASS locally and on GitHub CI. It was merged into `main` through [PR #1](https://github.com/cdanh11/campus-client/pull/1). The [Phase 7 final review](docs/reviews/phase-7-final-review.md) records the tested revision, results and limits. The remaining [Phases 8 and 9](docs/plans/phase-8-9-local-demo.md) focus on local end-to-end testing, demo quality and portfolio handoff. Scope is approved; the acceptance/demo gates are not yet complete. Production hosting and Workflow/AI are optional future work.
 
 ## Available features
 
@@ -17,6 +17,8 @@ The approved Phase 7 frontend is complete and reviewed PASS locally and on GitHu
 | ADMIN | Eight-group dashboard, five reports and filtered CSV export |
 | Authenticated accounts | Own inbox and explicit mark-read; Event catalog and own registration history |
 | Accounts linked to a Student | Own Event membership cancellation; registration/restoration additionally require an ACTIVE Student and OPEN Event under backend capacity rules |
+
+Phase 8A2 adds nine function-specific operators and separate Audit/Reporting viewers, with backend-enforced grants and restricted menus/direct routes. Only global ADMIN manages accounts and roles. 8A2 is [reviewed PASS](docs/reviews/phase-8a2-permissions-review.md); whole Phase 8 remains incomplete.
 
 Student Academic, Dormitory, Finance and Library self-service screens are outside the approved frontend scope. See the [portal API contract](docs/api/portal.md).
 

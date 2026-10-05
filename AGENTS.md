@@ -2,7 +2,7 @@
 
 ## Scope
 
-Separate React/TypeScript frontend for campus-service. Follow docs/plans/phase-7-frontend.md, README.md and current Git state. Phase 7 is complete and merged; use docs/reviews/phase-7-final-review.md for current evidence. Future phases require their own approved plan. Backend business rules/authorization remain authoritative; UI visibility is not access control.
+Separate React/TypeScript frontend for campus-service. Follow docs/plans/phase-7-frontend.md, README.md and current Git state. Phase 7 is complete and merged; use docs/reviews/phase-7-final-review.md for current evidence. Remaining Phases 8–9 follow docs/plans/phase-8-9-local-demo.md: local tests/demo quality and portfolio handoff. Production operations and Workflow/AI are not required. Each slice still requires its own review; do not mark planned gates complete. Backend business rules/authorization remain authoritative; UI visibility is not access control.
 
 ## Workflow
 
