@@ -38,7 +38,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: cdanh11/campus-service
-          ref: 3420a28dcc38724a315f32ce6c339a7a75efcd55
+          ref: f7b34e99d5cf5f434fa1308ff2e90bee58fca4fc
           path: campus-service
       - uses: actions/setup-node@v4
         with:
