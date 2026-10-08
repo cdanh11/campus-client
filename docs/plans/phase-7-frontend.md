@@ -34,4 +34,4 @@ Responsive/error/loading/empty states, accessibility baseline, component/API con
 
 ## Review and delivery rules
 
-Each slice requires inspect -> plan -> implement -> verify -> review diff -> PASS/FAIL before the next. Branches use feature/ prefixes; commits are grouped by function after PASS. The user owns PR/merge. Detailed checkpoint evidence is indexed in [documentation](../README.md). Phase 8 requires a separate plan; deployment and production first-admin provisioning remain outside Phase 7.
+Each slice requires inspect -> plan -> implement -> verify -> review diff -> PASS/FAIL before the next. Branches use feature/ prefixes; commits are grouped by function after PASS. The user owns PR/merge. Detailed checkpoint evidence is indexed in [documentation](../README.md). The approved [Phase 8–9 plan](phase-8-9-local-demo.md) covers local testing/demo and portfolio handoff. Deployment and production first-admin provisioning remain outside this completion scope.

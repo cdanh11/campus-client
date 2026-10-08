@@ -27,7 +27,7 @@ Status: PASS (local), 2026-10-05; post-push CI PASS (37312616255). Reviewed on f
 ## Resolved findings and limits
 
 Contrast and dialog return-focus findings were corrected and checked in real browser rendering. Pointer reference tests wait for dropdown entrance animation and assert submitted UUID; three repeated five-cycle runs and the full mock suite pass. Real owner flows wait for selected values before submission. Assertions were retained and no arbitrary sleep/retry was added.
-Scope is local frontend readiness on Chromium. No production deployment, first-admin runtime provisioning, SMTP/SMS, payment gateway or unapproved personal Academic/Dormitory/Finance/Library APIs. USER registration still requires an ACTIVE linked Student; server authorization is authoritative. Product demo/release packaging and any future workflow/AI work require later scope approval.
+Scope is local frontend readiness on Chromium. No production deployment, first-admin runtime provisioning, SMTP/SMS, payment gateway or unapproved personal Academic/Dormitory/Finance/Library APIs. USER registration still requires an ACTIVE linked Student; server authorization is authoritative. The subsequently approved [Phase 8–9 plan](../plans/phase-8-9-local-demo.md) covers local testing/demo and portfolio handoff. Workflow/AI are optional extensions outside the current completion scope.
 Post-push source gate PASS; the user completed PR #1 and merged it into main.
 
 GitHub CI run 37312616255 at b70c585026ba3ae41bc476404b7c47d2ce329bc0 completed SUCCESS for both verify and backend-browser. https://github.com/cdanh11/campus-client/actions/runs/37312616255 . Subsequent evidence-recording commit changes documentation only; tested runtime/test/configuration source is unchanged.

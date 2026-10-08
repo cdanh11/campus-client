@@ -57,6 +57,7 @@ it('does not offer a write for an already-read message and retains read time', a
  show({ ...item, delivery: { ...item.delivery, status: 'READ', readAt: '2026-10-05T01:00:00Z' } })
  await userEvent.click(await screen.findByRole('button', { name: 'Xem thông báo' }))
  const dialog = within(screen.getByRole('dialog'))
- await dialog.findByText('Đã đọc lúc: 2026-10-05T01:00:00Z')
+ const timestamp = await dialog.findByText('08:00:00 05/10/2026 (UTC+7)')
+ expect(timestamp).toHaveAttribute('datetime', '2026-10-05T01:00:00Z')
  expect(dialog.queryByRole('button', { name: 'Đánh dấu đã đọc' })).not.toBeInTheDocument()
 })

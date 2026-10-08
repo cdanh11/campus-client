@@ -4,7 +4,7 @@ Campus Client is the Vietnamese web frontend of Campus Platform. It uses the API
 
 ## Project status
 
-The approved Phase 7 frontend is complete and reviewed PASS locally and on GitHub CI. It was merged into `main` through [PR #1](https://github.com/cdanh11/campus-client/pull/1). The [Phase 7 final review](docs/reviews/phase-7-final-review.md) records the tested revision, results and limits. Phase 8 release/demo preparation has not started; production hosting is not configured or verified.
+The approved Phase 7 frontend is complete and reviewed PASS locally and on GitHub CI. It was merged into `main` through [PR #1](https://github.com/cdanh11/campus-client/pull/1). The [Phase 7 final review](docs/reviews/phase-7-final-review.md) records the tested revision, results and limits. The [Phases 8 and 9](docs/plans/phase-8-9-local-demo.md) focus on local end-to-end testing, demo quality and portfolio handoff. Phase 8 is [reviewed PASS locally](docs/reviews/phase-8-acceptance-review.md) with API/UI regressions and the seeded Docker demo; Phase 9 portfolio handoff is next. Production hosting and Workflow/AI are optional future work.
 
 ## Available features
 
@@ -17,6 +17,8 @@ The approved Phase 7 frontend is complete and reviewed PASS locally and on GitHu
 | ADMIN | Eight-group dashboard, five reports and filtered CSV export |
 | Authenticated accounts | Own inbox and explicit mark-read; Event catalog and own registration history |
 | Accounts linked to a Student | Own Event membership cancellation; registration/restoration additionally require an ACTIVE Student and OPEN Event under backend capacity rules |
+
+Phase 8A2 adds nine function-specific operators and separate Audit/Reporting viewers, with backend-enforced grants and restricted menus/direct routes. Only global ADMIN manages accounts and roles. 8A2 is [reviewed PASS](docs/reviews/phase-8a2-permissions-review.md); whole Phase 8 subsequently passed its [local acceptance/regression review](docs/reviews/phase-8-acceptance-review.md).
 
 Student Academic, Dormitory, Finance and Library self-service screens are outside the approved frontend scope. See the [portal API contract](docs/api/portal.md).
 
@@ -34,7 +36,15 @@ D:\Project\
   campus-client\
 ```
 
-Start the backend using its own README, then run in `campus-client`:
+For the portable Docker demo, run from the sibling `campus-service` in PowerShell 7 with Docker Desktop running:
+
+```powershell
+.\scripts\start-demo.ps1 -Seed
+```
+
+Open http://localhost:3300. Docker builds both applications, generates private per-installation login credentials and loads the substantial fictional dataset; host Java/Node are unnecessary for this route. Read the [backend Docker guide](https://github.com/cdanh11/campus-service/blob/feature/local-demo-test-plan/docs/runbooks/docker-demo.md) and [8A3 local PASS review](https://github.com/cdanh11/campus-service/blob/feature/local-demo-test-plan/docs/reviews/phase-8a3-demo-review.md). This implementation remains on `feature/local-demo-test-plan` until merged; 8B/8C and whole Phase 8 are [reviewed PASS locally](docs/reviews/phase-8-acceptance-review.md); user PR/merge is separate.
+
+For native development, start the backend using its own README, then run in `campus-client`:
 
 ```powershell
 npm ci

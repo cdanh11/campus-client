@@ -1,6 +1,6 @@
 # Post-merge Phase 7 repository review
 
-Status: PASS for the reviewed frontend scope, 2026-10-05. Base: merged main 268e4b9001a79f3323136b86b879374a281fac3a. Correction branch: feature/phase-7-documentation-review. Phase 8 has not started.
+Status: PASS for the reviewed frontend scope, 2026-10-05. Base: merged main 268e4b9001a79f3323136b86b879374a281fac3a. Correction branch: feature/phase-7-documentation-review. This checkpoint preceded Phase 8; its subsequently revised scope is in the [Phase 8–9 plan](../plans/phase-8-9-local-demo.md).
 
 ## Scope and method
 
@@ -29,4 +29,4 @@ A documentation index and this review were added. No unresolved blocker/major wa
 
 ## Limits and next gate
 
-This is a source/configuration/documentation and regression review of the current approved frontend, not proof against every possible defect, a full accessibility certification or production hosting. Phase 8 needs its own approved release/demo scope. Runtime administrator provisioning and deployment were not performed.
+This is a source/configuration/documentation and regression review of the current approved frontend, not proof against every possible defect, a full accessibility certification or production hosting. The later [Phase 8–9 plan](../plans/phase-8-9-local-demo.md) defines local testing/demo quality and portfolio handoff; those gates are not covered by this Phase 7 PASS. Runtime administrator provisioning and deployment were not performed.

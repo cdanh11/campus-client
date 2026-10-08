@@ -33,8 +33,12 @@ Queries/mutations do not retry business writes automatically. API 401 retries on
 
 Foundation navigation and session handling are 7A. ADMIN business screens are 7B1–7B4 and personal inbox/Event flows are 7C. All approved screens are implemented; personal Academic/Dormitory/Finance/Library flows are outside Phase 7.
 
-Vitest uses at most two workers with per-file isolation. Mocked and real Playwright suites use one worker to bound local resource usage. See the [final review](reviews/phase-7-final-review.md) for measured results; commands alone do not establish a PASS.
+Vitest uses at most two workers with per-file isolation. Run Maven, Vitest and browser regressions sequentially on resource-constrained local machines; Phase 8A2 concurrent UI wait failures disappeared in complete isolated runs without changing timeouts/assertions. Mocked and real Playwright suites use one worker to bound local resource usage. See the [final review](reviews/phase-7-final-review.md) for measured results; commands alone do not establish a PASS.
 
 ## Current UI and portal scope
 
 Shared experience rules: [design system](../design-system/campus-platform/MASTER.md); personal portal: [API contract](api/portal.md). Own inbox/Event routes are implemented; regular-user pages use authenticated owner APIs only. Production nullable readAt/cancelledAt/attendedAt fields are represented explicitly in local portal view types. Local UI UX Pro Max tooling is ignored; curated design decisions are versioned. Phase 7 closure evidence is in the [final review](reviews/phase-7-final-review.md); older counts are historical checkpoints.
+
+## Local demo and remaining phases
+
+Use the sibling backend `.\scripts\start-local.ps1` to load its ignored environment and start PostgreSQL/backend, then `npm run dev` here. See the [local demo guide](runbooks/local-demo.md). The approved [Phase 8–9 scope](plans/phase-8-9-local-demo.md) emphasizes acceptance/regression tests and demo/portfolio preparation, with no required hosting or Workflow/AI. Existing test evidence stays tied to its actual checkpoint.
