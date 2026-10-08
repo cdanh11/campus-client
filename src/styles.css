@@ -223,4 +223,27 @@ body { color: var(--ink); background: radial-gradient(circle at 85% -20%, #d9f1f
 @media (max-width: 1100px) { .workspace-launch-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .status-card { grid-column: span 2; } }
 @media (max-width: 760px) { .workspace-hero { min-height: 0; } .hero-orbit { display: none; } .workspace-section-heading { align-items: start; flex-direction: column; margin-top: 26px; } .workspace-launch-grid, .workspace-lower-grid { grid-template-columns: 1fr; } .status-card { grid-column: auto; } .activity-row { grid-template-columns: 10px 1fr; } .activity-row > .ant-typography:last-child { display: none; } }
 
+/* Unified page grammar: every functional screen gets the same editorial rhythm. */
+.page-chrome-title { position: relative; padding-left: 18px; }
+.page-chrome-rule { position: absolute; left: 0; top: 4px; bottom: 7px; width: 4px; border-radius: 99px; background: linear-gradient(180deg, var(--teal), var(--primary)); }
+.page-chrome-content { display: grid; gap: 22px; min-width: 0; }
+.page-chrome-content > .page-heading:first-child { margin-top: -4px; }
+.page-chrome .ant-card, .page-chrome .ant-table-wrapper { background: rgba(255,255,255,.9); }
+.page-chrome .page-heading { padding-top: 4px; }
+.page-chrome .page-heading h1 { font-size: clamp(24px, 2.5vw, 34px); }
+.page-chrome-content > .admin-navigation { margin-bottom: 0; }
+.admin-navigation { position: sticky; top: 102px; z-index: 4; overflow-x: auto; scrollbar-width: thin; }
+.admin-navigation a { white-space: nowrap; }
+.overview-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.overview-card { position: relative; overflow: hidden; }
+.overview-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 4px; background: linear-gradient(180deg, var(--teal), var(--primary)); opacity: .8; }
+.overview-card .ant-card-head-title { padding-left: 4px; }
+.list-filters { display: flex; align-items: center; gap: 12px; }
+.list-filters .ant-space-item { min-width: 0; }
+.portal-event-grid .ant-card, .portal-inbox .ant-card { transition: transform .2s, box-shadow .2s; }
+.portal-event-grid .ant-card:hover, .portal-inbox .ant-card:hover { transform: translateY(-3px); }
+.ant-table-wrapper { overflow: auto; }
+.ant-table-wrapper .ant-table-container { min-width: 720px; }
+@media (max-width: 1023px) { .admin-navigation { top: 92px; } }
+@media (max-width: 760px) { .page-chrome-title { padding-left: 14px; } .page-chrome-rule { width: 3px; } .admin-navigation { position: static; } .list-filters { align-items: stretch; } }
 
