@@ -5,6 +5,7 @@ import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import type { components } from '../../api/schema'
 import { queryParams, safePageTotal } from '../../api/query-params'
+import { CampusTime } from '../../components/CampusTime'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { useDialogSelection } from './useDialogSelection'
 
@@ -33,7 +34,7 @@ export default function InboxPage() {
   {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
   {!result.isFetching && !result.error && result.data?.content.length === 0 && <Card><Empty description="Chưa có thông báo phù hợp." /></Card>}
   <div className="portal-inbox">{!result.error && result.data?.content.map((item) => <Card key={item.delivery.id}>
-   <Space wrap><Tag color={item.delivery.status === 'UNREAD' ? 'purple' : 'default'}>{item.delivery.status === 'UNREAD' ? 'Chưa đọc' : 'Đã đọc'}</Tag><Typography.Text type="secondary">{item.delivery.deliveredAt}</Typography.Text></Space>
+   <Space wrap><Tag color={item.delivery.status === 'UNREAD' ? 'purple' : 'default'}>{item.delivery.status === 'UNREAD' ? 'Chưa đọc' : 'Đã đọc'}</Tag><Typography.Text type="secondary"><CampusTime value={item.delivery.deliveredAt} /></Typography.Text></Space>
    <Typography.Title level={2} style={{ fontSize: 20 }}>{item.title}</Typography.Title>
    <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{item.body}</Typography.Paragraph>
    <Button onClick={(event) => open(item.delivery.id, event.currentTarget)}>Xem thông báo</Button>
@@ -66,7 +67,7 @@ function InboxDetail({ id, onClose }: { id: string; onClose: () => void }) {
   {conflict && <Alert type="info" title="Đóng và mở lại thông báo để kiểm tra trạng thái mới nhất trước khi thao tác." />}
   {!detail.error && detail.data && <><Typography.Title level={2}>{detail.data.title}</Typography.Title>
    <Typography.Paragraph style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{detail.data.body}</Typography.Paragraph>
-   <Typography.Paragraph type="secondary">Nhận lúc: {detail.data.delivery.deliveredAt}</Typography.Paragraph>
-   {detail.data.delivery.readAt && <Typography.Paragraph>Đã đọc lúc: {detail.data.delivery.readAt}</Typography.Paragraph>}</>}
+   <Typography.Paragraph type="secondary">Nhận lúc: <CampusTime value={detail.data.delivery.deliveredAt} /></Typography.Paragraph>
+   {detail.data.delivery.readAt && <Typography.Paragraph>Đã đọc lúc: <CampusTime value={detail.data.delivery.readAt} /></Typography.Paragraph>}</>}
  </Modal>
 }

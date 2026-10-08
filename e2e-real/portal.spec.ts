@@ -51,6 +51,9 @@ test('real USER reads private inbox and registers, cancels and restores own Even
  const dialog = page.getByRole('dialog')
  await expect(dialog.getByText('<img src=x onerror=alert(1)>\nNội dung riêng', { exact: true })).toBeVisible()
  await expect(dialog.locator('img')).toHaveCount(0)
+ await expect(dialog.locator('time')).toHaveCount(1)
+ await expect(dialog.locator('time')).toContainText('(UTC+7)')
+ await expect(dialog.locator('time')).toHaveAttribute('datetime', /Z$/)
  const readResponse = page.waitForResponse((response) => response.request().method() === 'PUT' && response.url().endsWith('/read'))
  await dialog.getByRole('button', { name: 'Đánh dấu đã đọc' }).click()
  expect((await readResponse).status()).toBe(200)
@@ -61,6 +64,8 @@ test('real USER reads private inbox and registers, cancels and restores own Even
  const main = page.locator('.portal-event-grid .ant-card').filter({ hasText: 'Ngày hội portal' })
  await main.getByRole('button', { name: 'Xem sự kiện' }).click()
  await expect(dialog.getByRole('button', { name: 'Đăng ký sự kiện', exact: true })).toBeEnabled()
+ await expect(dialog.locator('time').first()).toHaveText('16:00:00 01/09/2026 (UTC+7)')
+ await expect(dialog.locator('time').first()).toHaveAttribute('datetime', /^2026-09-01T09:00:00(?:\.0+)?Z$/)
  const registered = page.waitForResponse((response) => response.request().method() === 'POST' && response.url().endsWith('/events/' + seed.eventId + '/registrations'))
  await dialog.getByRole('button', { name: 'Đăng ký sự kiện', exact: true }).click()
  const registeredResponse = await registered

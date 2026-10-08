@@ -5,6 +5,7 @@ import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import type { components } from '../../api/schema'
 import { queryParams, safePageTotal } from '../../api/query-params'
+import { CampusTime } from '../../components/CampusTime'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { useDialogSelection } from './useDialogSelection'
 export type CampusEvent = Required<components['schemas']['com.campus.event.domain.CampusEvent']>
@@ -50,10 +51,10 @@ export default function EventsPage({ history = false }: { history?: boolean }) {
    return <Card key={row.id}>
     <Tag color={row.status === 'OPEN' || row.status === 'REGISTERED' ? 'purple' : 'default'}>{states[row.status]}</Tag>
     <Typography.Title level={2} style={{ fontSize: 20 }}>{history ? <EventTitle id={registration.eventId} /> : event.title}</Typography.Title>
-    {history ? <><Typography.Paragraph>Mã sự kiện: {registration.eventId}</Typography.Paragraph><Typography.Paragraph>Đăng ký lúc: {registration.registeredAt}</Typography.Paragraph>
-     {registration.cancelledAt && <Typography.Paragraph>Hủy lúc: {registration.cancelledAt}</Typography.Paragraph>}
-     {registration.attendedAt && <Typography.Paragraph>Tham dự lúc: {registration.attendedAt}</Typography.Paragraph>}</>
-     : <><Typography.Paragraph type="secondary">{event.code} · Sức chứa: {event.capacity}</Typography.Paragraph><Typography.Paragraph>Bắt đầu UTC: {event.startsAt}</Typography.Paragraph></>}
+    {history ? <><Typography.Paragraph>Mã sự kiện: {registration.eventId}</Typography.Paragraph><Typography.Paragraph>Đăng ký lúc: <CampusTime value={registration.registeredAt} /></Typography.Paragraph>
+     {registration.cancelledAt && <Typography.Paragraph>Hủy lúc: <CampusTime value={registration.cancelledAt} /></Typography.Paragraph>}
+     {registration.attendedAt && <Typography.Paragraph>Tham dự lúc: <CampusTime value={registration.attendedAt} /></Typography.Paragraph>}</>
+     : <><Typography.Paragraph type="secondary">{event.code} · Sức chứa: {event.capacity}</Typography.Paragraph><Typography.Paragraph>Bắt đầu: <CampusTime value={event.startsAt} /></Typography.Paragraph></>}
     <Button onClick={(click) => open(history ? registration.eventId : event.id, click.currentTarget)}>Xem sự kiện</Button>
    </Card>
   })}</div>
@@ -102,12 +103,12 @@ function EventDetail({ id, onClose }: { id: string; onClose: () => void }) {
   {mutation.error && <><ErrorNotice error={mutation.error} /><Alert type="info" title="Đóng và mở lại sự kiện để kiểm tra dữ liệu mới nhất; thao tác chưa được gửi lại." /></>}
   {!event.error && event.data && <><Typography.Title level={2}>{event.data.title}</Typography.Title><Tag>{states[event.data.status]}</Tag>
    <Typography.Paragraph style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{event.data.description}</Typography.Paragraph>
-   <Typography.Paragraph>Bắt đầu UTC: {event.data.startsAt}</Typography.Paragraph><Typography.Paragraph>Kết thúc UTC: {event.data.endsAt}</Typography.Paragraph>
+   <Typography.Paragraph>Bắt đầu: <CampusTime value={event.data.startsAt} /></Typography.Paragraph><Typography.Paragraph>Kết thúc: <CampusTime value={event.data.endsAt} /></Typography.Paragraph>
    <Typography.Paragraph>Sức chứa: {event.data.capacity}. Số chỗ còn lại được máy chủ kiểm tra khi đăng ký.</Typography.Paragraph></>}
   {membership.data && <><Typography.Paragraph>Đăng ký của bạn: {states[membership.data.status]}</Typography.Paragraph>
-   <Typography.Paragraph>Đăng ký lúc: {membership.data.registeredAt}</Typography.Paragraph>
-   {membership.data.cancelledAt && <Typography.Paragraph>Hủy lúc: {membership.data.cancelledAt}</Typography.Paragraph>}
-   {membership.data.attendedAt && <Typography.Paragraph>Tham dự lúc: {membership.data.attendedAt}</Typography.Paragraph>}</>}
+   <Typography.Paragraph>Đăng ký lúc: <CampusTime value={membership.data.registeredAt} /></Typography.Paragraph>
+   {membership.data.cancelledAt && <Typography.Paragraph>Hủy lúc: <CampusTime value={membership.data.cancelledAt} /></Typography.Paragraph>}
+   {membership.data.attendedAt && <Typography.Paragraph>Tham dự lúc: <CampusTime value={membership.data.attendedAt} /></Typography.Paragraph>}</>}
  </Modal>
 }
 
