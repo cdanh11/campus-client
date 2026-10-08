@@ -114,3 +114,66 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 @media (max-width: 480px) { .account-email { max-width: 190px; } .page-heading .ant-btn { width: 100%; } .page-heading { align-items: stretch; } }
 @media print { .workspace-sidebar, .header, .admin-navigation, .mobile-menu { display: none !important; } .content { padding: 0; } body { background: white; } }
 
+/* Campus UI system: calm academic workspace with crisp operational density */
+:root {
+  --primary: #176b87;
+  --primary-dark: #0d5069;
+  --navy: #102a43;
+  --ink: #19324a;
+  --muted: #6b8094;
+  --border: #dce7ee;
+  --canvas: #f5f8fa;
+  --soft-blue: #e8f4f7;
+  --teal: #188b83;
+  --accent: #f0a35e;
+  --shadow-sm: 0 8px 24px rgba(16, 42, 67, .06);
+  --shadow-md: 0 18px 48px rgba(16, 42, 67, .10);
+}
+body { color: var(--ink); background: radial-gradient(circle at 85% -20%, #d9f1f3 0, transparent 34%), var(--canvas); }
+.workspace-sidebar { background: linear-gradient(180deg, #102f48 0%, #0d273d 100%); border-right: 1px solid rgba(255,255,255,.08); }
+.brand-mark { background: linear-gradient(135deg, #27a2a0, #177894); box-shadow: 0 10px 24px rgba(24,139,131,.30); }
+.sidebar-link.active { background: linear-gradient(100deg, #167b91, #15958d); box-shadow: 0 10px 24px rgba(9, 77, 99, .30); }
+.sidebar-link:hover { background: rgba(78, 195, 190, .13); }
+.header { height: 86px; background: rgba(255,255,255,.82); border-bottom-color: rgba(220,231,238,.9); }
+.header-title { font-size: 18px; }
+.content { padding-top: clamp(30px, 4vw, 56px); }
+.content > * { animation: rise-in .42s ease both; }
+.welcome-panel { background: linear-gradient(120deg, #e4f4f5 0%, #f8fbfc 54%, #fff1e2 120%); border-color: #cfe7e9; box-shadow: var(--shadow-sm); }
+.welcome-panel::after { border-color: #a9d9da; }
+.admin-navigation { background: rgba(255,255,255,.72); box-shadow: var(--shadow-sm); border-radius: 18px; padding: 8px; }
+.admin-navigation a[aria-current="page"] { background: #dff2f3; color: #126477; }
+.page-heading { margin-bottom: 18px; }
+.page-heading h1, .content h1 { color: var(--navy); font-weight: 760; }
+.page-heading h1 { font-size: clamp(28px, 3vw, 40px); }
+.ant-card, .ant-table-wrapper { border-radius: 20px !important; box-shadow: var(--shadow-sm); }
+.ant-card:hover { box-shadow: var(--shadow-md); }
+.ant-card-head { min-height: 58px; padding-inline: 22px !important; }
+.ant-card-body { padding: 22px !important; }
+.ant-table-wrapper { box-shadow: var(--shadow-sm); }
+.ant-table-thead > tr > th { background: #f1f7f8 !important; color: #496274; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.ant-table-tbody > tr > td { border-bottom-color: #edf2f5 !important; }
+.ant-table-tbody > tr:hover > td { background: #f5fbfb !important; }
+.ant-btn { min-height: 38px; border-radius: 11px; }
+.ant-btn-primary { background: var(--primary); border-color: var(--primary); }
+.ant-btn-primary:hover { background: var(--primary-dark) !important; border-color: var(--primary-dark) !important; }
+.ant-input, .ant-input-affix-wrapper, .ant-select-selector { min-height: 40px; border-radius: 11px !important; }
+.ant-form-item-label > label { font-size: 13px; }
+.list-filters { padding: 20px; border-radius: 18px; box-shadow: var(--shadow-sm); }
+.metric-list > div { padding: 16px 0; }
+.metric-list dd { color: var(--navy); }
+.portal-event-grid, .overview-grid, .dashboard-grid { gap: 24px; }
+.portal-inbox { gap: 20px; }
+.login-page { background: #fbfdfd; }
+.intro { background: radial-gradient(circle at 85% 20%, rgba(43,161,160,.26), transparent 30%), linear-gradient(145deg, #102a43 0%, #123f58 58%, #146d7c 140%); }
+.login-panel { background: rgba(255,255,255,.96); }
+.login-form h2 { color: var(--navy); font-size: clamp(30px, 4vw, 38px) !important; }
+.eyebrow { color: var(--teal); }
+.loading { color: var(--primary); }
+.ant-tag { padding-inline: 9px; line-height: 24px; }
+.ant-alert { border-radius: 14px; }
+.ant-modal-content { box-shadow: var(--shadow-md); }
+@keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 1023px) { .workspace-sidebar { display: none; } .content { padding-top: 30px; } }
+@media (max-width: 760px) { .header { min-height: 76px; } .welcome-panel { margin-bottom: 20px; } .ant-card-body { padding: 18px !important; } }
+@media (prefers-reduced-motion: reduce) { .content > * { animation: none; } }
+
