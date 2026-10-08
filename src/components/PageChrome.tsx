@@ -7,8 +7,7 @@ export function PageChrome({ eyebrow, title, description, actions, children }: {
   return <div className="page-chrome">
     <header className="page-chrome-header">
       <div className="page-chrome-title">
-        <span className="page-chrome-rule" aria-hidden="true" />
-        <Text className="section-kicker">{eyebrow}</Text>
+        <div className="page-chrome-eyebrow"><span className="page-chrome-rule" aria-hidden="true" /><Text className="section-kicker">{eyebrow}</Text></div>
         <Title level={1}>{title}</Title>
         {description && <p className="page-description">{description}</p>}
       </div>
