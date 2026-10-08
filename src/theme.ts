@@ -1,9 +1,9 @@
 import type { ThemeConfig } from 'antd'
 export const campusTheme: ThemeConfig = {
  token: {
-  colorPrimary: '#4338ca', colorInfo: '#4338ca', colorSuccess: '#047857',
-  colorText: '#172033', colorTextSecondary: '#526078', colorTextDescription: '#526078', colorBgLayout: '#f4f6fb',
-  colorBorder: '#d8dfeb', borderRadius: 12, fontFamily: 'Inter, Segoe UI, system-ui, sans-serif',
+  colorPrimary: '#2563eb', colorInfo: '#2563eb', colorSuccess: '#0f766e',
+  colorText: '#172033', colorTextSecondary: '#64748b', colorTextDescription: '#64748b', colorBgLayout: '#f4f7fb',
+  colorBorder: '#e5eaf2', borderRadius: 10, fontFamily: 'Inter, Segoe UI, system-ui, sans-serif',
   fontSize: 14, controlHeight: 40, controlHeightLG: 48,
  },
  components: {

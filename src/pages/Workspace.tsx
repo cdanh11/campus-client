@@ -58,11 +58,11 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
    <Layout.Content id="main-content" tabIndex={-1} className="content">
     <Routes>
      <Route path="/" element={<>
-      <section className="welcome-panel"><Tag color="purple">KHÔNG GIAN LÀM VIỆC</Tag><Title level={1}>Một khuôn viên. Một kết nối.</Title><Paragraph>Chào mừng bạn đến Campus Platform. Truy cập nhanh các hoạt động phù hợp với vai trò của bạn.</Paragraph></section>
+      <section className="welcome-panel"><Tag color="blue">KHÔNG GIAN LÀM VIỆC</Tag><Title level={1}>Một khuôn viên. Một kết nối.</Title><Paragraph>Chào mừng trở lại, <strong>{user.email}</strong>. Truy cập nhanh các hoạt động phù hợp với vai trò và nghiệp vụ của bạn.</Paragraph></section>
       <div className="overview-grid">
-       <Card title="Thông tin tài khoản"><Space wrap>{user.roles.map((role) => <Tag key={role}>{role}</Tag>)}</Space><Paragraph className="account-note">{user.email}</Paragraph></Card>
-       <Card title="Cổng cá nhân"><Paragraph>Thông báo và hoạt động dành cho bạn.</Paragraph><Link className="text-action" to="/portal">Mở cổng cá nhân →</Link></Card>
-       {admin && <Card title="Quản trị khuôn viên"><Paragraph>Hồ sơ, học vụ và các dịch vụ trong cùng một không gian.</Paragraph><Link className="text-action" to="/admin">Mở không gian quản trị →</Link></Card>}
+       <Card title="Tài khoản của bạn"><Space wrap>{user.roles.map((role) => <Tag color="blue" key={role}>{role}</Tag>)}</Space><Paragraph className="account-note">Phiên làm việc đang hoạt động<br />{user.email}</Paragraph></Card>
+       <Card title="Cổng cá nhân" extra={<span aria-hidden="true">↗</span>}><Paragraph>Thông báo, sự kiện và các hoạt động dành riêng cho bạn.</Paragraph><Link className="text-action" to="/portal">Mở cổng cá nhân</Link></Card>
+       {admin && <Card title="Quản trị khuôn viên" extra={<span aria-hidden="true">↗</span>}><Paragraph>Hồ sơ, học vụ, thư viện và các dịch vụ trong cùng một không gian.</Paragraph><Link className="text-action" to="/admin">Mở không gian quản trị</Link></Card>}
       </div>
      </>} />
      <Route path="/admin/*" element={<AccessBoundary user={user} roles={Object.values(administrationRoles).flat()}><Suspense fallback={<p role="status">Đang tải…</p>}><AdminPeople user={user} /></Suspense></AccessBoundary>} />
