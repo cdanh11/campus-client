@@ -1,13 +1,11 @@
 import type { components } from '../../api/schema'
 import type { Field, Resource, Values } from '../people/resources'
+import { sortOptions } from '../sort-options'
 import { nameRule, trimOrganization } from '../../forms/validation'
 type Schemas = components['schemas']
 const options = (values: string[]) => values.map((value) => ({ value, label: value }))
 const active = options(['ACTIVE', 'INACTIVE'])
-const sorts = (fields: string[], first: string) => {
- const all = fields.flatMap((field) => ['asc', 'desc'].map((direction) => ({ value: field + ',' + direction, label: field + ' ' + direction })))
- return [...all.filter((item) => item.value === first), ...all.filter((item) => item.value !== first)]
-}
+const sorts = sortOptions
 const str = (values: Values, key: string) => String(values[key] ?? '')
 const code: Field = { name: 'code', label: 'Mã', type: 'text', rules: [nameRule(2, 32, trimOrganization), nameRule(2, 32, (value) => trimOrganization(value).toUpperCase())] }
 const status: Field = { name: 'status', label: 'Trạng thái', type: 'enum', updateOnly: true, required: true, options: active }

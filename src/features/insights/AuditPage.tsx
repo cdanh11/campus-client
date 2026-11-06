@@ -10,6 +10,7 @@ import type { Audit, AuditPage as Page, AuditSource } from './contracts'
 import { actionLimit, auditResources } from './config'
 import { auditParams, uuidRule, type Filters } from './query'
 import { TimeFilters } from './TimeFilters'
+import { sortOptions } from '../sort-options'
 const auditText = (value: unknown) => isInstant(value) ? campusTimeText(value) : String(value ?? '—')
 export function AuditsPage() {
  const [source, setSource] = useState<AuditSource>('IDENTITY')
@@ -28,7 +29,7 @@ function AuditList({ source }: { source: AuditSource }) {
   <Form.Item name="action" label="Action" rules={[{ pattern: /^[A-Z_]+$/, max: actionLimit(source), message: 'Action gồm A–Z/_; tối đa ' + actionLimit(source) + ' ký tự.' }]}><Input maxLength={actionLimit(source)} /></Form.Item>
   <TimeFilters /><Button type="primary" htmlType="submit">Áp dụng bộ lọc</Button>
  </Space></Form>
- <Space wrap><Select aria-label="Sắp xếp audit" value={paging.sort} onChange={(sort) => setPaging({ ...paging, sort, page: 0 })} options={['occurredAt,desc', 'occurredAt,asc'].map((value) => ({ value, label: value }))} /><Button disabled={result.isFetching} onClick={() => { void result.refetch() }}>Làm mới audit</Button></Space>
+ <Space wrap><Select aria-label="Sắp xếp audit" value={paging.sort} onChange={(sort) => setPaging({ ...paging, sort, page: 0 })} options={sortOptions(['occurredAt'], 'occurredAt,desc')} /><Button disabled={result.isFetching} onClick={() => { void result.refetch() }}>Làm mới audit</Button></Space>
  {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
  <Table<Audit> rowKey="id" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 1000 }} columns={[
   ...['resource', 'targetId', 'actorId', 'action', 'resourceVersion', 'occurredAt'].map((key) => ({ title: key, key, render: (_: unknown, row: Audit) => auditText(row[key as keyof Audit]) })),

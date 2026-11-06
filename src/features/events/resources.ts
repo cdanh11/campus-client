@@ -2,13 +2,11 @@ import type { components } from '../../api/schema'
 import type { Resource, Values } from '../people/resources'
 import { nameRule, trimOrganization } from '../../forms/validation'
 import { campusTimeText } from '../../components/CampusTime'
+import { sortOptions } from '../sort-options'
 import { eventEndRule, instantRule } from './instant'
 type Schemas = components['schemas']
 const options = (values: string[]) => values.map((value) => ({ value, label: value }))
-const sorts = (fields: string[], first: string) => {
- const values = fields.flatMap((field) => ['asc', 'desc'].map((direction) => ({ value: field + ',' + direction, label: field + ' ' + direction })))
- return [...values.filter((item) => item.value === first), ...values.filter((item) => item.value !== first)]
-}
+const sorts = sortOptions
 export function eventTransitions(status: string): string[] {
  return status === 'DRAFT' ? ['DRAFT', 'OPEN', 'CANCELLED'] : status === 'OPEN' ? ['OPEN', 'CLOSED', 'CANCELLED'] : []
 }

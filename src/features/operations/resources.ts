@@ -4,15 +4,13 @@ import type { Field, Resource, Values } from '../people/resources'
 import { nameRule, trimOrganization } from '../../forms/validation'
 import { amountRule, formatVnd, integerVnd, paymentAmount } from './money'
 import { ChargeBalancePanel } from './ChargeBalancePanel'
+import { sortOptions } from '../sort-options'
 type Schemas = components['schemas']
 const code = (key = 'code', label = 'Mã'): Field => ({ name: key, label, type: 'text', rules: [nameRule(2, 32, trimOrganization), nameRule(2, 32, (value) => trimOrganization(value).toUpperCase())] })
 const text = (name: string, label: string): Field => ({ name, label, type: 'text', rules: [nameRule(2, 160, trimOrganization)] })
 const options = (values: string[]) => values.map((value) => ({ value, label: value }))
 const active = options(['ACTIVE', 'INACTIVE'])
-const sorts = (fields: string[], first?: string) => {
- const all = fields.flatMap((key) => ['asc', 'desc'].map((direction) => ({ value: key + ',' + direction, label: key + ' ' + direction })))
- return first ? [...all.filter((item) => item.value === first), ...all.filter((item) => item.value !== first)] : all
-}
+const sorts = sortOptions
 const str = (values: Values, key: string) => String(values[key] ?? '')
 const reference = (name: string, label: string, type: Field['type'], required = true): Field => ({ name, label, type, required })
 const status: Field = { name: 'status', label: 'Trạng thái', type: 'enum', required: true, options: active, updateOnly: true }

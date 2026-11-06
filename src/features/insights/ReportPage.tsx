@@ -50,7 +50,7 @@ function ReportList({ kind }: { kind: ReportKind }) {
     <Button htmlType="submit" type="primary">Áp dụng bộ lọc</Button>
    </Space>
   </Form>
-  <Space wrap><Select aria-label="Sắp xếp báo cáo" value={paging.sort} onChange={(sort) => setPaging({ ...paging, sort, page: 0 })} options={['id,asc', 'id,desc'].map((value) => ({ value, label: value }))} /><Button aria-label="Tải CSV" loading={download.isPending} disabled={download.isPending || result.isFetching || !!result.error || !result.data} onClick={() => download.mutate()}>Tải CSV</Button><Button disabled={result.isFetching} onClick={() => { void result.refetch() }}>Làm mới báo cáo</Button></Space>
+  <Space wrap><Select aria-label="Sắp xếp báo cáo" value={paging.sort} onChange={(sort) => setPaging({ ...paging, sort, page: 0 })} options={[{ value: 'id,asc', label: 'Thứ tự tăng dần' }, { value: 'id,desc', label: 'Thứ tự giảm dần' }]} /><Button aria-label="Tải CSV" loading={download.isPending} disabled={download.isPending || result.isFetching || !!result.error || !result.data} onClick={() => download.mutate()}>Tải CSV</Button><Button disabled={result.isFetching} onClick={() => { void result.refetch() }}>Làm mới báo cáo</Button></Space>
   {download.error && <ErrorNotice error={download.error} />}{result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
   {result.data && <p>Dữ liệu tại thời điểm: <CampusTime value={result.data.asOf} /></p>}
   <Table<ReportRow> rowKey={(row) => String('id' in row ? row.id : 'studentId' in row ? row.studentId : '')} loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 1000 }}

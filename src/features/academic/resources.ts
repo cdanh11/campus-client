@@ -2,6 +2,7 @@ import type { Rule } from 'antd/es/form'
 import type { components } from '../../api/schema'
 import { nameRule, trimOrganization } from '../../forms/validation'
 import type { Field, RegistryRow, Resource, Values } from '../people/resources'
+import { sortOptions } from '../sort-options'
 type Schemas = components['schemas']
 type ProgramCreate = Schemas['com.campus.academic.api.AdminAcademicProgramController.Request']
 type ProgramUpdate = Schemas['com.campus.academic.api.AdminAcademicProgramController.UpdateRequest']
@@ -26,7 +27,7 @@ const name = (key: string, label: string): Field => ({ name: key, label, type: '
 const organization: Field = { name: 'organizationUnitId', label: 'Đơn vị', type: 'organization', required: true }
 const reference = (key: string, label: string, type: Field['type'], required = true): Field => ({ name: key, label, type, required })
 const status = (states: { value: string; label: string }[], updateOnly = false): Field => ({ name: 'status', label: 'Trạng thái', type: 'enum', required: true, options: states, updateOnly })
-const sorts = (fields: string[]) => fields.flatMap((value) => [{ value: value + ',asc', label: value + ' ↑' }, { value: value + ',desc', label: value + ' ↓' }])
+const sorts = sortOptions
 const path = '/api/v1/admin/academic/'
 export function lifecycleOptions(kind: 'term' | 'delivery' | 'enrollment', current: string): string[] {
  if (kind === 'enrollment') return current === 'ENROLLED' ? ['WITHDRAWN'] : ['ENROLLED']

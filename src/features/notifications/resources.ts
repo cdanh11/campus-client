@@ -1,12 +1,10 @@
 import type { components } from '../../api/schema'
 import type { Field, Resource } from '../people/resources'
+import { sortOptions } from '../sort-options'
 import { nameRule, trimOrganization } from '../../forms/validation'
 type Schemas = components['schemas']
 const text = (name: string, label: string, max = 160, updateOnly = false): Field => ({ name, label, type: name === 'body' ? 'textarea' : 'text', updateOnly, rules: [nameRule(2, max, trimOrganization)] })
-const sorts = (fields: string[], first: string) => {
- const values = fields.flatMap((key) => ['asc', 'desc'].map((direction) => ({ value: key + ',' + direction, label: key + ' ' + direction })))
- return [...values.filter((item) => item.value === first), ...values.filter((item) => item.value !== first)]
-}
+const sorts = sortOptions
 const active = [{ value: 'ACTIVE', label: 'Đang hoạt động' }, { value: 'INACTIVE', label: 'Ngừng hoạt động' }]
 export const templates: Resource = {
  path: '/api/v1/admin/notifications/templates', title: 'Mẫu thông báo', singular: 'mẫu thông báo', identifier: 'code', states: active,
