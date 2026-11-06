@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Alert, Button, Card, Empty, Input, Modal, Pagination, Select, Space, Tag, Typography, App as AntApp } from 'antd'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import type { components } from '../../api/schema'
@@ -27,6 +27,7 @@ export default function EventsPage({ history = false }: { history?: boolean }) {
  const params = queryParams({ ...filters, q: history ? undefined : filters.q })
  const result = useQuery({
   queryKey: ['portal-events', history ? 'history' : 'catalog', params],
+  placeholderData: keepPreviousData,
   queryFn: ({ signal }) => api.request<Page<CampusEvent | Registration>>((history ? ownPath : eventPath) + '?' + params, { signal }),
   select: (value) => ({ ...value, totalElements: safePageTotal(value.totalElements) }),
  })

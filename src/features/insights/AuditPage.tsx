@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Descriptions, Form, Input, Modal, Select, Space, Table, Typography } from 'antd'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api } from '../../api/runtime'
 import { safePageTotal } from '../../api/query-params'
 import { ErrorNotice } from '../../components/ErrorNotice'
@@ -22,7 +22,7 @@ function AuditList({ source }: { source: AuditSource }) {
  const [id, setId] = useState<string>()
  const params = auditParams(source, filters, paging.page, paging.size, paging.sort)
  const path = '/api/v1/admin/audits/' + source
- const result = useQuery({ queryKey: ['audit', source, params], queryFn: ({ signal }) => api.request<Page>(path + '?' + params, { signal }), select: (data) => ({ ...data, totalElements: safePageTotal(data.totalElements) }) })
+ const result = useQuery({ queryKey: ['audit', source, params], placeholderData: keepPreviousData, queryFn: ({ signal }) => api.request<Page>(path + '?' + params, { signal }), select: (data) => ({ ...data, totalElements: safePageTotal(data.totalElements) }) })
  return <><Form<Filters> layout="vertical" onFinish={(values) => { setFilters(values); setPaging({ ...paging, page: 0 }) }}><Space wrap align="start">
   <Form.Item name="resource" label="Tài nguyên"><Select aria-label="Tài nguyên audit" allowClear options={auditResources[source].map((value) => ({ value, label: value }))} style={{ width: 200 }} /></Form.Item>
   <Form.Item name="targetId" label="Đối tượng UUID" rules={[uuidRule]}><Input /></Form.Item><Form.Item name="actorId" label="Người thao tác UUID" rules={[uuidRule]}><Input /></Form.Item>

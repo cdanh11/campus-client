@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { App as AntApp, Button, Form, Input, InputNumber, Modal, Select, Space, Table, Tag, Typography } from 'antd'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import { queryParams, safePageTotal } from '../../api/query-params'
@@ -21,6 +21,7 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
  const params = queryParams({ ...filters, ...referenceFilters })
  const result = useQuery({
   queryKey: ['registry', resource.path, params],
+  placeholderData: keepPreviousData,
   select: (data: PageResult<RegistryRow>) => ({ ...data, totalElements: safePageTotal(data.totalElements) }),
   queryFn: ({ signal }) => api.request<PageResult<RegistryRow>>(resource.path + '?' + params, { signal }),
  })

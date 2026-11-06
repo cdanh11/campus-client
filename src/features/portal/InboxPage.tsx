@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Alert, Button, Card, Empty, Modal, Pagination, Select, Space, Tag, Typography, App as AntApp } from 'antd'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import type { components } from '../../api/schema'
@@ -19,6 +19,7 @@ export default function InboxPage() {
  const params = queryParams(filters)
  const result = useQuery({
   queryKey: ['inbox', params],
+  placeholderData: keepPreviousData,
   queryFn: ({ signal }) => api.request<InboxPageResult>(path + '?' + params, { signal }),
   select: (value) => ({ ...value, totalElements: safePageTotal(value.totalElements) }),
  })

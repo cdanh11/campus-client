@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Checkbox, Form, Select, Space, Table, Typography } from 'antd'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api } from '../../api/runtime'
 import { safePageTotal } from '../../api/query-params'
 import { ErrorNotice } from '../../components/ErrorNotice'
@@ -27,7 +27,7 @@ function ReportList({ kind }: { kind: ReportKind }) {
  const params = reportParams(kind, filters, paging.page, paging.size, paging.sort)
  const path = '/api/v1/admin/reports/' + kind
  const result = useQuery({
-  queryKey: ['report', kind, params], queryFn: ({ signal }) => api.request<Page>(path + '?' + params, { signal }),
+  queryKey: ['report', kind, params], placeholderData: keepPreviousData, queryFn: ({ signal }) => api.request<Page>(path + '?' + params, { signal }),
   select: (data) => {
    if (data.report !== kind || data.columns.join(',') !== config.columns.join(',')) throw new Error('Report contract không hợp lệ.')
    for (const row of data.content) for (const key of config.columns) {

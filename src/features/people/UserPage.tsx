@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react'
 import { Button, Descriptions, Form, Input, Modal, Select, Space, Table, Typography } from 'antd'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import { queryParams, safePageTotal } from '../../api/query-params'
@@ -22,6 +22,7 @@ export function UserPage() {
  const session = useSyncExternalStore(api.subscribe, api.getSession)
  const result = useQuery({
   queryKey: ['users', params],
+  placeholderData: keepPreviousData,
   queryFn: ({ signal }) => api.request<PageResult<AdminUser>>(path + '?' + params, { signal }),
   select: (data: PageResult<AdminUser>) => ({ ...data, totalElements: safePageTotal(data.totalElements) }),
  })

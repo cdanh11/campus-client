@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Descriptions, Form, Input, Modal, Select, Space, Table, Typography } from 'antd'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import { queryParams, safePageTotal } from '../../api/query-params'
@@ -22,7 +22,8 @@ export function PaymentsPage() {
  const [edit, setEdit] = useState<{ mode: Mode; id?: string } | null>(null)
  const params = queryParams(filters)
  const result = useQuery({
-  queryKey: ['payments', params], queryFn: ({ signal }) => api.request<PageResult<Payment>>(path + '?' + params, { signal }),
+  queryKey: ['payments', params],
+  placeholderData: keepPreviousData, queryFn: ({ signal }) => api.request<PageResult<Payment>>(path + '?' + params, { signal }),
   select: (data: PageResult<Payment>) => ({ ...data, totalElements: safePageTotal(data.totalElements) }),
  })
  return <>
