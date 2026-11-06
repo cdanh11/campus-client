@@ -11,5 +11,6 @@ export const api = new ApiClient(
  () => channel?.postMessage({ type: 'session-changed' }),
 )
 if (channel) channel.onmessage = (event) => {
- if (event.data?.type === 'session-changed') api.invalidateSession()
+ // Another tab logged in or out: re-read the shared refresh cookie instead of clearing this tab blindly.
+ if (event.data?.type === 'session-changed') void api.restore().catch(() => {})
 }

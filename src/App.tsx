@@ -17,7 +17,7 @@ export function App() {
  }
  useEffect(() => { void api.restore().catch(() => setRestoreError(true)) }, [])
  const logout = () => { setLogoutError(false); void api.logout().catch(() => setLogoutError(true)) }
- if (restoreError) return <Result status="warning" title="Chưa kết nối được máy chủ" subTitle="Kiểm tra backend rồi thử khôi phục phiên." extra={<Button onClick={restore}>Thử lại</Button>} />
+ if (restoreError && session.status === 'loading') return <Result status="warning" title="Chưa kết nối được máy chủ" subTitle="Kiểm tra backend rồi thử khôi phục phiên." extra={<Button onClick={restore}>Thử lại</Button>} />
  if (session.status === 'loading') return <Loading />
  return <Suspense fallback={<Loading />}>
   {session.status === 'anonymous' ? <>
