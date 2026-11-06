@@ -5,6 +5,7 @@ import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import { queryParams, safePageTotal } from '../../api/query-params'
 import { ErrorNotice } from '../../components/ErrorNotice'
+import { campusTimeText } from '../../components/CampusTime'
 import { roleCodes } from '../../api/administration'
 import { nameRule, passwordRule } from '../../forms/validation'
 import { sortOptions } from '../sort-options'
@@ -96,7 +97,7 @@ function UserEditor({ action, id, onClose }: { action: Action; id?: string; onCl
    { key: 'name', label: 'Tên hiển thị', children: detail.data.displayName }, { key: 'status', label: 'Trạng thái', children: detail.data.status },
    { key: 'roles', label: 'Quyền', children: detail.data.roles.join(', ') },
    { key: 'version', label: 'Phiên bản', children: String(detail.data.rowVersion) },
-   { key: 'created', label: 'Ngày tạo', children: detail.data.createdAt }, { key: 'updated', label: 'Cập nhật', children: detail.data.updatedAt },
+   { key: 'created', label: 'Ngày tạo', children: campusTimeText(detail.data.createdAt) }, { key: 'updated', label: 'Cập nhật', children: campusTimeText(detail.data.updatedAt) },
   ]} />}
   {action !== 'detail' && (!id || detail.data) && <Form form={form} layout="vertical" disabled={busy || blocked} initialValues={{ status: detail.data?.status ?? 'ACTIVE', roles: detail.data?.roles ?? ['USER'] }} onFinish={(values) => mutation.mutate(values)}>
    {action === 'create' && <>

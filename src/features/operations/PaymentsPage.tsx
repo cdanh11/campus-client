@@ -9,6 +9,7 @@ import type { PageResult } from '../people/contracts'
 import { ReferenceLabel, ReferencePicker } from '../people/ReferencePicker'
 import { ReferenceLabelsProvider } from '../people/reference-labels'
 import { ErrorNotice } from '../../components/ErrorNotice'
+import { campusTimeText } from '../../components/CampusTime'
 import { nameRule, trimOrganization } from '../../forms/validation'
 import { amountRule, formatVnd, paymentAmount } from './money'
 import { balancePath, BalanceSummary, type Balance } from './ChargeBalancePanel'
@@ -43,7 +44,7 @@ export function PaymentsPage() {
    locale={{ emptyText: 'Chưa có biên nhận phù hợp.' }}
    columns={[
     { title: 'Mã biên nhận', dataIndex: 'receiptNumber' }, { title: 'Khoản thu', dataIndex: 'chargeId', render: (id: unknown) => <ReferenceLabel kind="charge" value={id} /> },
-    { title: 'Số tiền', dataIndex: 'amount', render: formatVnd }, { title: 'Trạng thái', dataIndex: 'status' }, { title: 'Ghi nhận', dataIndex: 'recordedAt' },
+    { title: 'Số tiền', dataIndex: 'amount', render: formatVnd }, { title: 'Trạng thái', dataIndex: 'status' }, { title: 'Ghi nhận', dataIndex: 'recordedAt', render: (value: unknown) => campusTimeText(typeof value === 'string' ? value : undefined) },
     { title: 'Thao tác', render: (_, row) => <Space wrap><Button onClick={() => setEdit({ mode: 'detail', id: row.id })}>Chi tiết</Button><Button disabled={row.status !== 'RECORDED'} onClick={() => setEdit({ mode: 'reverse', id: row.id })}>Đảo biên nhận</Button></Space> },
    ]}
    pagination={{ current: filters.page + 1, pageSize: filters.size, total: result.data?.totalElements ?? 0, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setFilters({ ...filters, page: page - 1, size }) }} />
@@ -87,8 +88,8 @@ function PaymentEditor({ mode, id, onClose }: { mode: Mode; id?: string; onClose
   {balance.isFetching && <p role="status">Đang tải công nợ…</p>}
   {detail.data && <Descriptions column={1} items={[
    { key: 'number', label: 'Mã biên nhận', children: detail.data.receiptNumber }, { key: 'amount', label: 'Số tiền gốc', children: formatVnd(detail.data.amount) },
-   { key: 'status', label: 'Trạng thái', children: detail.data.status }, { key: 'recorded', label: 'Ghi nhận', children: detail.data.recordedAt },
-   { key: 'reversed', label: 'Đảo lúc', children: detail.data.reversedAt ?? '—' }, { key: 'reason', label: 'Lý do đã lưu', children: detail.data.reversalReason ?? '—' },
+   { key: 'status', label: 'Trạng thái', children: detail.data.status }, { key: 'recorded', label: 'Ghi nhận', children: campusTimeText(detail.data.recordedAt) },
+   { key: 'reversed', label: 'Đảo lúc', children: campusTimeText(detail.data.reversedAt) }, { key: 'reason', label: 'Lý do đã lưu', children: detail.data.reversalReason ?? '—' },
   ]} />}
   {balance.data && <BalanceSummary balance={balance.data} />}
   {mutation.error && <ErrorNotice error={mutation.error} />}
