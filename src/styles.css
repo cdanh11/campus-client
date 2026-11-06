@@ -389,26 +389,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 .tip-card p { line-height: 1.65; }
 
 /* Portal */
-.portal-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 150px;
-  margin-bottom: 18px;
-  padding: 24px 28px;
-  background: linear-gradient(120deg, #e4f4f5, #fff8ed);
-  border: 1px solid #d5e9e7;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-.portal-heading h1 { margin: 5px 0 6px; }
-.portal-heading p { max-width: 600px; margin: 0; }
-.portal-heading-art { display: flex; align-items: center; gap: 12px; color: var(--primary); font-size: 22px; }
-.portal-heading-art svg { width: 48px; height: 48px; padding: 12px; background: rgba(255, 255, 255, .78); border-radius: 15px; box-shadow: var(--shadow-sm); }
-.portal-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
-.portal-summary-grid .ant-card-body { display: flex; align-items: center; gap: 14px; }
-.portal-summary-grid .ant-card-body > svg { flex: 0 0 auto; width: 45px; height: 45px; padding: 12px; color: var(--primary); background: var(--primary-soft); border-radius: 13px; }
-.portal-summary-grid h3 { margin: 2px 0 0; }
 .portal-inbox { display: grid; gap: 20px; margin-bottom: 24px; }
 .portal-inbox .ant-card { min-width: 0; }
 .portal-event-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 24px; margin-bottom: 24px; }
@@ -446,9 +426,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   .page-actions { width: 100%; }
   .page-actions > * { flex: 1; }
   .empty-state { align-items: flex-start; padding: 24px; }
-  .portal-heading-art { display: none; }
-  .portal-summary-grid { grid-template-columns: 1fr; gap: 12px; }
-  .portal-summary-grid .ant-card-body { padding: 15px !important; }
   .workspace-hero { min-height: 0; }
   .hero-orbit { display: none; }
   .workspace-section-heading { flex-direction: column; align-items: flex-start; margin-top: 26px; }
