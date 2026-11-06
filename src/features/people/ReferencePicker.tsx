@@ -8,6 +8,8 @@ import type { PageResult } from './contracts'
 import type { RegistryRow } from './resources'
 import { referenceSources, type ReferenceKind } from './references'
 
+const referenceOptions = { staleTime: 5 * 60_000, refetchOnWindowFocus: false }
+
 export function ReferencePicker({ kind, value, onChange, id, label, disabled, eligible = true, allowClear }: {
  kind: ReferenceKind; value?: string; onChange?: (value?: string) => void; id?: string; label: string; disabled?: boolean; eligible?: boolean; allowClear?: boolean
 }) {
@@ -19,12 +21,12 @@ export function ReferencePicker({ kind, value, onChange, id, label, disabled, el
  const list = useQuery({
   queryKey: ['reference', path, params],
   queryFn: ({ signal }) => api.request<PageResult<RegistryRow>>(path + '?' + params, { signal }),
-  enabled: !disabled,
+  enabled: !disabled, ...referenceOptions,
  })
  const selected = useQuery({
   queryKey: ['reference-selected', path, value],
   queryFn: ({ signal }) => api.request<RegistryRow>(path + '/' + value, { signal }),
-  enabled: !!value,
+  enabled: !!value, ...referenceOptions,
  })
  const rows = [...(list.data?.content ?? [])]
  if (selected.data && !rows.some((row) => row.id === selected.data?.id)) rows.unshift(selected.data)
@@ -43,7 +45,7 @@ export function ReferenceLabel({ kind, value }: { kind: ReferenceKind; value: un
  const selected = useQuery({
   queryKey: ['reference-selected', source.path, value],
   queryFn: ({ signal }) => api.request<RegistryRow>(source.path + '/' + String(value), { signal }),
-  enabled: typeof value === 'string' && !!value,
+  enabled: typeof value === 'string' && !!value, ...referenceOptions,
  })
  if (!value) return <>—</>
  return <span title={String(value)}>{selected.data ? kind === 'offering' ? <OfferingSummary row={selected.data} /> : source.label(selected.data) : selected.error ? 'Không tải được tham chiếu' : 'Đang tải…'}</span>
