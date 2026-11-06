@@ -22,7 +22,7 @@ export function ownActions(registration: Registration | null, event: CampusEvent
  return registration.status === 'CANCELLED' && event.status === 'OPEN' ? ['RESTORE'] : []
 }
 export default function EventsPage({ history = false }: { history?: boolean }) {
- const [filters, setFilters] = useState({ page: 0, size: 20, q: '', status: '', sort: history ? 'registeredAt,desc' : 'startsAt,asc' })
+ const [filters, setFilters] = useState({ page: 0, size: 20, q: '', status: history ? '' : 'OPEN', sort: history ? 'registeredAt,desc' : 'startsAt,asc' })
  const { selected, open, close } = useDialogSelection()
  const params = queryParams({ ...filters, q: history ? undefined : filters.q })
  const result = useQuery({
@@ -37,8 +37,8 @@ export default function EventsPage({ history = false }: { history?: boolean }) {
    <Typography.Paragraph type="secondary">{history ? 'Lịch sử đăng ký, hủy và khôi phục được giữ lại.' : 'Tìm hoạt động trong khuôn viên. Chỉ sự kiện đang mở nhận đăng ký.'}</Typography.Paragraph></div></div>
   <Space wrap className="list-filters">
    {!history && <Input.Search aria-label="Tìm sự kiện" maxLength={100} placeholder="Tìm mã hoặc tên sự kiện" allowClear onSearch={(q) => setFilters({ ...filters, q, page: 0 })} style={{ width: 260 }} />}
-   <Select aria-label="Lọc trạng thái sự kiện" value={filters.status} onChange={(status) => setFilters({ ...filters, status, page: 0 })}
-    options={[{ value: '', label: 'Tất cả trạng thái' }, ...statuses.map((value) => ({ value, label: states[value as keyof typeof states] }))]} style={{ minWidth: 180 }} />
+   {history && <Select aria-label="Lọc trạng thái sự kiện" value={filters.status} onChange={(status) => setFilters({ ...filters, status, page: 0 })}
+    options={[{ value: '', label: 'Tất cả trạng thái' }, ...statuses.map((value) => ({ value, label: states[value as keyof typeof states] }))]} style={{ minWidth: 180 }} />}
    <Select aria-label="Sắp xếp sự kiện" value={filters.sort} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })}
     options={history ? [{ value: 'registeredAt,desc', label: 'Đăng ký mới nhất' }, { value: 'registeredAt,asc', label: 'Đăng ký cũ nhất' }]
      : [{ value: 'startsAt,asc', label: 'Bắt đầu tăng dần' }, { value: 'startsAt,desc', label: 'Bắt đầu giảm dần' }, { value: 'title,asc', label: 'Tên A–Z' }]} style={{ minWidth: 180 }} />

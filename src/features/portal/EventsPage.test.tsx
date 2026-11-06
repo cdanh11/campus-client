@@ -86,19 +86,23 @@ it('offers only own lifecycle actions allowed by current membership and event st
  expect(ownActions({ ...membership, status: 'ATTENDED' }, event)).toEqual([])
 })
 
-it('resets paging on submitted search/status changes and keeps bounded owner queries', async () => {
+it('pins the public catalog to OPEN, hides its status filter and resets paging on search', async () => {
  show({ total: 41 })
  await screen.findByRole('button', { name: 'Xem sự kiện' })
+ await waitFor(() => expect(vi.mocked(api.request).mock.calls.some(([path]) => new URLSearchParams(path.split('?')[1]).get('status') === 'OPEN')).toBe(true))
+ expect(screen.queryByRole('combobox', { name: 'Lọc trạng thái sự kiện' })).not.toBeInTheDocument()
  await userEvent.click(screen.getByTitle('2', { exact: true }))
  await waitFor(() => expect(vi.mocked(api.request).mock.calls.some(([path]) => path.includes('page=1'))).toBe(true))
  await userEvent.type(screen.getByRole('searchbox', { name: 'Tìm sự kiện' }), 'Ngày hội{Enter}')
  await waitFor(() => expect(vi.mocked(api.request).mock.calls.some(([path]) => {
   const params = new URLSearchParams(path.split('?')[1])
-  return params.get('page') === '0' && params.get('size') === '20' && params.get('q') === 'Ngày hội'
+  return params.get('page') === '0' && params.get('size') === '20' && params.get('q') === 'Ngày hội' && params.get('status') === 'OPEN'
  })).toBe(true))
- await userEvent.click(screen.getByRole('combobox', { name: 'Lọc trạng thái sự kiện' }))
- await userEvent.click(screen.getByTitle('Đang mở', { exact: true }))
- await waitFor(() => expect(vi.mocked(api.request).mock.calls.some(([path]) => new URLSearchParams(path.split('?')[1]).get('status') === 'OPEN')).toBe(true))
+})
+it('keeps the status filter available on own history', async () => {
+ show({ history: true, record: membership })
+ await screen.findByRole('heading', { name: event.title })
+ expect(screen.getByRole('combobox', { name: 'Lọc trạng thái sự kiện' })).toBeInTheDocument()
 })
 it('loads own history without ADMIN or unsupported search fields and resolves the event title', async () => {
  show({ history: true, record: membership })
