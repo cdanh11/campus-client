@@ -6,6 +6,7 @@ import type { components } from '../../api/schema'
 import { ApiError } from '../../api/client'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { ReferenceLabel, ReferencePicker } from '../people/ReferencePicker'
+import { ReferenceLabelsProvider } from '../people/reference-labels'
 type Notice = Required<components['schemas']['com.campus.notification.domain.Notice']>
 export function PublishNotice({ id, onClose }: { id: string; onClose: () => void }) {
  const [recipients, setRecipients] = useState<string[]>([])
@@ -35,7 +36,9 @@ export function PublishNotice({ id, onClose }: { id: string; onClose: () => void
   <ReferencePicker kind="recipient" label="Tài khoản nhận" value={candidate} onChange={setCandidate} disabled={locked || recipients.length >= 100} />
   <Button disabled={locked || !candidate || recipients.includes(candidate) || recipients.length >= 100} onClick={() => { if (candidate) { setRecipients([...recipients, candidate]); setCandidate(undefined) } }}>Thêm người nhận</Button>
   <p>Đã chọn: {recipients.length}/100</p>
-  <Space wrap>{recipients.map((recipient) => <Tag key={recipient} closable={!locked} onClose={() => setRecipients(recipients.filter((value) => value !== recipient))}><ReferenceLabel kind="recipient" value={recipient} /></Tag>)}</Space>
+  <ReferenceLabelsProvider requests={{ recipient: recipients }}>
+   <Space wrap>{recipients.map((recipient) => <Tag key={recipient} closable={!locked} onClose={() => setRecipients(recipients.filter((value) => value !== recipient))}><ReferenceLabel kind="recipient" value={recipient} /></Tag>)}</Space>
+  </ReferenceLabelsProvider>
   {mutation.error && <ErrorNotice error={mutation.error} />}
   {conflict && <Typography.Paragraph>Đóng và mở lại để kiểm tra bản nháp mới trước khi phát hành. Không tự động gửi lại.</Typography.Paragraph>}
  </Modal>

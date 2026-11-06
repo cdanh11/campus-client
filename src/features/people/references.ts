@@ -3,6 +3,10 @@ export type ReferenceKind = 'organization' | 'identity' | 'term' | 'course' | 'o
 export interface ReferenceSource { path: string; sort: string; search?: boolean; eligible?: Record<string, string>; available?: (row: RegistryRow) => boolean; label: (row: RegistryRow) => string }
 const base = '/api/v1/admin/'
 const named = (code: string, name: string) => (row: RegistryRow) => String(row[code]) + ' · ' + String(row[name])
+const dormitoryResidents: ReferenceKind[] = ['building', 'room', 'bed']
+export const lookupPath = (kind: ReferenceKind) => dormitoryResidents.includes(kind)
+ ? base + 'dormitory/lookup/' + kind + 's'
+ : referenceSources[kind].path + '/lookup'
 export const referenceSources: Record<ReferenceKind, ReferenceSource> = {
  bookTitle: { path: base + 'library/titles', sort: 'code,asc', eligible: { status: 'ACTIVE' }, label: named('code', 'title') },
  bookCopy: { path: base + 'library/copies', sort: 'code,asc', eligible: { status: 'ACTIVE' }, label: (row) => String(row.code) },

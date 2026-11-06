@@ -7,6 +7,7 @@ import { queryParams, safePageTotal } from '../../api/query-params'
 import type { components } from '../../api/schema'
 import type { PageResult } from '../people/contracts'
 import { ReferenceLabel, ReferencePicker } from '../people/ReferencePicker'
+import { ReferenceLabelsProvider } from '../people/reference-labels'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { nameRule, trimOrganization } from '../../forms/validation'
 import { amountRule, formatVnd, paymentAmount } from './money'
@@ -37,7 +38,8 @@ export function PaymentsPage() {
    <Select aria-label="Sắp xếp" value={filters.sort} options={sortOptions(['recordedAt', 'receiptNumber', 'amount', 'status', 'createdAt', 'updatedAt'], 'recordedAt,desc')} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })} />
   </Space>
   {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
-  <Table<Payment> rowKey="id" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 1000 }}
+  <ReferenceLabelsProvider requests={{ charge: (result.data?.content ?? []).map((payment) => payment.chargeId) }}>
+   <Table<Payment> rowKey="id" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 1000 }}
    locale={{ emptyText: 'Chưa có biên nhận phù hợp.' }}
    columns={[
     { title: 'Mã biên nhận', dataIndex: 'receiptNumber' }, { title: 'Khoản thu', dataIndex: 'chargeId', render: (id: unknown) => <ReferenceLabel kind="charge" value={id} /> },
@@ -45,6 +47,7 @@ export function PaymentsPage() {
     { title: 'Thao tác', render: (_, row) => <Space wrap><Button onClick={() => setEdit({ mode: 'detail', id: row.id })}>Chi tiết</Button><Button disabled={row.status !== 'RECORDED'} onClick={() => setEdit({ mode: 'reverse', id: row.id })}>Đảo biên nhận</Button></Space> },
    ]}
    pagination={{ current: filters.page + 1, pageSize: filters.size, total: result.data?.totalElements ?? 0, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setFilters({ ...filters, page: page - 1, size }) }} />
+  </ReferenceLabelsProvider>
   {edit && <PaymentEditor key={(edit.id ?? '') + edit.mode} {...edit} onClose={() => setEdit(null)} />}
  </>
 }
@@ -67,6 +70,7 @@ function PaymentEditor({ mode, id, onClose }: { mode: Mode; id?: string; onClose
    void queryClient.invalidateQueries({ queryKey: ['registry', '/api/v1/admin/finance/charges'] })
    void queryClient.invalidateQueries({ queryKey: ['reference'] })
    void queryClient.invalidateQueries({ queryKey: ['reference-selected'] })
+   void queryClient.invalidateQueries({ queryKey: ['reference-labels'] })
    void queryClient.invalidateQueries({ queryKey: ['charge-balance'] })
    void queryClient.invalidateQueries({ queryKey: ['charge-balance-mutation'] })
    onClose()

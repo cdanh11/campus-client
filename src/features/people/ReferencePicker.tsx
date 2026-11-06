@@ -7,6 +7,7 @@ import { ErrorNotice } from '../../components/ErrorNotice'
 import type { PageResult } from './contracts'
 import type { RegistryRow } from './resources'
 import { referenceSources, type ReferenceKind } from './references'
+import { ReferenceLabelsProvider, useReferenceLabels } from './reference-labels'
 
 const referenceOptions = { staleTime: 5 * 60_000, refetchOnWindowFocus: false }
 
@@ -30,7 +31,7 @@ export function ReferencePicker({ kind, value, onChange, id, label, disabled, el
  })
  const rows = [...(list.data?.content ?? [])]
  if (selected.data && !rows.some((row) => row.id === selected.data?.id)) rows.unshift(selected.data)
- return <><Select
+ const picker = <Select
   id={id} aria-label={label} value={value || undefined} onChange={onChange} disabled={disabled}
   allowClear={allowClear ?? kind === 'identity'} showSearch={source.search === false ? false : { filterOption: false, onSearch: (text) => { setQ(Array.from(text).slice(0, 100).join('')); setPage(0) } }}
   loading={list.isFetching || selected.isFetching} options={rows.map((row) => ({ value: row.id, title: source.label(row), disabled: eligible && source.available ? !source.available(row) : false, label: kind === 'offering' ? <OfferingSummary row={row} /> : source.label(row) }))}
@@ -38,17 +39,27 @@ export function ReferencePicker({ kind, value, onChange, id, label, disabled, el
   popupRender={(menu) => <>{menu}{list.error && <ErrorNotice error={list.error} onRetry={() => { void list.refetch() }} />}
    <Space className="reference-pages"><Button size="small" disabled={page === 0 || list.isFetching} onClick={() => setPage(page - 1)}>Trước</Button><span>Trang {page + 1}</span><Button size="small" disabled={!list.data || page + 1 >= list.data.totalPages || list.isFetching} onClick={() => setPage(page + 1)}>Sau</Button></Space>
   </>}
- />{selected.error && <ErrorNotice error={selected.error} onRetry={() => { void selected.refetch() }} />}</>
+ />
+ const body = <>{picker}{selected.error && <ErrorNotice error={selected.error} onRetry={() => { void selected.refetch() }} />}</>
+ return kind === 'offering'
+  ? <ReferenceLabelsProvider requests={{ course: rows.map((row) => String(row.courseId ?? '')), term: rows.map((row) => String(row.termId ?? '')) }}>{body}</ReferenceLabelsProvider>
+  : body
 }
 export function ReferenceLabel({ kind, value }: { kind: ReferenceKind; value: unknown }) {
  const source = referenceSources[kind]
+ const labels = useReferenceLabels()
+ const tracked = labels?.tracked(kind) ?? false
  const selected = useQuery({
   queryKey: ['reference-selected', source.path, value],
   queryFn: ({ signal }) => api.request<RegistryRow>(source.path + '/' + String(value), { signal }),
-  enabled: typeof value === 'string' && !!value, ...referenceOptions,
+  enabled: !tracked && typeof value === 'string' && !!value, ...referenceOptions,
  })
  if (!value) return <>—</>
- return <span title={String(value)}>{selected.data ? kind === 'offering' ? <OfferingSummary row={selected.data} /> : source.label(selected.data) : selected.error ? 'Không tải được tham chiếu' : 'Đang tải…'}</span>
+ const id = String(value)
+ const row = tracked ? labels?.row(kind, id) : selected.data
+ if (row) return <span title={id}>{kind === 'offering' ? <OfferingSummary row={row} /> : source.label(row)}</span>
+ const status = tracked ? labels?.status(kind) : selected.error ? 'error' : 'loading'
+ return <span title={id}>{status === 'loading' ? 'Đang tải…' : 'Không tải được tham chiếu'}</span>
 }
 
 function OfferingSummary({ row }: { row: RegistryRow }) {

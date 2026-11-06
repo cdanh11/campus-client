@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { App as AntApp, Button, Form, Input, InputNumber, Modal, Select, Space, Table, Tag, Typography } from 'antd'
 import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
@@ -10,6 +10,7 @@ import { fromLocalInput, toLocalInput } from '../../forms/datetime'
 import { ReferenceLabel, ReferencePicker } from './ReferencePicker'
 import { labels, type RegistryRow, type Resource, type Values } from './resources'
 import { referenceSources, type ReferenceKind } from './references'
+import { ReferenceLabelsProvider, type ReferenceRequests } from './reference-labels'
 import type { PageResult } from './contracts'
 
 const referenceKind = (type: string): type is ReferenceKind => type in referenceSources
@@ -26,6 +27,19 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
   queryFn: ({ signal }) => api.request<PageResult<RegistryRow>>(resource.path + '?' + params, { signal }),
  })
  const total = result.data?.totalElements ?? 0
+ const rows = useMemo(() => result.data?.content ?? [], [result.data])
+ const labelRequests = useMemo(() => {
+  const requests: ReferenceRequests = {}
+  const collect = (kind: ReferenceKind, ids: unknown[]) => {
+   requests[kind] = [...(requests[kind] ?? []), ...ids.map((id) => typeof id === 'string' ? id : undefined)]
+  }
+  for (const column of resource.columns) if (column.reference) collect(column.reference, rows.map((row) => row[column.key]))
+  if (resource.columns.some((column) => column.reference === 'offering')) {
+   collect('course', rows.map((row) => row.courseId))
+   collect('term', rows.map((row) => row.termId))
+  }
+  return requests
+ }, [resource, rows])
  const states = resource.states ?? [{ value: 'ACTIVE', label: 'Đang hoạt động' }, { value: 'INACTIVE', label: 'Ngừng hoạt động' }]
  return <>
   <div className="page-heading"><div><Typography.Title level={1}>{resource.title}</Typography.Title><Typography.Paragraph type="secondary">Tra cứu và quản lý theo dữ liệu hiện tại.</Typography.Paragraph></div><Button type="primary" onClick={() => setEdit({})}>Thêm {resource.singular}</Button></div>
@@ -43,7 +57,8 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
    <Select aria-label="Sắp xếp" value={filters.sort} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })} options={resource.sorts} style={{ minWidth: 160 }} />
   </Space>
   {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
-  <Table<RegistryRow> rowKey="id" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 850 }}
+  <ReferenceLabelsProvider requests={labelRequests}>
+   <Table<RegistryRow> rowKey="id" loading={result.isFetching} dataSource={rows} scroll={{ x: 850 }}
    columns={[
     ...resource.columns.map((column) => ({ title: column.title, key: column.key, dataIndex: column.key, render: (value: unknown) => column.format ? column.format(value) : column.reference
      ? <ReferenceLabel kind={column.reference} value={value} />
@@ -55,6 +70,7 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
    locale={{ emptyText: 'Chưa có bản ghi phù hợp.' }}
    pagination={{ current: filters.page + 1, pageSize: filters.size, total, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setFilters({ ...filters, page: page - 1, size }) }}
   />
+  </ReferenceLabelsProvider>
   {edit && <RegistryEditor key={edit.id ?? 'create'} resource={resource} id={edit.id} onClose={() => setEdit(null)} />}
  </>
 }
@@ -73,6 +89,7 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
    void queryClient.invalidateQueries({ queryKey: ['registry', resource.path] })
    void queryClient.invalidateQueries({ queryKey: ['reference'] })
    void queryClient.invalidateQueries({ queryKey: ['reference-selected'] })
+   void queryClient.invalidateQueries({ queryKey: ['reference-labels'] })
    onClose()
   },
  })
