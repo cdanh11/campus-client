@@ -4,6 +4,7 @@ import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api } from '../../api/runtime'
 import { safePageTotal } from '../../api/query-params'
 import { ErrorNotice } from '../../components/ErrorNotice'
+import { PageChrome } from '../../components/PageChrome'
 import { CampusTime, campusTimeText, isInstant } from '../../components/CampusTime'
 import { ReferencePicker } from '../people/ReferencePicker'
 import type { ReportKind, ReportPage as Page, ReportRow } from './contracts'
@@ -21,7 +22,7 @@ export function saveCsv(csv: string, kind: ReportKind) {
 }
 export function ReportsPage() {
  const [kind, setKind] = useState<ReportKind>('STUDENT_DEBT')
- return <><Typography.Title level={1}>Báo cáo</Typography.Title><Select aria-label="Loại báo cáo" value={kind} onChange={setKind} options={Object.entries(reportConfig).map(([value, config]) => ({ value, label: config.label }))} style={{ width: 280 }} /><ReportList key={kind} kind={kind} /></>
+ return <PageChrome eyebrow="CAMPUS INTELLIGENCE" title="Báo cáo" description="Chọn loại báo cáo, lọc dữ liệu nguồn và tải CSV cho toàn bộ kết quả." actions={<Select aria-label="Loại báo cáo" value={kind} onChange={setKind} options={Object.entries(reportConfig).map(([value, config]) => ({ value, label: config.label }))} style={{ width: 280 }} />}><ReportList key={kind} kind={kind} /></PageChrome>
 }
 function ReportList({ kind }: { kind: ReportKind }) {
  const [filters, setFilters] = useState<Filters>({})

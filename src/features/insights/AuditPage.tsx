@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Button, Descriptions, Form, Input, Modal, Select, Space, Table, Typography } from 'antd'
+import { Button, Descriptions, Form, Input, Modal, Select, Space, Table } from 'antd'
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api } from '../../api/runtime'
 import { safePageTotal } from '../../api/query-params'
 import { ErrorNotice } from '../../components/ErrorNotice'
+import { PageChrome } from '../../components/PageChrome'
 import { campusTimeText, isInstant } from '../../components/CampusTime'
 import type { Audit, AuditPage as Page, AuditSource } from './contracts'
 import { actionLimit, auditResources } from './config'
@@ -12,9 +13,7 @@ import { TimeFilters } from './TimeFilters'
 const auditText = (value: unknown) => isInstant(value) ? campusTimeText(value) : String(value ?? '—')
 export function AuditsPage() {
  const [source, setSource] = useState<AuditSource>('IDENTITY')
- return <><Typography.Title level={1}>Nhật ký audit</Typography.Title><Typography.Paragraph>Chỉ xem lịch sử đã ghi nhận, từng nguồn riêng; phiên bản trống nghĩa nguồn đó không ghi phiên bản. Metadata chỉ hiển thị trạng thái đã được API cho phép.</Typography.Paragraph>
-  <Select aria-label="Nguồn audit" value={source} onChange={setSource} options={Object.keys(auditResources).map((value) => ({ value, label: value }))} style={{ width: 240 }} /><AuditList key={source} source={source} />
- </>
+ return <PageChrome eyebrow="CAMPUS INTELLIGENCE" title="Nhật ký audit" description="Chỉ xem lịch sử đã ghi nhận, từng nguồn riêng; phiên bản trống nghĩa nguồn đó không ghi phiên bản. Metadata chỉ hiển thị trạng thái đã được API cho phép." actions={<Select aria-label="Nguồn audit" value={source} onChange={setSource} options={Object.keys(auditResources).map((value) => ({ value, label: value }))} style={{ width: 240 }} />}><AuditList key={source} source={source} /></PageChrome>
 }
 function AuditList({ source }: { source: AuditSource }) {
  const [filters, setFilters] = useState<Filters>({})

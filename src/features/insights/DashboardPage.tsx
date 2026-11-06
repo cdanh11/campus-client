@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { Button, Card, Typography } from 'antd'
+import { Button, Card } from 'antd'
 import { api } from '../../api/runtime'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { CampusTime } from '../../components/CampusTime'
+import { PageChrome } from '../../components/PageChrome'
 import type { Dashboard } from './contracts'
 import { metricText } from './query'
 const groupLabels: Record<string, string> = { IDENTITY: 'Tài khoản', PEOPLE: 'Hồ sơ', ACADEMIC: 'Học vụ', DORMITORY: 'Ký túc xá', FINANCE: 'Tài chính', NOTIFICATION: 'Thông báo', EVENT: 'Sự kiện', LIBRARY: 'Thư viện' }
@@ -15,8 +16,8 @@ export function DashboardPage() {
    return { group, label, metrics: Object.entries(data.groups[group]).map(([key, value]) => ({ key, label: metricLabels[key] ?? key, value: metricText(value, key.endsWith('_vnd')) })) }
   }) }),
  })
- return <><Typography.Title level={1}>Dashboard</Typography.Title><Typography.Paragraph>Số liệu tại thời điểm đọc; không tái dựng lịch sử. Thanh toán đã đảo không đóng góp vào số thanh toán hiệu lực.</Typography.Paragraph><Button disabled={result.isFetching} onClick={() => { void result.refetch() }}>Làm mới dashboard</Button>
+ return <PageChrome eyebrow="CAMPUS INTELLIGENCE" title="Dashboard" description="Số liệu tại thời điểm đọc; không tái dựng lịch sử. Thanh toán đã đảo không đóng góp vào số thanh toán hiệu lực." actions={<Button disabled={result.isFetching} onClick={() => { void result.refetch() }}>Làm mới dashboard</Button>}>
   {result.isFetching && <p role="status">Đang tải dashboard…</p>}{result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
   {result.data && <><p>Dữ liệu tại thời điểm: <CampusTime value={result.data.asOf} /></p><div className="dashboard-grid">{result.data.groups.map((group) => <Card key={group.group} title={group.label} ><dl className="metric-list">{group.metrics.map((metric) => <div key={metric.key}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>)}</dl></Card>)}</div></>}
- </>
+ </PageChrome>
 }
