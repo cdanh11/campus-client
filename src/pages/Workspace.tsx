@@ -41,7 +41,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
  const [open, setOpen] = useState(false)
  const location = useLocation()
  const inbox = useQuery({
-  queryKey: ['workspace-inbox'],
+  queryKey: ['inbox', 'workspace'],
   enabled: location.pathname === '/',
   queryFn: ({ signal }) => api.request<{ content: InboxItem[] }>('/api/v1/notifications?' + queryParams({ page: 0, size: 3, sort: 'deliveredAt,desc' }), { signal }),
  })
