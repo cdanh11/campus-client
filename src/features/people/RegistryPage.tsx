@@ -5,6 +5,8 @@ import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import { queryParams, safePageTotal } from '../../api/query-params'
 import { ErrorNotice } from '../../components/ErrorNotice'
+import { campusTimeText, isInstant } from '../../components/CampusTime'
+import { fromLocalInput, toLocalInput } from '../../forms/datetime'
 import { ReferenceLabel, ReferencePicker } from './ReferencePicker'
 import { labels, type RegistryRow, type Resource, type Values } from './resources'
 import { referenceSources, type ReferenceKind } from './references'
@@ -44,6 +46,7 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
    columns={[
     ...resource.columns.map((column) => ({ title: column.title, key: column.key, dataIndex: column.key, render: (value: unknown) => column.format ? column.format(value) : column.reference
      ? <ReferenceLabel kind={column.reference} value={value} />
+     : isInstant(value) ? campusTimeText(value)
      : resource.fields.find((field) => field.name === column.key)?.options?.find((option) => option.value === value)?.label ?? String(value ?? '—') })),
     { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={value === 'ACTIVE' || value === 'OPEN' || value === 'ENROLLED' ? 'green' : 'default'}>{labels[String(value)] ?? String(value)}</Tag> },
     { title: 'Thao tác', key: 'actions', render: (_, row) => <Space wrap><Button onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space> },
@@ -90,10 +93,15 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
     const disabled = readOnly || (!!id && !!detail.data && !!resource.disabled?.(field, detail.data))
     const choices = detail.data ? resource.choices?.(field, detail.data) ?? field.options : field.options
     return <Form.Item key={field.name} name={field.name} label={field.label} dependencies={field.dependencies}
+     {...(field.type === 'datetime' ? {
+      getValueProps: (value: string | undefined) => ({ value: toLocalInput(value) }),
+      normalize: (value: string | undefined) => fromLocalInput(value),
+     } : {})}
      rules={[...(field.required ? [{ required: true, message: 'Chọn ' + field.label.toLowerCase() + '.' }] : []), ...(field.rules ?? [])]}>
      {field.type === 'enum' ? <Select options={choices} disabled={disabled || busy} /> :
       referenceKind(field.type) ? <ReferencePicker kind={field.type} label={field.label} disabled={disabled || busy} allowClear={!field.required} /> :
       field.type === 'textarea' ? <Input.TextArea rows={5} disabled={disabled || busy} /> :
+      field.type === 'datetime' ? <Input type="datetime-local" step="1" disabled={disabled || busy} /> :
        field.type === 'integer' ? <InputNumber min={field.min} max={field.max} disabled={disabled || busy} style={{ width: '100%' }} /> :
       <Input placeholder={field.placeholder} inputMode={field.inputMode} maxLength={field.maxLength} type={field.type === 'date' ? 'date' : 'text'} autoComplete="off" disabled={disabled || busy} />}
     </Form.Item>

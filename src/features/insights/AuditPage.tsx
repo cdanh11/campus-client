@@ -4,10 +4,12 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '../../api/runtime'
 import { safePageTotal } from '../../api/query-params'
 import { ErrorNotice } from '../../components/ErrorNotice'
+import { campusTimeText, isInstant } from '../../components/CampusTime'
 import type { Audit, AuditPage as Page, AuditSource } from './contracts'
 import { actionLimit, auditResources } from './config'
 import { auditParams, uuidRule, type Filters } from './query'
 import { TimeFilters } from './TimeFilters'
+const auditText = (value: unknown) => isInstant(value) ? campusTimeText(value) : String(value ?? '—')
 export function AuditsPage() {
  const [source, setSource] = useState<AuditSource>('IDENTITY')
  return <><Typography.Title level={1}>Nhật ký audit</Typography.Title><Typography.Paragraph>Chỉ xem lịch sử đã ghi nhận, từng nguồn riêng; phiên bản trống nghĩa nguồn đó không ghi phiên bản. Metadata chỉ hiển thị trạng thái đã được API cho phép.</Typography.Paragraph>
@@ -30,7 +32,7 @@ function AuditList({ source }: { source: AuditSource }) {
  <Space wrap><Select aria-label="Sắp xếp audit" value={paging.sort} onChange={(sort) => setPaging({ ...paging, sort, page: 0 })} options={['occurredAt,desc', 'occurredAt,asc'].map((value) => ({ value, label: value }))} /><Button disabled={result.isFetching} onClick={() => { void result.refetch() }}>Làm mới audit</Button></Space>
  {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
  <Table<Audit> rowKey="id" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 1000 }} columns={[
-  ...['resource', 'targetId', 'actorId', 'action', 'resourceVersion', 'occurredAt'].map((key) => ({ title: key, key, render: (_: unknown, row: Audit) => String(row[key as keyof Audit] ?? '—') })),
+  ...['resource', 'targetId', 'actorId', 'action', 'resourceVersion', 'occurredAt'].map((key) => ({ title: key, key, render: (_: unknown, row: Audit) => auditText(row[key as keyof Audit]) })),
   { title: 'Chi tiết', key: 'detail', render: (_, row) => <Button onClick={() => setId(row.id)}>Xem audit</Button> },
  ]} locale={{ emptyText: 'Chưa có audit phù hợp.' }} pagination={{ current: paging.page + 1, pageSize: paging.size, total: result.data?.totalElements ?? 0, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setPaging({ ...paging, page: page - 1, size }) }} />
  {id && <AuditDetail source={source} id={id} onClose={() => setId(undefined)} />}
@@ -40,6 +42,6 @@ function AuditDetail({ source, id, onClose }: { source: AuditSource; id: string;
  const result = useQuery({ queryKey: ['audit-detail', source, id], queryFn: ({ signal }) => api.request<Audit>('/api/v1/admin/audits/' + source + '/' + id, { signal }) })
  return <Modal open title="Chi tiết audit" onCancel={onClose} footer={<Button onClick={onClose}>Đóng</Button>}>
   {result.isFetching && <p role="status">Đang tải audit…</p>}{result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
-  {result.data && <Descriptions column={1} items={[...['id', 'source', 'resource', 'targetId', 'actorId', 'action', 'resourceVersion', 'occurredAt'].map((key) => ({ key, label: key, children: String(result.data![key as keyof Audit] ?? '—') })), { key: 'status', label: 'Metadata status', children: result.data.metadata?.status ?? '—' }]} />}
+  {result.data && <Descriptions column={1} items={[...['id', 'source', 'resource', 'targetId', 'actorId', 'action', 'resourceVersion', 'occurredAt'].map((key) => ({ key, label: key, children: auditText(result.data![key as keyof Audit]) })), { key: 'status', label: 'Metadata status', children: result.data.metadata?.status ?? '—' }]} />}
  </Modal>
 }

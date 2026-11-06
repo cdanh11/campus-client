@@ -21,7 +21,7 @@ it('rejects reversed times and fractional capacity in the form without submittin
  show(events)
  await userEvent.click(screen.getByRole('button', { name: 'Thêm sự kiện' }))
  const dialog = within(screen.getByRole('dialog'))
- for (const [label, value] of [['Mã sự kiện', 'EV1'], ['Tên sự kiện', 'Sự kiện'], ['Mô tả', 'Mô tả'], ['Bắt đầu (UTC)', '2026-12-01T10:00:00Z'], ['Kết thúc (UTC)', '2026-12-01T09:00:00Z']]) fireEvent.change(dialog.getByLabelText(label), { target: { value } })
+ for (const [label, value] of [['Mã sự kiện', 'EV1'], ['Tên sự kiện', 'Sự kiện'], ['Mô tả', 'Mô tả'], ['Bắt đầu (UTC+7)', '2026-12-01T10:00'], ['Kết thúc (UTC+7)', '2026-12-01T09:00']]) fireEvent.change(dialog.getByLabelText(label), { target: { value } })
  fireEvent.change(dialog.getByRole('spinbutton', { name: 'Sức chứa' }), { target: { value: '1.5' } })
  await userEvent.click(dialog.getByRole('button', { name: 'Lưu' }))
  await dialog.findByText('Kết thúc phải sau bắt đầu.')
