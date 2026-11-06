@@ -14,10 +14,17 @@ export const reportConfig: Record<ReportKind, { label: string; columns: string[]
  EVENT_MEMBERSHIP: { label: 'Tham gia sự kiện', columns: ['id', 'eventId', 'studentId', 'eventCode', 'eventTitle', 'status', 'registeredAt', 'cancelledAt', 'attendedAt'], reference: 'event', resourceLabel: 'Sự kiện', statuses: ['REGISTERED', 'CANCELLED', 'ATTENDED'] },
  LIBRARY_LOANS: { label: 'Sách đang mượn', columns: ['id', 'studentId', 'copyId', 'titleId', 'copyCode', 'title', 'borrowedAt', 'dueAt', 'overdue'], reference: 'bookCopy', resourceLabel: 'Bản sao' },
 }
+export const reportReferences: Record<ReportKind, Partial<Record<string, ReferenceKind>>> = {
+ STUDENT_DEBT: { studentId: 'student' },
+ CURRENT_ACCOMMODATION: { studentId: 'student', bedId: 'bed', roomId: 'room', buildingId: 'building' },
+ SECTION_ENROLLMENT: { studentId: 'student', sectionId: 'section', offeringId: 'offering', termId: 'term', courseId: 'course' },
+ EVENT_MEMBERSHIP: { eventId: 'event', studentId: 'student' },
+ LIBRARY_LOANS: { studentId: 'student', copyId: 'bookCopy', titleId: 'bookTitle' },
+}
 export const columnLabels: Record<string, string> = {
- id: 'UUID', studentId: 'Sinh viên UUID', chargeCount: 'Số khoản thu', principalVnd: 'Gốc VND', paidVnd: 'Đã trả VND', outstandingVnd: 'Còn nợ VND',
- bedId: 'Giường UUID', roomId: 'Phòng UUID', buildingId: 'Tòa nhà UUID', assignedAt: 'Nhận chỗ UTC',
- sectionId: 'Lớp UUID', offeringId: 'Đợt mở môn UUID', termId: 'Học kỳ UUID', courseId: 'Môn UUID', status: 'Trạng thái', updatedAt: 'Cập nhật UTC',
- eventId: 'Sự kiện UUID', eventCode: 'Mã sự kiện', eventTitle: 'Tên sự kiện', registeredAt: 'Đăng ký UTC', cancelledAt: 'Hủy UTC', attendedAt: 'Tham dự UTC',
- copyId: 'Bản sao UUID', titleId: 'Đầu sách UUID', copyCode: 'Mã bản sao', title: 'Tên sách', borrowedAt: 'Mượn UTC', dueAt: 'Hạn trả UTC', overdue: 'Quá hạn',
+ id: 'Mã bản ghi', studentId: 'Sinh viên', chargeCount: 'Số khoản thu', principalVnd: 'Gốc VND', paidVnd: 'Đã trả VND', outstandingVnd: 'Còn nợ VND',
+ bedId: 'Giường', roomId: 'Phòng', buildingId: 'Tòa nhà', assignedAt: 'Nhận chỗ',
+ sectionId: 'Lớp học phần', offeringId: 'Đợt mở môn', termId: 'Học kỳ', courseId: 'Môn học', status: 'Trạng thái', updatedAt: 'Cập nhật',
+ eventId: 'Sự kiện', eventCode: 'Mã sự kiện', eventTitle: 'Tên sự kiện', registeredAt: 'Đăng ký', cancelledAt: 'Hủy', attendedAt: 'Tham dự',
+ copyId: 'Bản sao', titleId: 'Đầu sách', copyCode: 'Mã bản sao', title: 'Tên sách', borrowedAt: 'Mượn', dueAt: 'Hạn trả', overdue: 'Quá hạn',
 }

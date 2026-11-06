@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button, Checkbox, Form, Select, Space, Table, Typography } from 'antd'
 import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api } from '../../api/runtime'
@@ -6,11 +6,20 @@ import { safePageTotal } from '../../api/query-params'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { PageChrome } from '../../components/PageChrome'
 import { CampusTime, campusTimeText, isInstant } from '../../components/CampusTime'
-import { ReferencePicker } from '../people/ReferencePicker'
+import { ReferenceLabel, ReferencePicker } from '../people/ReferencePicker'
+import { ReferenceLabelsProvider, type ReferenceRequests } from '../people/reference-labels'
 import type { ReportKind, ReportPage as Page, ReportRow } from './contracts'
-import { columnLabels, reportConfig } from './config'
+import { columnLabels, reportConfig, reportReferences } from './config'
 import { metricText, reportParams, type Filters } from './query'
 import { TimeFilters } from './TimeFilters'
+import { statusOptions, statusText } from '../status-options'
+const columnWidths: Record<string, number> = {
+ studentId: 190, chargeCount: 110, principalVnd: 130, paidVnd: 130, outstandingVnd: 140,
+ bedId: 160, roomId: 140, buildingId: 160, assignedAt: 140,
+ sectionId: 200, offeringId: 180, termId: 150, courseId: 180, status: 110, updatedAt: 140,
+ eventId: 220, eventCode: 130, eventTitle: 180, registeredAt: 140, cancelledAt: 140, attendedAt: 140,
+ copyId: 150, titleId: 180, copyCode: 130, title: 180, borrowedAt: 140, dueAt: 140, overdue: 90,
+}
 export function saveCsv(csv: string, kind: ReportKind) {
  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=UTF-8' }))
  const link = document.createElement('a'); link.href = url; link.download = kind.toLowerCase() + '.csv'
@@ -41,11 +50,23 @@ function ReportList({ kind }: { kind: ReportKind }) {
   },
  })
  const download = useMutation({ mutationFn: () => api.downloadCsv(path + '/export?' + reportParams(kind, filters, 0, paging.size, paging.sort, true)), onSuccess: (csv) => saveCsv(csv, kind) })
+ const references = reportReferences[kind]
+ const requests = useMemo(() => {
+  const requests: ReferenceRequests = {}
+  for (const [key, reference] of Object.entries(references)) {
+   if (!reference) continue
+   for (const row of result.data?.content ?? []) {
+    const value = (row as Record<string, unknown>)[key]
+    if (typeof value === 'string') requests[reference] = [...(requests[reference] ?? []), value]
+   }
+  }
+  return requests
+ }, [references, result.data])
  return <><Typography.Title level={2}>{config.label}</Typography.Title><Typography.Paragraph>Báo cáo hiện tại; khoảng thời gian lọc dữ liệu nguồn, không phải số dư lịch sử. CSV gồm toàn bộ dữ liệu phù hợp, tối đa 5.000 dòng; có thể khác trang hiện tại nếu dữ liệu vừa thay đổi.</Typography.Paragraph>
   <Form<Filters> layout="vertical" onFinish={(values) => { setFilters(values); setPaging({ ...paging, page: 0 }); download.reset() }}>
    <Space wrap align="start"><Form.Item name="studentId" label="Lọc sinh viên"><ReferencePicker kind="student" label="Lọc sinh viên" eligible={false} allowClear /></Form.Item>
     {config.reference && <Form.Item name="resourceId" label={'Lọc ' + config.resourceLabel?.toLowerCase()}><ReferencePicker kind={config.reference} label={'Lọc ' + config.resourceLabel?.toLowerCase()} eligible={false} allowClear /></Form.Item>}
-    {config.statuses && <Form.Item name="status" label="Trạng thái"><Select aria-label="Trạng thái báo cáo" allowClear options={config.statuses.map((value) => ({ value, label: value }))} style={{ width: 170 }} /></Form.Item>}
+    {config.statuses && <Form.Item name="status" label="Trạng thái"><Select aria-label="Trạng thái báo cáo" allowClear options={statusOptions(config.statuses)} style={{ width: 170 }} /></Form.Item>}
     <TimeFilters />{kind === 'LIBRARY_LOANS' && <Form.Item name="overdueOnly" valuePropName="checked"><Checkbox>Chỉ quá hạn</Checkbox></Form.Item>}
     <Button htmlType="submit" type="primary">Áp dụng bộ lọc</Button>
    </Space>
@@ -53,10 +74,13 @@ function ReportList({ kind }: { kind: ReportKind }) {
   <Space wrap><Select aria-label="Sắp xếp báo cáo" value={paging.sort} onChange={(sort) => setPaging({ ...paging, sort, page: 0 })} options={[{ value: 'id,asc', label: 'Thứ tự tăng dần' }, { value: 'id,desc', label: 'Thứ tự giảm dần' }]} /><Button aria-label="Tải CSV" loading={download.isPending} disabled={download.isPending || result.isFetching || !!result.error || !result.data} onClick={() => download.mutate()}>Tải CSV</Button><Button disabled={result.isFetching} onClick={() => { void result.refetch() }}>Làm mới báo cáo</Button></Space>
   {download.error && <ErrorNotice error={download.error} />}{result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
   {result.data && <p>Dữ liệu tại thời điểm: <CampusTime value={result.data.asOf} /></p>}
-  <Table<ReportRow> rowKey={(row) => String('id' in row ? row.id : 'studentId' in row ? row.studentId : '')} loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 1000 }}
-   columns={config.columns.map((key) => ({ title: columnLabels[key] ?? key, key, render: (_, row) => {
-    const value: unknown = (row as Record<string, unknown>)[key]
-    return key.endsWith('Vnd') ? metricText(value, true) : key === 'chargeCount' ? metricText(value) : typeof value === 'boolean' ? value ? 'Có' : 'Không' : isInstant(value) ? campusTimeText(value) : String(value ?? '—')
-   } }))} locale={{ emptyText: 'Chưa có dữ liệu phù hợp.' }} pagination={{ current: paging.page + 1, pageSize: paging.size, total: result.data?.totalElements ?? 0, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setPaging({ ...paging, page: page - 1, size }) }} />
+  <ReferenceLabelsProvider requests={requests}>
+   <Table<ReportRow> rowKey={(row) => String('id' in row ? row.id : 'studentId' in row ? row.studentId : '')} loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 1200 }}
+    columns={config.columns.filter((key) => key !== 'id').map((key) => ({ title: columnLabels[key] ?? key, key, width: columnWidths[key], render: (_, row) => {
+     const value: unknown = (row as Record<string, unknown>)[key]
+     const reference = references[key]
+     return key.endsWith('Vnd') ? metricText(value, true) : key === 'chargeCount' ? metricText(value) : typeof value === 'boolean' ? value ? 'Có' : 'Không' : isInstant(value) ? campusTimeText(value) : key === 'status' ? statusText(value) : reference ? <ReferenceLabel kind={reference} value={value} /> : String(value ?? '—')
+    } }))} locale={{ emptyText: 'Chưa có dữ liệu phù hợp.' }} pagination={{ current: paging.page + 1, pageSize: paging.size, total: result.data?.totalElements ?? 0, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setPaging({ ...paging, page: page - 1, size }) }} />
+  </ReferenceLabelsProvider>
  </>
 }

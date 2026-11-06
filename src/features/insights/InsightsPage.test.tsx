@@ -36,7 +36,7 @@ it('resets unsupported report filters on kind change and surfaces failed export 
  await userEvent.click(screen.getByRole('combobox', { name: 'Loại báo cáo' }))
  await userEvent.click(await screen.findByText('Tham gia sự kiện', { selector: '.ant-select-item-option-content' }))
  await userEvent.click(screen.getByRole('combobox', { name: 'Trạng thái báo cáo' }))
- await userEvent.click(await screen.findByText('CANCELLED', { selector: '.ant-select-item-option-content' }))
+ await userEvent.click(await screen.findByText('Đã hủy', { selector: '.ant-select-item-option-content' }))
  await userEvent.click(screen.getByRole('button', { name: 'Áp dụng bộ lọc' }))
  await waitFor(() => expect(request).toHaveBeenCalledWith(expect.stringContaining('status=CANCELLED'), expect.anything()))
  await userEvent.click(screen.getByRole('button', { name: 'Tải CSV' }))
