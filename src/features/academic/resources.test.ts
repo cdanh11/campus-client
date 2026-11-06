@@ -18,7 +18,18 @@ it('freezes term dates after activation and section admission fields after DRAFT
   expect(academicResources.sections.disabled!(field, current)).toBe(true)
  }
  expect(academicResources.sections.disabled!(academicResources.sections.fields.find((field) => field.name === 'status')!, current)).toBe(false)
+ for (const name of ['weekday', 'startsAt', 'endsAt', 'room']) {
+  expect(academicResources.sections.disabled!(academicResources.sections.fields.find((field) => field.name === name)!, current)).toBe(false)
+ }
  expect(academicResources.terms.disabled!(academicResources.terms.fields.find((field) => field.name === 'startDate')!, { ...current, status: 'ACTIVE' })).toBe(true)
+})
+it('round-trips a section schedule between the nested response and the flat form', () => {
+ const current = { id: 's', rowVersion: 2, status: 'OPEN', code: 'S1', capacity: 30, schedule: { weekday: 3, startsAt: '07:30:00', endsAt: '09:30:00', room: 'A101' } }
+ const form = academicResources.sections.editValues!(current)
+ expect(form).toMatchObject({ weekday: '3', startsAt: '07:30', endsAt: '09:30', room: 'A101' })
+ expect(academicResources.sections.body({ ...form, status: 'OPEN' }, current)).toEqual({
+  code: 'S1', capacity: 30, facultyId: undefined, weekday: 3, startsAt: '07:30', endsAt: '09:30', room: 'A101', status: 'OPEN', expectedVersion: 2,
+ })
 })
 it('offers approved transitions only, while allowing retained metadata updates', () => {
  expect(lifecycleOptions('term', 'PLANNED')).toEqual(['PLANNED', 'ACTIVE', 'CANCELLED'])

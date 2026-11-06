@@ -5,10 +5,10 @@ import { nameRule, trimOrganization } from '../../forms/validation'
 import { amountRule, formatVnd, integerVnd, paymentAmount } from './money'
 import { ChargeBalancePanel } from './ChargeBalancePanel'
 import { sortOptions } from '../sort-options'
+import { statusOptions as options } from '../status-options'
 type Schemas = components['schemas']
 const code = (key = 'code', label = 'Mã'): Field => ({ name: key, label, type: 'text', rules: [nameRule(2, 32, trimOrganization), nameRule(2, 32, (value) => trimOrganization(value).toUpperCase())] })
 const text = (name: string, label: string): Field => ({ name, label, type: 'text', rules: [nameRule(2, 160, trimOrganization)] })
-const options = (values: string[]) => values.map((value) => ({ value, label: value }))
 const active = options(['ACTIVE', 'INACTIVE'])
 const sorts = sortOptions
 const str = (values: Values, key: string) => String(values[key] ?? '')
@@ -33,11 +33,11 @@ export const rooms = inventory('rooms', 'Phòng ký túc xá', 'phòng', 'buildi
 export const beds = inventory('beds', 'Giường', 'giường', 'room')
 export const assignments: Resource = {
  path: '/api/v1/admin/dormitory/assignments', title: 'Phân chỗ ở', singular: 'phân chỗ', identifier: 'id', search: false,
- fields: [reference('studentId', 'Sinh viên', 'student'), reference('bedId', 'Giường', 'bed'), { name: 'status', label: 'Thao tác', type: 'enum', required: true, options: options(['RELEASED']), updateOnly: true }],
+ fields: [reference('studentId', 'Sinh viên', 'student'), reference('bedId', 'Giường', 'bed'), { name: 'status', label: 'Thao tác', type: 'enum', required: true, options: [{ value: 'RELEASED', label: 'Trả chỗ' }], updateOnly: true }],
  filters: [reference('studentId', 'Lọc sinh viên', 'student', false), reference('bedId', 'Lọc giường', 'bed', false)],
  columns: [{ key: 'studentId', title: 'Sinh viên', reference: 'student' }, { key: 'bedId', title: 'Giường', reference: 'bed' }, { key: 'assignedAt', title: 'Nhận chỗ' }, { key: 'releasedAt', title: 'Trả chỗ' }],
- sorts: sorts(['assignedAt', 'createdAt', 'updatedAt', 'status'], 'assignedAt,desc'), states: options(['ASSIGNED', 'RELEASED']),
- note: 'Mỗi sinh viên và giường chỉ có một chỗ ASSIGNED. Trả chỗ giữ lịch sử; lần ở tiếp theo tạo bản ghi mới.',
+ sorts: sorts(['assignedAt', 'createdAt', 'updatedAt', 'status'], 'assignedAt,desc'), states: [{ value: 'ASSIGNED', label: 'Đang ở' }, { value: 'RELEASED', label: 'Đã trả chỗ' }],
+ note: 'Mỗi sinh viên và giường chỉ có một chỗ đang ở. Trả chỗ giữ lịch sử; lần ở tiếp theo tạo bản ghi mới.',
  disabled: (field) => field.name !== 'status', readOnly: (current) => current.status === 'RELEASED',
  editValues: (current) => ({ ...current, status: undefined }),
  body: (values, current) => current
@@ -58,8 +58,8 @@ export const fees: Resource = {
  },
 }
 export const charges: Resource = {
- path: '/api/v1/admin/finance/charges', title: 'Khoản thu', singular: 'khoản thu', identifier: 'chargeNumber', states: options(['OPEN', 'CANCELLED']),
- fields: [code('chargeNumber', 'Mã khoản thu'), reference('studentId', 'Sinh viên', 'student'), reference('feeId', 'Biểu phí', 'fee'), { name: 'dueDate', label: 'Hạn thanh toán', type: 'date', required: true }, { name: 'status', label: 'Thao tác', type: 'enum', options: options(['CANCELLED']), required: true, updateOnly: true }],
+ path: '/api/v1/admin/finance/charges', title: 'Khoản thu', singular: 'khoản thu', identifier: 'chargeNumber', states: [{ value: 'OPEN', label: 'Chưa thu' }, { value: 'CANCELLED', label: 'Đã hủy' }],
+ fields: [code('chargeNumber', 'Mã khoản thu'), reference('studentId', 'Sinh viên', 'student'), reference('feeId', 'Biểu phí', 'fee'), { name: 'dueDate', label: 'Hạn thanh toán', type: 'date', required: true }, { name: 'status', label: 'Thao tác', type: 'enum', options: [{ value: 'CANCELLED', label: 'Hủy khoản thu' }], required: true, updateOnly: true }],
  filters: [reference('studentId', 'Lọc sinh viên', 'student', false), reference('feeId', 'Lọc biểu phí', 'fee', false)],
  columns: [{ key: 'chargeNumber', title: 'Mã' }, { key: 'studentId', title: 'Sinh viên', reference: 'student' }, { key: 'feeName', title: 'Tên phí đã lưu' }, { key: 'amount', title: 'Số tiền đã lưu', format: formatVnd }, { key: 'dueDate', title: 'Hạn thanh toán' }],
  sorts: sorts(['chargeNumber', 'amount', 'dueDate', 'status', 'createdAt', 'updatedAt'], 'dueDate,asc'),

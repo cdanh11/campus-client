@@ -1,11 +1,11 @@
 import { lazy, Suspense, type ReactNode } from 'react'
-import { Card, Typography } from 'antd'
-import { Link, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { UserPage } from './UserPage'
 import { RegistryPage } from './RegistryPage'
 import { resources } from './resources'
+import AdminHome from './AdminHome'
 import type { User } from '../../api/client'
-import { administrationDestinations, administrationRoles, canAdminister, type AdministrationArea } from '../../api/administration'
+import { administrationRoles, type AdministrationArea } from '../../api/administration'
 import { AccessBoundary } from '../../components/AccessBoundary'
 import { PageChrome, EmptyState } from '../../components/PageChrome'
 
@@ -18,10 +18,7 @@ const AdminOperations = lazy(() => import('../operations/AdminOperations'))
 export default function AdminPeople({ user }: { user: User }) {
  const gate = (area: AdministrationArea, element: ReactNode) => <AccessBoundary user={user} roles={administrationRoles[area]}>{element}</AccessBoundary>
  return <Routes>
-  <Route index element={<PageChrome eyebrow="CAMPUS OPERATIONS" title="Không gian quản trị" description="Một bảng điều khiển thống nhất cho mọi nghiệp vụ vận hành trong trường.">
-   <div className="overview-intro"><div><Typography.Title level={2}>Trung tâm điều phối</Typography.Title><Typography.Paragraph>Chọn một không gian để bắt đầu. Các module hiển thị theo quyền của tài khoản.</Typography.Paragraph></div><span className="overview-badge">{administrationDestinations.filter(({ area }) => canAdminister(user, area)).length} khu vực</span></div>
-   <div className="overview-grid">{administrationDestinations.filter(({ area }) => canAdminister(user, area)).map(({ area, path, title }) => <Card key={area} className="overview-card" title={<span>{title}</span>}><Link to={path} aria-label={'Mở ' + title}>Mở không gian <span aria-hidden="true">→</span></Link></Card>)}</div>
-  </PageChrome>} />
+  <Route index element={<AdminHome user={user} />} />
   <Route path="insights/*" element={<Suspense fallback={<p role="status">Đang tải…</p>}><AdminInsights user={user} /></Suspense>} />
   <Route path="library/*" element={gate('library', <Suspense fallback={<p role="status">Đang tải…</p>}><AdminLibrary /></Suspense>)} />
   <Route path="events/*" element={gate('events', <Suspense fallback={<p role="status">Đang tải…</p>}><AdminEvents /></Suspense>)} />

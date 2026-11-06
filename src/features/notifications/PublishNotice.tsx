@@ -7,6 +7,7 @@ import { ApiError } from '../../api/client'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { ReferenceLabel, ReferencePicker } from '../people/ReferencePicker'
 import { ReferenceLabelsProvider } from '../people/reference-labels'
+import { statusText } from '../status-options'
 type Notice = Required<components['schemas']['com.campus.notification.domain.Notice']>
 export function PublishNotice({ id, onClose }: { id: string; onClose: () => void }) {
  const [recipients, setRecipients] = useState<string[]>([])
@@ -31,8 +32,8 @@ export function PublishNotice({ id, onClose }: { id: string; onClose: () => void
   <Alert type="info" showIcon title="Phát hành ngay cho các tài khoản đã chọn; nội dung sau phát hành không thể sửa." />
   {detail.isFetching && <p role="status">Đang tải bản nháp mới nhất…</p>}
   {detail.error && <ErrorNotice error={detail.error} onRetry={() => { void detail.refetch() }} />}
-  {detail.data && <><Typography.Title level={4}>{detail.data.title}</Typography.Title><Typography.Paragraph style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{detail.data.body}</Typography.Paragraph><Typography.Paragraph>Trạng thái: {detail.data.status} · Phiên bản: {String(detail.data.rowVersion)}</Typography.Paragraph></>}
-  <Typography.Paragraph>Chọn 1–100 tài khoản ACTIVE. Nếu một người nhận không còn hợp lệ, toàn bộ lượt phát hành bị từ chối.</Typography.Paragraph>
+  {detail.data && <><Typography.Title level={4}>{detail.data.title}</Typography.Title><Typography.Paragraph style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{detail.data.body}</Typography.Paragraph><Typography.Paragraph>Trạng thái: {statusText(detail.data.status)} · Phiên bản: {String(detail.data.rowVersion)}</Typography.Paragraph></>}
+  <Typography.Paragraph>Chọn 1–100 tài khoản đang hoạt động. Nếu một người nhận không còn hợp lệ, toàn bộ lượt phát hành bị từ chối.</Typography.Paragraph>
   <ReferencePicker kind="recipient" label="Tài khoản nhận" value={candidate} onChange={setCandidate} disabled={locked || recipients.length >= 100} />
   <Button disabled={locked || !candidate || recipients.includes(candidate) || recipients.length >= 100} onClick={() => { if (candidate) { setRecipients([...recipients, candidate]); setCandidate(undefined) } }}>Thêm người nhận</Button>
   <p>Đã chọn: {recipients.length}/100</p>

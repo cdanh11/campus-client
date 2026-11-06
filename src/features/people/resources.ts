@@ -7,7 +7,7 @@ import type { OrganizationCreate, OrganizationUpdate, StudentCreate, StudentUpda
 export type RegistryRow = { id: string; rowVersion: Version; [key: string]: unknown }
 export type Values = Record<string, unknown>
 export interface Field {
- name: string; label: string; type: 'text' | 'textarea' | 'email' | 'enum' | 'integer' | 'date' | 'datetime' | ReferenceKind
+ name: string; label: string; type: 'text' | 'textarea' | 'email' | 'enum' | 'integer' | 'date' | 'datetime' | 'time' | ReferenceKind
  placeholder?: string; inputMode?: 'numeric'; maxLength?: number; min?: number; max?: number; updateOnly?: boolean; dependencies?: string[]
  required?: boolean; rules?: Rule[]; options?: { value: string; label: string }[]
 }
@@ -76,4 +76,3 @@ export const personnel: Resource = {
  },
 }
 export const resources = { organizations: organization, students: student, personnel }
-export const labels: Record<string, string> = { ACTIVE: 'Đang hoạt động', INACTIVE: 'Ngừng hoạt động', FACULTY: 'Khoa / Giảng viên', DEPARTMENT: 'Bộ môn', ADMINISTRATIVE: 'Hành chính', STAFF: 'Nhân viên' }

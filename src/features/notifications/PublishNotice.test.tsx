@@ -48,7 +48,7 @@ it('refuses publication when fresh read reports already published', async () => 
  const mutation = vi.spyOn(api, 'mutation').mockResolvedValue({})
  show('PUBLISHED')
  const dialog = within(screen.getByRole('dialog'))
- await dialog.findByText(/Trạng thái: PUBLISHED/)
+ await dialog.findByText(/Trạng thái: Đã phát hành/)
  expect(dialog.getByRole('button', { name: 'Xác nhận phát hành' })).toBeDisabled()
  expect(mutation).not.toHaveBeenCalled()
 }, 15000)

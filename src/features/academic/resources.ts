@@ -3,6 +3,8 @@ import type { components } from '../../api/schema'
 import { nameRule, trimOrganization } from '../../forms/validation'
 import type { Field, RegistryRow, Resource, Values } from '../people/resources'
 import { sortOptions } from '../sort-options'
+import { statusOptions as options } from '../status-options'
+import { scheduleBody, scheduleFormValues, scheduleText, weekdayOptions, type SectionSchedule } from './schedule'
 type Schemas = components['schemas']
 type ProgramCreate = Schemas['com.campus.academic.api.AdminAcademicProgramController.Request']
 type ProgramUpdate = Schemas['com.campus.academic.api.AdminAcademicProgramController.UpdateRequest']
@@ -16,7 +18,6 @@ type SectionCreate = Schemas['com.campus.academic.api.delivery.AdminClassSection
 type SectionUpdate = Schemas['com.campus.academic.api.delivery.AdminClassSectionController.UpdateRequest']
 type EnrollmentCreate = Schemas['com.campus.academic.api.enrollment.AdminEnrollmentController.CreateRequest']
 type EnrollmentUpdate = Schemas['com.campus.academic.api.enrollment.AdminEnrollmentController.UpdateRequest']
-const options = (values: string[]) => values.map((value) => ({ value, label: value }))
 const catalog = options(['ACTIVE', 'INACTIVE'])
 const terms = options(['PLANNED', 'ACTIVE', 'CLOSED', 'CANCELLED'])
 const delivery = options(['DRAFT', 'OPEN', 'CLOSED', 'CANCELLED'])
@@ -38,6 +39,27 @@ const boundary: Rule = ({ getFieldValue }) => ({ validator: async (_, value: unk
  const start = getFieldValue('startDate') as string | undefined
  if (start && typeof value === 'string' && value < start) throw new Error('Ngày kết thúc phải từ ngày bắt đầu trở đi.')
 } })
+const scheduleNames = ['weekday', 'startsAt', 'endsAt', 'room', 'status']
+const scheduleDependencies = (name: string) => scheduleNames.filter((value) => value !== name)
+const scheduleRule: Rule = ({ getFieldValue }) => ({ validator: async () => {
+ const weekday = getFieldValue('weekday') as string | undefined
+ const startsAt = getFieldValue('startsAt') as string | undefined
+ const endsAt = getFieldValue('endsAt') as string | undefined
+ const room = (getFieldValue('room') as string | undefined)?.trim()
+ const open = getFieldValue('status') === 'OPEN'
+ if (!weekday && !startsAt && !endsAt && !room) {
+  if (open) throw new Error('Lớp mở cần thứ, giờ bắt đầu và giờ kết thúc.')
+  return
+ }
+ if (!weekday || !startsAt || !endsAt) throw new Error('Nhập đủ thứ, giờ bắt đầu và giờ kết thúc, hoặc để trống toàn bộ lịch.')
+ if (endsAt <= startsAt) throw new Error('Giờ kết thúc phải sau giờ bắt đầu.')
+ if (room && (Array.from(room).length < 2 || Array.from(room).length > 32)) throw new Error('Phòng học cần 2–32 ký tự hoặc để trống.')
+} })
+// Cross-field rule lives on one item so a single consolidated error is shown.
+const weekdayField: Field = { name: 'weekday', label: 'Thứ trong tuần', type: 'enum', options: weekdayOptions, dependencies: scheduleDependencies('weekday') }
+const startsAtField: Field = { name: 'startsAt', label: 'Giờ bắt đầu', type: 'time', dependencies: scheduleDependencies('startsAt') }
+const endsAtField: Field = { name: 'endsAt', label: 'Giờ kết thúc', type: 'time', dependencies: scheduleDependencies('endsAt'), rules: [scheduleRule] }
+const roomField: Field = { name: 'room', label: 'Phòng học', type: 'text', maxLength: 32, dependencies: scheduleDependencies('room') }
 export const programs: Resource = {
  path: path + 'programs', title: 'Chương trình đào tạo', singular: 'chương trình', identifier: 'code',
  fields: [code, name('name', 'Tên chương trình'), organization, status(catalog)],
@@ -63,7 +85,7 @@ export const academicTerms: Resource = {
  fields: [code, name('name', 'Tên học kỳ'), { name: 'startDate', label: 'Ngày bắt đầu', type: 'date', required: true }, { name: 'endDate', label: 'Ngày kết thúc', type: 'date', required: true, dependencies: ['startDate'], rules: [boundary] }, status(terms, true)],
  columns: [{ key: 'code', title: 'Mã' }, { key: 'name', title: 'Học kỳ' }, { key: 'startDate', title: 'Bắt đầu' }, { key: 'endDate', title: 'Kết thúc' }],
  sorts: sorts(['code', 'name', 'startDate', 'endDate', 'status', 'createdAt', 'updatedAt']), states: terms, defaults: { status: 'PLANNED' },
- note: 'Học kỳ mới ở PLANNED. Ngày bắt đầu/kết thúc cố định sau khi kích hoạt; đóng học kỳ cần không còn đợt mở môn OPEN.',
+ note: 'Học kỳ mới ở trạng thái Sắp mở. Ngày bắt đầu/kết thúc cố định sau khi kích hoạt; đóng học kỳ cần không còn đợt mở môn đang mở.',
  disabled: (field, current) => ['startDate', 'endDate'].includes(field.name) && current.status !== 'PLANNED',
  choices: (field, current) => field.name === 'status' ? options(lifecycleOptions('term', String(current.status))) : field.options,
  body: (values, current) => {
@@ -77,7 +99,7 @@ export const offerings: Resource = {
  filters: [reference('termId', 'Lọc học kỳ', 'term', false), reference('courseId', 'Lọc môn học', 'course', false)],
  columns: [{ key: 'id', title: 'Đợt mở môn' }, { key: 'termId', title: 'Học kỳ', reference: 'term' }, { key: 'courseId', title: 'Môn học', reference: 'course' }],
  sorts: [{ value: 'createdAt,desc', label: 'Mới tạo' }, ...sorts(['createdAt', 'status', 'updatedAt']).filter((value) => value.value !== 'createdAt,desc')], states: delivery, defaults: { status: 'DRAFT' },
- note: 'Mỗi môn chỉ có một đợt mở trong học kỳ. Chỉ mở khi học kỳ ACTIVE, môn và đơn vị ACTIVE; đóng cần không còn lớp OPEN.',
+ note: 'Mỗi môn chỉ có một đợt mở trong học kỳ. Chỉ mở khi học kỳ đang hoạt động, môn và đơn vị đang hoạt động; đóng cần không còn lớp đang mở.',
  disabled: (field) => field.name !== 'status',
  choices: (field, current) => field.name === 'status' ? options(lifecycleOptions('delivery', String(current.status))) : field.options,
  body: (values, current) => current
@@ -86,15 +108,16 @@ export const offerings: Resource = {
 }
 export const sections: Resource = {
  path: path + 'sections', title: 'Lớp học phần', singular: 'lớp học phần', identifier: 'code',
- fields: [reference('offeringId', 'Đợt mở môn', 'offering'), code, { name: 'capacity', label: 'Sức chứa', type: 'integer', required: true, min: 1, max: 2147483647, rules: [{ type: 'integer', min: 1, max: 2147483647, message: 'Sức chứa là số nguyên dương, tối đa 2147483647.' }] }, reference('facultyId', 'Giảng viên', 'faculty', false), status(delivery, true)],
+ fields: [reference('offeringId', 'Đợt mở môn', 'offering'), code, { name: 'capacity', label: 'Sức chứa', type: 'integer', required: true, min: 1, max: 2147483647, rules: [{ type: 'integer', min: 1, max: 2147483647, message: 'Sức chứa là số nguyên dương, tối đa 2147483647.' }] }, reference('facultyId', 'Giảng viên', 'faculty', false), weekdayField, startsAtField, endsAtField, roomField, status(delivery, true)],
  filters: [reference('offeringId', 'Lọc đợt mở môn', 'offering', false)],
- columns: [{ key: 'code', title: 'Lớp' }, { key: 'offeringId', title: 'Đợt mở môn', reference: 'offering' }, { key: 'capacity', title: 'Sức chứa' }, { key: 'facultyId', title: 'Giảng viên', reference: 'faculty' }],
+ columns: [{ key: 'code', title: 'Lớp' }, { key: 'offeringId', title: 'Đợt mở môn', reference: 'offering' }, { key: 'capacity', title: 'Sức chứa' }, { key: 'facultyId', title: 'Giảng viên', reference: 'faculty' }, { key: 'schedule', title: 'Lịch học', format: (value) => scheduleText(value as SectionSchedule) }],
  sorts: sorts(['code', 'capacity', 'status', 'createdAt', 'updatedAt']), states: delivery, defaults: { status: 'DRAFT' },
- note: 'DRAFT được thiếu giảng viên; OPEN cần giảng viên ACTIVE thuộc FACULTY. Mã, sức chứa và giảng viên cố định sau DRAFT.',
- disabled: (field, current) => field.name === 'offeringId' || (current.status !== 'DRAFT' && field.name !== 'status'),
+ note: 'Bản nháp được thiếu lịch và giảng viên; lớp đang mở cần giảng viên đang hoạt động thuộc khoa cùng thứ, giờ học và phòng. Mã, sức chứa và giảng viên cố định sau bản nháp.',
+ editValues: (current) => ({ ...current, ...scheduleFormValues(current) }),
+ disabled: (field, current) => field.name === 'offeringId' || (current.status !== 'DRAFT' && !['status', 'weekday', 'startsAt', 'endsAt', 'room'].includes(field.name)),
  choices: (field, current) => field.name === 'status' ? options(lifecycleOptions('delivery', String(current.status))) : field.options,
  body: (values, current) => {
-  const base = { code: str(values, 'code'), capacity: Number(values.capacity), facultyId: values.facultyId ? str(values, 'facultyId') : undefined } satisfies Omit<SectionCreate, 'offeringId'>
+  const base = { code: str(values, 'code'), capacity: Number(values.capacity), facultyId: values.facultyId ? str(values, 'facultyId') : undefined, ...scheduleBody(values) } satisfies Omit<SectionCreate, 'offeringId'>
   return current ? { ...base, status: values.status as SectionUpdate['status'], expectedVersion: current.rowVersion } satisfies SectionUpdate
    : { ...base, offeringId: str(values, 'offeringId') } satisfies SectionCreate
  },
@@ -105,7 +128,7 @@ export const enrollments: Resource = {
  filters: [reference('studentId', 'Lọc sinh viên', 'student', false), reference('sectionId', 'Lọc lớp', 'section', false)],
  columns: [{ key: 'studentId', title: 'Sinh viên', reference: 'student' }, { key: 'sectionId', title: 'Lớp', reference: 'section' }, { key: 'updatedAt', title: 'Cập nhật' }],
  sorts: [{ value: 'createdAt,desc', label: 'Mới tạo' }, ...sorts(['createdAt', 'status', 'updatedAt']).filter((value) => value.value !== 'createdAt,desc')], states: enrollment, defaults: { status: 'ENROLLED' },
- note: 'Ghi danh cần sinh viên ACTIVE, lớp và đợt mở OPEN, học kỳ ACTIVE và còn chỗ. Hủy giữ lịch sử và giải phóng suất; ghi danh lại bằng cùng bản ghi.',
+ note: 'Ghi danh cần sinh viên đang hoạt động, lớp và đợt mở đang mở, học kỳ đang hoạt động và còn chỗ. Hủy giữ lịch sử và giải phóng suất; ghi danh lại bằng cùng bản ghi.',
  editValues: (current) => ({ ...current, status: undefined }),
  disabled: (field) => field.name !== 'status',
  choices: (field, current) => field.name === 'status' ? options(lifecycleOptions('enrollment', String(current.status))) : field.options,

@@ -1,4 +1,4 @@
-import { NavLink as Link, Route, Routes } from 'react-router-dom'
+import { NavLink as Link, Navigate, Route, Routes } from 'react-router-dom'
 import type { User } from '../../api/client'
 import { administrationRoles, canAdminister, type AdministrationArea } from '../../api/administration'
 import { AccessBoundary } from '../../components/AccessBoundary'
@@ -14,7 +14,7 @@ export default function AdminOperations({ user }: { user: User }) {
  </nav><Routes>
   {Object.entries(operationResources).map(([key, value]) => <Route key={key} path={key} element={<AccessBoundary user={user} roles={administrationRoles[area(value.path)]}><RegistryPage key={value.path} resource={value} /></AccessBoundary>} />)}
   <Route path="payments" element={<AccessBoundary user={user} roles={administrationRoles.finance}><PaymentsPage /></AccessBoundary>} />
-  <Route index element={<PageChrome eyebrow="DỊCH VỤ KHUÔN VIÊN" title="Ký túc xá & tài chính" description="Theo dõi nguồn lực, nơi ở và các giao dịch trong một không gian vận hành rõ ràng."><EmptyState title="Chọn một khu vực vận hành" description="Mở ký túc xá, tài chính hoặc biên nhận thanh toán từ thanh điều hướng phía trên." /></PageChrome>} />
+  <Route index element={<Navigate to={canAdminister(user, 'finance') ? 'fees' : 'buildings'} replace />} />
   <Route path="*" element={<PageChrome eyebrow="DỊCH VỤ KHUÔN VIÊN" title="Không tìm thấy trang vận hành" description="Kiểm tra lại đường dẫn hoặc quay lại khu vực vận hành."><EmptyState title="Đường dẫn không hợp lệ" description="Trang bạn tìm không nằm trong không gian vận hành." /></PageChrome>} />
  </Routes></>
 }

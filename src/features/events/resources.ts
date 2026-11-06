@@ -3,9 +3,9 @@ import type { Resource, Values } from '../people/resources'
 import { nameRule, trimOrganization } from '../../forms/validation'
 import { campusTimeText } from '../../components/CampusTime'
 import { sortOptions } from '../sort-options'
+import { statusOptions as options } from '../status-options'
 import { eventEndRule, instantRule } from './instant'
 type Schemas = components['schemas']
-const options = (values: string[]) => values.map((value) => ({ value, label: value }))
 const sorts = sortOptions
 export function eventTransitions(status: string): string[] {
  return status === 'DRAFT' ? ['DRAFT', 'OPEN', 'CANCELLED'] : status === 'OPEN' ? ['OPEN', 'CLOSED', 'CANCELLED'] : []
@@ -27,7 +27,7 @@ export const events: Resource = {
  ],
  columns: [{ key: 'code', title: 'Mã' }, { key: 'title', title: 'Tên sự kiện' }, { key: 'startsAt', title: 'Bắt đầu', format: (value) => campusTimeText(String(value)) }, { key: 'endsAt', title: 'Kết thúc', format: (value) => campusTimeText(String(value)) }, { key: 'capacity', title: 'Sức chứa' }],
  states: options(['DRAFT', 'OPEN', 'CLOSED', 'CANCELLED']), sorts: sorts(['code', 'title', 'startsAt', 'endsAt', 'capacity', 'status', 'createdAt', 'updatedAt'], 'startsAt,asc'),
- note: 'Nhập giờ Việt Nam (UTC+7), giữ nguyên phần giây lẻ. ADMIN chủ động mở/đóng. OPEN quyết định nhận đăng ký; ngày không tự đóng sự kiện.',
+ note: 'Nhập giờ Việt Nam (UTC+7), giữ nguyên phần giây lẻ. Quản trị viên chủ động mở/đóng. Trạng thái "Đang mở" quyết định nhận đăng ký; ngày không tự đóng sự kiện.',
  readOnly: (current) => current.status === 'CLOSED' || current.status === 'CANCELLED',
  choices: (field, current) => field.name === 'status' ? options(eventTransitions(String(current.status))) : field.options,
  body: (values, current) => {
@@ -42,7 +42,7 @@ export const registrations: Resource = {
  filters: [{ name: 'eventId', label: 'Lọc sự kiện', type: 'event' }, { name: 'studentId', label: 'Lọc sinh viên', type: 'student' }],
  columns: [{ key: 'eventId', title: 'Sự kiện', reference: 'event' }, { key: 'studentId', title: 'Sinh viên', reference: 'student' }, { key: 'registeredAt', title: 'Đăng ký lúc', format: (value) => campusTimeText(String(value)) }, { key: 'cancelledAt', title: 'Hủy lúc', format: (value) => campusTimeText(String(value)) }, { key: 'attendedAt', title: 'Tham dự lúc', format: (value) => campusTimeText(String(value)) }],
  states: options(['REGISTERED', 'CANCELLED', 'ATTENDED']), sorts: sorts(['registeredAt', 'status', 'createdAt', 'updatedAt'], 'registeredAt,desc'),
- note: 'REGISTERED/ATTENDED chiếm chỗ. Hủy giải phóng chỗ; khôi phục cùng bản ghi nếu OPEN và còn chỗ. ADMIN xác nhận tham dự khi OPEN/CLOSED.',
+ note: 'Đã đăng ký/Đã tham dự chiếm chỗ. Hủy giải phóng chỗ; khôi phục cùng bản ghi nếu sự kiện đang mở và còn chỗ. Quản trị viên xác nhận tham dự khi sự kiện đang mở hoặc đã đóng.',
  disabled: (field) => field.name !== 'action', readOnly: (current) => current.status === 'ATTENDED',
  editValues: (current) => ({ ...current, action: undefined }),
  choices: (field, current) => field.name === 'action' ? options(registrationActions(String(current.status))) : field.options,

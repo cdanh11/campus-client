@@ -8,7 +8,8 @@ import { ErrorNotice } from '../../components/ErrorNotice'
 import { campusTimeText, isInstant } from '../../components/CampusTime'
 import { fromLocalInput, toLocalInput } from '../../forms/datetime'
 import { ReferenceLabel, ReferencePicker } from './ReferencePicker'
-import { labels, type RegistryRow, type Resource, type Values } from './resources'
+import { type RegistryRow, type Resource, type Values } from './resources'
+import { statusText } from '../status-options'
 import { referenceSources, type ReferenceKind } from './references'
 import { ReferenceLabelsProvider, type ReferenceRequests } from './reference-labels'
 import type { PageResult } from './contracts'
@@ -34,10 +35,6 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
    requests[kind] = [...(requests[kind] ?? []), ...ids.map((id) => typeof id === 'string' ? id : undefined)]
   }
   for (const column of resource.columns) if (column.reference) collect(column.reference, rows.map((row) => row[column.key]))
-  if (resource.columns.some((column) => column.reference === 'offering')) {
-   collect('course', rows.map((row) => row.courseId))
-   collect('term', rows.map((row) => row.termId))
-  }
   return requests
  }, [resource, rows])
  const states = resource.states ?? [{ value: 'ACTIVE', label: 'Đang hoạt động' }, { value: 'INACTIVE', label: 'Ngừng hoạt động' }]
@@ -57,14 +54,14 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
    <Select aria-label="Sắp xếp" value={filters.sort} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })} options={resource.sorts} style={{ minWidth: 160 }} />
   </Space>
   {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
-  <ReferenceLabelsProvider requests={labelRequests}>
+  <ReferenceLabelsProvider requests={labelRequests} expandOfferings={resource.columns.some((column) => column.reference === 'offering')}>
    <Table<RegistryRow> rowKey="id" loading={result.isFetching} dataSource={rows} scroll={{ x: 850 }}
    columns={[
     ...resource.columns.map((column) => ({ title: column.title, key: column.key, dataIndex: column.key, render: (value: unknown) => column.format ? column.format(value) : column.reference
      ? <ReferenceLabel kind={column.reference} value={value} />
      : isInstant(value) ? campusTimeText(value)
      : resource.fields.find((field) => field.name === column.key)?.options?.find((option) => option.value === value)?.label ?? String(value ?? '—') })),
-    { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={value === 'ACTIVE' || value === 'OPEN' || value === 'ENROLLED' ? 'green' : 'default'}>{labels[String(value)] ?? String(value)}</Tag> },
+    { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={value === 'ACTIVE' || value === 'OPEN' || value === 'ENROLLED' ? 'green' : 'default'}>{states.find((state) => state.value === value)?.label ?? statusText(value)}</Tag> },
     { title: 'Thao tác', key: 'actions', render: (_, row) => <Space wrap><Button onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space> },
    ]}
    locale={{ emptyText: 'Chưa có bản ghi phù hợp.' }}
@@ -94,12 +91,13 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
   },
  })
  const readOnly = !!detail.data && !!resource.readOnly?.(detail.data)
+ const states = resource.states ?? [{ value: 'ACTIVE', label: 'Đang hoạt động' }, { value: 'INACTIVE', label: 'Ngừng hoạt động' }]
  const busy = mutation.isPending || (!!id && (detail.isFetching || !detail.data || !!detail.error))
  const conflict = mutation.error instanceof ApiError && mutation.error.status === 409 && mutation.error.detail.code === 'CONCURRENT_MODIFICATION'
  return <Modal open title={(id ? 'Xem / sửa ' : 'Thêm ') + resource.singular} onCancel={mutation.isPending ? undefined : onClose}
   footer={<Space><Button disabled={mutation.isPending} onClick={onClose}>Hủy</Button>{!readOnly && <Button aria-label="Lưu" type="primary" loading={mutation.isPending} disabled={busy || conflict} onClick={() => form.submit()}>Lưu</Button>}</Space>}>
   {resource.note && <Typography.Paragraph>{resource.note}</Typography.Paragraph>}
-  {detail.data && <Typography.Paragraph type="secondary">Trạng thái hiện tại: {String(detail.data.status)} · Phiên bản: {String(detail.data.rowVersion)}</Typography.Paragraph>}
+  {detail.data && <Typography.Paragraph type="secondary">Trạng thái hiện tại: {states.find((state) => state.value === detail.data?.status)?.label ?? statusText(detail.data.status)} · Phiên bản: {String(detail.data.rowVersion)}</Typography.Paragraph>}
   {detail.data && resource.details?.(detail.data)}
   {detail.error && <ErrorNotice error={detail.error} onRetry={() => { void detail.refetch() }} />}
   {mutation.error && <ErrorNotice error={mutation.error} onRetry={id && conflict ? () => {
@@ -120,6 +118,7 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
       referenceKind(field.type) ? <ReferencePicker kind={field.type} label={field.label} disabled={disabled || busy} allowClear={!field.required} /> :
       field.type === 'textarea' ? <Input.TextArea rows={5} disabled={disabled || busy} /> :
       field.type === 'datetime' ? <Input type="datetime-local" step="1" disabled={disabled || busy} /> :
+       field.type === 'time' ? <Input type="time" step="60" disabled={disabled || busy} /> :
        field.type === 'integer' ? <InputNumber min={field.min} max={field.max} disabled={disabled || busy} style={{ width: '100%' }} /> :
       <Input placeholder={field.placeholder} inputMode={field.inputMode} maxLength={field.maxLength} type={field.type === 'date' ? 'date' : 'text'} autoComplete="off" disabled={disabled || busy} />}
     </Form.Item>
