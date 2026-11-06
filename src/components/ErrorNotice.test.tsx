@@ -18,3 +18,9 @@ it('presents permission denial clearly', () => {
  render(<ErrorNotice error={new ApiError(403, { code: 'FORBIDDEN' })} />)
  expect(screen.getByText('Tài khoản không có quyền thực hiện thao tác này.')).toBeInTheDocument()
 })
+it('keeps server diagnostics in Vietnamese while exposing the error code', () => {
+ render(<ErrorNotice error={new ApiError(500, { code: 'INTERNAL_ERROR', message: 'An unexpected error occurred', traceId: 'request-500' })} />)
+ expect(screen.getByText('Máy chủ gặp lỗi ngoài dự kiến. Vui lòng thử lại sau.')).toBeInTheDocument()
+ expect(screen.queryByText(/unexpected/)).not.toBeInTheDocument()
+ expect(screen.getByText('Mã lỗi: INTERNAL_ERROR')).toBeInTheDocument()
+})
