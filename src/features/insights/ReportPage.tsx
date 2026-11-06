@@ -14,7 +14,10 @@ export function saveCsv(csv: string, kind: ReportKind) {
  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=UTF-8' }))
  const link = document.createElement('a'); link.href = url; link.download = kind.toLowerCase() + '.csv'
  document.body.append(link)
- try { link.click() } finally { link.remove(); URL.revokeObjectURL(url) }
+ link.click()
+ link.remove()
+ // Revoking immediately can cancel the download in some browsers.
+ window.setTimeout(() => URL.revokeObjectURL(url), 1_000)
 }
 export function ReportsPage() {
  const [kind, setKind] = useState<ReportKind>('STUDENT_DEBT')

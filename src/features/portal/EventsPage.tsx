@@ -52,7 +52,7 @@ export default function EventsPage({ history = false }: { history?: boolean }) {
    return <Card key={row.id}>
     <Tag color={row.status === 'OPEN' || row.status === 'REGISTERED' ? 'purple' : 'default'}>{states[row.status]}</Tag>
     <Typography.Title level={2} style={{ fontSize: 20 }}>{history ? <EventTitle id={registration.eventId} /> : event.title}</Typography.Title>
-    {history ? <><Typography.Paragraph>Mã sự kiện: {registration.eventId}</Typography.Paragraph><Typography.Paragraph>Đăng ký lúc: <CampusTime value={registration.registeredAt} /></Typography.Paragraph>
+    {history ? <><Typography.Paragraph>Đăng ký lúc: <CampusTime value={registration.registeredAt} /></Typography.Paragraph>
      {registration.cancelledAt && <Typography.Paragraph>Hủy lúc: <CampusTime value={registration.cancelledAt} /></Typography.Paragraph>}
      {registration.attendedAt && <Typography.Paragraph>Tham dự lúc: <CampusTime value={registration.attendedAt} /></Typography.Paragraph>}</>
      : <><Typography.Paragraph type="secondary">{event.code} · Sức chứa: {event.capacity}</Typography.Paragraph><Typography.Paragraph>Bắt đầu: <CampusTime value={event.startsAt} /></Typography.Paragraph></>}
