@@ -1,5 +1,5 @@
 import { useState, useSyncExternalStore } from 'react'
-import { Button, Descriptions, Form, Input, Modal, Select, Space, Table, Typography } from 'antd'
+import { Button, Descriptions, Form, Input, Modal, Select, Space, Table, Tag, Typography } from 'antd'
 import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
@@ -9,11 +9,13 @@ import { campusTimeText } from '../../components/CampusTime'
 import { roleCodes } from '../../api/administration'
 import { nameRule, passwordRule } from '../../forms/validation'
 import { sortOptions } from '../sort-options'
+import { statusColor, statusOptions, statusText } from '../status-options'
+import { roleOptions, roleText } from '../roles'
 import type { AdminUser, PageResult, UserCreate, UserPassword, UserRoles, UserStatus } from './contracts'
 
 const path = '/api/v1/admin/users'
-const statuses = ['ACTIVE', 'SUSPENDED', 'DISABLED'].map((value) => ({ value, label: value }))
-const roles = roleCodes.map((value) => ({ value, label: value }))
+const statuses = statusOptions(['ACTIVE', 'SUSPENDED', 'DISABLED'])
+const roles = roleOptions(roleCodes)
 type Action = 'create' | 'detail' | 'status' | 'roles' | 'password'
 interface Values { email: string; displayName: string; initialPassword: string; newPassword: string; roles: string[]; status: 'ACTIVE' | 'SUSPENDED' | 'DISABLED' }
 
@@ -41,7 +43,7 @@ export function UserPage() {
   <Table<AdminUser> rowKey="id" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 950 }} locale={{ emptyText: 'Chưa có tài khoản phù hợp.' }}
    columns={[
     { title: 'Email', dataIndex: 'email' }, { title: 'Tên hiển thị', dataIndex: 'displayName' },
-    { title: 'Trạng thái', dataIndex: 'status' }, { title: 'Quyền', render: (_, row) => row.roles.join(', ') },
+    { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={statusColor(value)}>{statusText(value)}</Tag> }, { title: 'Quyền', render: (_, row) => row.roles.map(roleText).join(', ') },
     { title: 'Thao tác', render: (_, row) => <Space wrap>
      <Button onClick={() => setEdit({ action: 'detail', id: row.id })}>Chi tiết</Button>
      <Button disabled={row.id === session.user?.id} onClick={() => setEdit({ action: 'status', id: row.id })}>Đổi trạng thái</Button>
@@ -94,8 +96,8 @@ function UserEditor({ action, id, onClose }: { action: Action; id?: string; onCl
   {blocked && <Typography.Paragraph>Dữ liệu đã thay đổi. Đóng hộp thoại và mở lại để xem phiên bản mới trước khi thao tác.</Typography.Paragraph>}
   {detail.data && <Descriptions column={1} items={[
    { key: 'id', label: 'UUID', children: detail.data.id }, { key: 'email', label: 'Email', children: detail.data.email },
-   { key: 'name', label: 'Tên hiển thị', children: detail.data.displayName }, { key: 'status', label: 'Trạng thái', children: detail.data.status },
-   { key: 'roles', label: 'Quyền', children: detail.data.roles.join(', ') },
+   { key: 'name', label: 'Tên hiển thị', children: detail.data.displayName }, { key: 'status', label: 'Trạng thái', children: statusText(detail.data.status) },
+   { key: 'roles', label: 'Quyền', children: detail.data.roles.map(roleText).join(', ') },
    { key: 'version', label: 'Phiên bản', children: String(detail.data.rowVersion) },
    { key: 'created', label: 'Ngày tạo', children: campusTimeText(detail.data.createdAt) }, { key: 'updated', label: 'Cập nhật', children: campusTimeText(detail.data.updatedAt) },
   ]} />}

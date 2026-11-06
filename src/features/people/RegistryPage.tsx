@@ -9,7 +9,7 @@ import { campusTimeText, isInstant } from '../../components/CampusTime'
 import { fromLocalInput, toLocalInput } from '../../forms/datetime'
 import { ReferenceLabel, ReferencePicker } from './ReferencePicker'
 import { type RegistryRow, type Resource, type Values } from './resources'
-import { statusText } from '../status-options'
+import { statusColor, statusText } from '../status-options'
 import { referenceSources, type ReferenceKind } from './references'
 import { ReferenceLabelsProvider, type ReferenceRequests } from './reference-labels'
 import type { PageResult } from './contracts'
@@ -61,7 +61,7 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
      ? <ReferenceLabel kind={column.reference} value={value} />
      : isInstant(value) ? campusTimeText(value)
      : resource.fields.find((field) => field.name === column.key)?.options?.find((option) => option.value === value)?.label ?? String(value ?? '—') })),
-    { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={value === 'ACTIVE' || value === 'OPEN' || value === 'ENROLLED' ? 'green' : 'default'}>{states.find((state) => state.value === value)?.label ?? statusText(value)}</Tag> },
+    { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={statusColor(value)}>{states.find((state) => state.value === value)?.label ?? statusText(value)}</Tag> },
     { title: 'Thao tác', key: 'actions', render: (_, row) => <Space wrap><Button onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space> },
    ]}
    locale={{ emptyText: 'Chưa có bản ghi phù hợp.' }}

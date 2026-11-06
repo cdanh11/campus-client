@@ -11,6 +11,7 @@ import { AccessBoundary } from '../components/AccessBoundary'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { CampusTime } from '../components/CampusTime'
 import { ErrorNotice } from '../components/ErrorNotice'
+import { roleText } from '../features/roles'
 import type { InboxItem } from '../features/portal/InboxPage'
 import StudentSnapshot from '../features/portal/StudentSnapshot'
 
@@ -81,7 +82,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
       <div className="workspace-launch-grid">
        <Link className="launch-card launch-card-primary" to="/portal"><div className="launch-icon"><UserOutlined /></div><div><Text className="launch-kicker">DÀNH CHO BẠN</Text><Title level={3}>Cổng cá nhân</Title><Paragraph>Thông báo, sự kiện và các đăng ký đang theo dõi.</Paragraph></div><ArrowRightOutlined className="launch-arrow" /></Link>
        {admin && <Link className="launch-card" to="/admin"><div className="launch-icon"><PieChartOutlined /></div><div><Text className="launch-kicker">VẬN HÀNH</Text><Title level={3}>Không gian quản trị</Title><Paragraph>Điều phối hồ sơ, học vụ, dịch vụ và báo cáo.</Paragraph></div><ArrowRightOutlined className="launch-arrow" /></Link>}
-       <Card className="status-card" variant="borderless"><div className="status-card-heading"><span className="status-dot" /> <Text strong>Phiên làm việc đang hoạt động</Text></div><Text type="secondary">Tài khoản</Text><div className="status-email">{user.email}</div><Space wrap>{user.roles.map((role) => <Tag color="cyan" key={role}>{role}</Tag>)}</Space></Card>
+       <Card className="status-card" variant="borderless"><div className="status-card-heading"><span className="status-dot" /> <Text strong>Phiên làm việc đang hoạt động</Text></div><Text type="secondary">Tài khoản</Text><div className="status-email">{user.email}</div><Space wrap>{user.roles.map((role) => <Tag color="cyan" key={role}>{roleText(role)}</Tag>)}</Space></Card>
       </div>
       <section className="workspace-lower-grid"><Card className="activity-card" title={<Space><ClockCircleOutlined /> Thông báo gần đây</Space>} extra={<Link to="/portal/inbox">Xem tất cả</Link>}>
        {inbox.isFetching && <p role="status">Đang tải thông báo…</p>}
