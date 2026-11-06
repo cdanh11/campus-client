@@ -8,6 +8,7 @@ import { api } from '../api/runtime'
 import { queryParams } from '../api/query-params'
 import { administrationRoles, canAdminister, canEnterAdministration } from '../api/administration'
 import { AccessBoundary } from '../components/AccessBoundary'
+import { ErrorBoundary } from '../components/ErrorBoundary'
 import { CampusTime } from '../components/CampusTime'
 import { ErrorNotice } from '../components/ErrorNotice'
 import type { InboxItem } from '../features/portal/InboxPage'
@@ -67,6 +68,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
    </Layout.Header>
    <Drawer title="Campus Platform" placement="left" open={open} onClose={() => setOpen(false)} size={288}>{open && navigation}</Drawer>
    <Layout.Content id="main-content" tabIndex={-1} className="content">
+    <ErrorBoundary key={location.pathname}>
     <Routes>
      <Route path="/" element={<>
       <section className="welcome-panel workspace-hero">
@@ -95,6 +97,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
      <Route path="/login" element={<Navigate to="/" replace />} />
      <Route path="*" element={<Result status="404" title="Không tìm thấy trang" extra={<Link to="/"><Button>Về trang chủ</Button></Link>} />} />
     </Routes>
+    </ErrorBoundary>
    </Layout.Content>
   </Layout>
  </Layout>

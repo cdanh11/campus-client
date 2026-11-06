@@ -42,7 +42,7 @@ Both files must stay in sync. Change a token in `src/styles.css` and mirror the 
 
 ## Data and language
 
-- Vietnamese-first copy; timestamps display in `Asia/Ho_Chi_Minh` while API payloads stay UTC.
+- Vietnamese-first copy; timestamps display and are entered in `Asia/Ho_Chi_Minh` (UTC+7) while API payloads stay UTC.
 - Exact VND and 64-bit versions are never rounded through JavaScript `Number`.
 - No invented metrics: dashboard values come from real APIs.
 
