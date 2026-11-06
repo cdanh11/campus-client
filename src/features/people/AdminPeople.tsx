@@ -20,7 +20,7 @@ export default function AdminPeople({ user }: { user: User }) {
  return <Routes>
   <Route index element={<PageChrome eyebrow="CAMPUS OPERATIONS" title="Không gian quản trị" description="Một bảng điều khiển thống nhất cho mọi nghiệp vụ vận hành trong trường.">
    <div className="overview-intro"><div><Typography.Title level={2}>Trung tâm điều phối</Typography.Title><Typography.Paragraph>Chọn một không gian để bắt đầu. Các module hiển thị theo quyền của tài khoản.</Typography.Paragraph></div><span className="overview-badge">{administrationDestinations.filter(({ area }) => canAdminister(user, area)).length} khu vực</span></div>
-   <div className="overview-grid">{administrationDestinations.filter(({ area }) => canAdminister(user, area)).map(({ area, path, title }) => <Card key={area} className="overview-card" title={<span>{title}</span>}><Link to={path}>Mở không gian <span aria-hidden="true">→</span></Link></Card>)}</div>
+   <div className="overview-grid">{administrationDestinations.filter(({ area }) => canAdminister(user, area)).map(({ area, path, title }) => <Card key={area} className="overview-card" title={<span>{title}</span>}><Link to={path} aria-label={'Mở ' + title}>Mở không gian <span aria-hidden="true">→</span></Link></Card>)}</div>
   </PageChrome>} />
   <Route path="insights/*" element={<Suspense fallback={<p role="status">Đang tải…</p>}><AdminInsights user={user} /></Suspense>} />
   <Route path="library/*" element={gate('library', <Suspense fallback={<p role="status">Đang tải…</p>}><AdminLibrary /></Suspense>)} />

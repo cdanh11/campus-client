@@ -1,24 +1,30 @@
 import { render, screen } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter } from 'react-router-dom'
 import { expect, it, vi } from 'vitest'
 import Workspace from './Workspace'
 import { api } from '../api/runtime'
 const user = { id: '1', email: 'user@example.test', status: 'ACTIVE', roles: ['USER'] }
+function renderAt(entry: string, account = user) {
+ const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+ return render(<QueryClientProvider client={client}><MemoryRouter initialEntries={[entry]}><Workspace user={account} onLogout={() => {}} /></MemoryRouter></QueryClientProvider>)
+}
 it('keeps ADMIN navigation and data out of a regular account shell', () => {
- render(<MemoryRouter><Workspace user={user} onLogout={() => {}} /></MemoryRouter>)
+ vi.spyOn(api, 'request').mockResolvedValue({ content: [], totalElements: 0 })
+ renderAt('/')
  expect(screen.queryByRole('link', { name: 'Sinh viên' })).not.toBeInTheDocument()
  expect(screen.queryByRole('link', { name: 'Quản trị' })).not.toBeInTheDocument()
  expect(screen.getByRole('link', { name: 'Cổng cá nhân' })).toBeInTheDocument()
 })
 it('rejects a direct ADMIN route without issuing owner API calls', () => {
  const request = vi.spyOn(api, 'request')
- render(<MemoryRouter initialEntries={['/admin/students']}><Workspace user={user} onLogout={() => {}} /></MemoryRouter>)
+ renderAt('/admin/students')
  expect(screen.getByText('Bạn không có quyền truy cập')).toBeInTheDocument()
  expect(request).not.toHaveBeenCalled()
 })
 
 it('shows only the functional navigation of a finance administrator', () => {
- render(<MemoryRouter><Workspace user={{ ...user, roles: ['FINANCE_ADMIN'] }} onLogout={() => {}} /></MemoryRouter>)
+ renderAt('/', { ...user, roles: ['FINANCE_ADMIN'] })
  expect(screen.getByRole('link', { name: 'Ký túc xá & tài chính' })).toBeInTheDocument()
  expect(screen.queryByRole('link', { name: 'Sinh viên' })).not.toBeInTheDocument()
  expect(screen.queryByRole('link', { name: 'Tài khoản' })).not.toBeInTheDocument()
@@ -34,12 +40,12 @@ it.each([
  ['ACADEMIC_ADMIN', '/admin/personnel'],
 ])('rejects %s direct access to %s before owner requests', async (role, path) => {
  const request = vi.spyOn(api, 'request')
- render(<MemoryRouter initialEntries={[path]}><Workspace user={{ ...user, roles: [role] }} onLogout={() => {}} /></MemoryRouter>)
+ renderAt(path, { ...user, roles: [role] })
  expect(await screen.findByText('Bạn không có quyền truy cập')).toBeInTheDocument()
  expect(request).not.toHaveBeenCalled()
 })
 it('offers useful overview destinations for combined functional roles', async () => {
- render(<MemoryRouter initialEntries={['/admin']}><Workspace user={{ ...user, roles: ['EVENT_ADMIN', 'LIBRARY_ADMIN'] }} onLogout={() => {}} /></MemoryRouter>)
+ renderAt('/admin', { ...user, roles: ['EVENT_ADMIN', 'LIBRARY_ADMIN'] })
  expect(await screen.findByRole('link', { name: 'Mở Sự kiện' })).toHaveAttribute('href', '/admin/events')
  expect(screen.getByRole('link', { name: 'Mở Thư viện' })).toHaveAttribute('href', '/admin/library')
  expect(screen.queryByRole('link', { name: 'Mở Tài khoản' })).not.toBeInTheDocument()
