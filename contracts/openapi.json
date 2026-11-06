@@ -3919,6 +3919,103 @@
         } ]
       }
     },
+    "/api/v1/me/timetable" : {
+      "get" : {
+        "tags" : [ "own-academic-controller" ],
+        "summary" : "Weekly timetable of the signed-in student",
+        "operationId" : "timetable",
+        "parameters" : [ {
+          "name" : "termId",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.Timetable"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/me/student" : {
+      "get" : {
+        "tags" : [ "own-student-controller" ],
+        "summary" : "Profile of the student linked to the signed-in account",
+        "operationId" : "profile",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/com.campus.student.application.StudentProfileService.StudentProfile"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/me/finance" : {
+      "get" : {
+        "tags" : [ "own-finance-controller" ],
+        "summary" : "Tuition charges and payments of the signed-in student",
+        "operationId" : "summary",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/com.campus.finance.application.StudentFinanceService.FinanceSummary"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/me/enrollments" : {
+      "get" : {
+        "tags" : [ "own-academic-controller" ],
+        "summary" : "Enrollment history of the signed-in student",
+        "operationId" : "enrollments",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.Enrollments"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
     "/api/v1/events" : {
       "get" : {
         "tags" : [ "event-catalog-controller" ],
@@ -6289,6 +6386,23 @@
             "type" : "string",
             "format" : "uuid"
           },
+          "weekday" : {
+            "type" : "integer",
+            "format" : "int32",
+            "maximum" : 7,
+            "minimum" : 1
+          },
+          "startsAt" : {
+            "type" : "string"
+          },
+          "endsAt" : {
+            "type" : "string"
+          },
+          "room" : {
+            "type" : "string",
+            "maxLength" : 32,
+            "minLength" : 0
+          },
           "status" : {
             "type" : "string",
             "enum" : [ "DRAFT", "OPEN", "CLOSED", "CANCELLED" ]
@@ -6322,6 +6436,9 @@
             "type" : "string",
             "format" : "uuid"
           },
+          "schedule" : {
+            "$ref" : "#/components/schemas/com.campus.academic.domain.SectionSchedule"
+          },
           "status" : {
             "type" : "string",
             "enum" : [ "DRAFT", "OPEN", "CLOSED", "CANCELLED" ]
@@ -6337,6 +6454,24 @@
           "updatedAt" : {
             "type" : "string",
             "format" : "date-time"
+          }
+        }
+      },
+      "com.campus.academic.domain.SectionSchedule" : {
+        "type" : "object",
+        "properties" : {
+          "weekday" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "startsAt" : {
+            "type" : "string"
+          },
+          "endsAt" : {
+            "type" : "string"
+          },
+          "room" : {
+            "type" : "string"
           }
         }
       },
@@ -7030,6 +7165,23 @@
           "facultyId" : {
             "type" : "string",
             "format" : "uuid"
+          },
+          "weekday" : {
+            "type" : "integer",
+            "format" : "int32",
+            "maximum" : 7,
+            "minimum" : 1
+          },
+          "startsAt" : {
+            "type" : "string"
+          },
+          "endsAt" : {
+            "type" : "string"
+          },
+          "room" : {
+            "type" : "string",
+            "maxLength" : 32,
+            "minLength" : 0
           }
         },
         "required" : [ "code", "offeringId" ]
@@ -7164,6 +7316,266 @@
           },
           "body" : {
             "type" : "string"
+          }
+        }
+      },
+      "com.campus.academic.application.StudentAcademicService.CourseView" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "credits" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "com.campus.academic.application.StudentAcademicService.EnrollmentView" : {
+        "type" : "object",
+        "properties" : {
+          "enrollmentId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ENROLLED", "WITHDRAWN" ]
+          },
+          "enrolledAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "term" : {
+            "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.TermView"
+          },
+          "course" : {
+            "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.CourseView"
+          },
+          "sectionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "sectionCode" : {
+            "type" : "string"
+          },
+          "facultyId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "facultyName" : {
+            "type" : "string"
+          },
+          "schedule" : {
+            "$ref" : "#/components/schemas/com.campus.academic.domain.SectionSchedule"
+          },
+          "sectionStatus" : {
+            "type" : "string",
+            "enum" : [ "DRAFT", "OPEN", "CLOSED", "CANCELLED" ]
+          }
+        }
+      },
+      "com.campus.academic.application.StudentAcademicService.TermView" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "startDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "endDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "PLANNED", "ACTIVE", "CLOSED", "CANCELLED" ]
+          }
+        }
+      },
+      "com.campus.academic.application.StudentAcademicService.Timetable" : {
+        "type" : "object",
+        "properties" : {
+          "studentId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "term" : {
+            "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.TermView"
+          },
+          "meetings" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.EnrollmentView"
+            }
+          }
+        }
+      },
+      "com.campus.student.application.StudentProfileService.StudentProfile" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "studentNumber" : {
+            "type" : "string"
+          },
+          "fullName" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "organizationUnitName" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          }
+        }
+      },
+      "com.campus.finance.application.StudentFinanceService.ChargeView" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "chargeNumber" : {
+            "type" : "string"
+          },
+          "feeCode" : {
+            "type" : "string"
+          },
+          "feeName" : {
+            "type" : "string"
+          },
+          "amount" : {
+            "type" : "number"
+          },
+          "currency" : {
+            "type" : "string"
+          },
+          "dueDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OPEN", "CANCELLED" ]
+          },
+          "paid" : {
+            "type" : "number"
+          },
+          "outstanding" : {
+            "type" : "number"
+          },
+          "overdue" : {
+            "type" : "boolean"
+          },
+          "payments" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.finance.application.StudentFinanceService.PaymentView"
+            }
+          }
+        }
+      },
+      "com.campus.finance.application.StudentFinanceService.FinanceSummary" : {
+        "type" : "object",
+        "properties" : {
+          "studentId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "currency" : {
+            "type" : "string"
+          },
+          "asOf" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "totalCharged" : {
+            "type" : "number"
+          },
+          "totalPaid" : {
+            "type" : "number"
+          },
+          "outstanding" : {
+            "type" : "number"
+          },
+          "charges" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.finance.application.StudentFinanceService.ChargeView"
+            }
+          }
+        }
+      },
+      "com.campus.finance.application.StudentFinanceService.PaymentView" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "receiptNumber" : {
+            "type" : "string"
+          },
+          "amount" : {
+            "type" : "number"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "RECORDED", "REVERSED" ]
+          },
+          "recordedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reversedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reversalReason" : {
+            "type" : "string"
+          }
+        }
+      },
+      "com.campus.academic.application.StudentAcademicService.Enrollments" : {
+        "type" : "object",
+        "properties" : {
+          "studentId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.EnrollmentView"
+            }
           }
         }
       },

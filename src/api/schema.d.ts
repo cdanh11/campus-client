@@ -971,6 +971,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/timetable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Weekly timetable of the signed-in student */
+        get: operations["timetable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Profile of the student linked to the signed-in account */
+        get: operations["profile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/finance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Tuition charges and payments of the signed-in student */
+        get: operations["summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/enrollments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Enrollment history of the signed-in student */
+        get: operations["enrollments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/events": {
         parameters: {
             query?: never;
@@ -1916,6 +1984,11 @@ export interface components {
             capacity?: number;
             /** Format: uuid */
             facultyId?: string;
+            /** Format: int32 */
+            weekday?: number;
+            startsAt?: string;
+            endsAt?: string;
+            room?: string;
             /** @enum {string} */
             status: "DRAFT" | "OPEN" | "CLOSED" | "CANCELLED";
             /** Format: int64 */
@@ -1931,6 +2004,7 @@ export interface components {
             capacity?: number;
             /** Format: uuid */
             facultyId?: string;
+            schedule?: components["schemas"]["com.campus.academic.domain.SectionSchedule"];
             /** @enum {string} */
             status?: "DRAFT" | "OPEN" | "CLOSED" | "CANCELLED";
             /** Format: int64 */
@@ -1939,6 +2013,13 @@ export interface components {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+        };
+        "com.campus.academic.domain.SectionSchedule": {
+            /** Format: int32 */
+            weekday?: number;
+            startsAt?: string;
+            endsAt?: string;
+            room?: string;
         };
         "com.campus.academic.api.AdminAcademicProgramController.UpdateRequest": {
             code: string;
@@ -2205,6 +2286,11 @@ export interface components {
             capacity?: number;
             /** Format: uuid */
             facultyId?: string;
+            /** Format: int32 */
+            weekday?: number;
+            startsAt?: string;
+            endsAt?: string;
+            room?: string;
         };
         "com.campus.academic.api.AdminAcademicProgramController.Request": {
             code: string;
@@ -2257,6 +2343,109 @@ export interface components {
             delivery?: components["schemas"]["com.campus.notification.domain.NotificationDelivery"];
             title?: string;
             body?: string;
+        };
+        "com.campus.academic.application.StudentAcademicService.CourseView": {
+            /** Format: uuid */
+            id?: string;
+            code?: string;
+            title?: string;
+            /** Format: int32 */
+            credits?: number;
+        };
+        "com.campus.academic.application.StudentAcademicService.EnrollmentView": {
+            /** Format: uuid */
+            enrollmentId?: string;
+            /** @enum {string} */
+            status?: "ENROLLED" | "WITHDRAWN";
+            /** Format: date-time */
+            enrolledAt?: string;
+            term?: components["schemas"]["com.campus.academic.application.StudentAcademicService.TermView"];
+            course?: components["schemas"]["com.campus.academic.application.StudentAcademicService.CourseView"];
+            /** Format: uuid */
+            sectionId?: string;
+            sectionCode?: string;
+            /** Format: uuid */
+            facultyId?: string;
+            facultyName?: string;
+            schedule?: components["schemas"]["com.campus.academic.domain.SectionSchedule"];
+            /** @enum {string} */
+            sectionStatus?: "DRAFT" | "OPEN" | "CLOSED" | "CANCELLED";
+        };
+        "com.campus.academic.application.StudentAcademicService.TermView": {
+            /** Format: uuid */
+            id?: string;
+            code?: string;
+            name?: string;
+            /** Format: date */
+            startDate?: string;
+            /** Format: date */
+            endDate?: string;
+            /** @enum {string} */
+            status?: "PLANNED" | "ACTIVE" | "CLOSED" | "CANCELLED";
+        };
+        "com.campus.academic.application.StudentAcademicService.Timetable": {
+            /** Format: uuid */
+            studentId?: string;
+            term?: components["schemas"]["com.campus.academic.application.StudentAcademicService.TermView"];
+            meetings?: components["schemas"]["com.campus.academic.application.StudentAcademicService.EnrollmentView"][];
+        };
+        "com.campus.student.application.StudentProfileService.StudentProfile": {
+            /** Format: uuid */
+            id?: string;
+            studentNumber?: string;
+            fullName?: string;
+            email?: string;
+            /** Format: uuid */
+            organizationUnitId?: string;
+            organizationUnitName?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+        };
+        "com.campus.finance.application.StudentFinanceService.ChargeView": {
+            /** Format: uuid */
+            id?: string;
+            chargeNumber?: string;
+            feeCode?: string;
+            feeName?: string;
+            amount?: number | bigint | LosslessNumber;
+            currency?: string;
+            /** Format: date */
+            dueDate?: string;
+            /** @enum {string} */
+            status?: "OPEN" | "CANCELLED";
+            paid?: number | bigint | LosslessNumber;
+            outstanding?: number | bigint | LosslessNumber;
+            overdue?: boolean;
+            payments?: components["schemas"]["com.campus.finance.application.StudentFinanceService.PaymentView"][];
+        };
+        "com.campus.finance.application.StudentFinanceService.FinanceSummary": {
+            /** Format: uuid */
+            studentId?: string;
+            currency?: string;
+            /** Format: date-time */
+            asOf?: string;
+            totalCharged?: number | bigint | LosslessNumber;
+            totalPaid?: number | bigint | LosslessNumber;
+            outstanding?: number | bigint | LosslessNumber;
+            charges?: components["schemas"]["com.campus.finance.application.StudentFinanceService.ChargeView"][];
+        };
+        "com.campus.finance.application.StudentFinanceService.PaymentView": {
+            /** Format: uuid */
+            id?: string;
+            receiptNumber?: string;
+            amount?: number | bigint | LosslessNumber;
+            /** @enum {string} */
+            status?: "RECORDED" | "REVERSED";
+            /** Format: date-time */
+            recordedAt?: string;
+            /** Format: date-time */
+            reversedAt?: string;
+            reversalReason?: string;
+        };
+        "com.campus.academic.application.StudentAcademicService.Enrollments": {
+            /** Format: uuid */
+            studentId?: string;
+            items?: components["schemas"]["com.campus.academic.application.StudentAcademicService.EnrollmentView"][];
         };
         CampusEventPage: {
             content?: components["schemas"]["com.campus.event.domain.CampusEvent"][];
@@ -5035,6 +5224,88 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["com.campus.notification.domain.InboxItem"];
+                };
+            };
+        };
+    };
+    timetable: {
+        parameters: {
+            query?: {
+                termId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.application.StudentAcademicService.Timetable"];
+                };
+            };
+        };
+    };
+    profile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.student.application.StudentProfileService.StudentProfile"];
+                };
+            };
+        };
+    };
+    summary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.finance.application.StudentFinanceService.FinanceSummary"];
+                };
+            };
+        };
+    };
+    enrollments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.application.StudentAcademicService.Enrollments"];
                 };
             };
         };

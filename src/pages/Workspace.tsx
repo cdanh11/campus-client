@@ -12,6 +12,7 @@ import { ErrorBoundary } from '../components/ErrorBoundary'
 import { CampusTime } from '../components/CampusTime'
 import { ErrorNotice } from '../components/ErrorNotice'
 import type { InboxItem } from '../features/portal/InboxPage'
+import StudentSnapshot from '../features/portal/StudentSnapshot'
 
 const Portal = lazy(() => import('../features/portal/Portal'))
 const AdminPeople = lazy(() => import('../features/people/AdminPeople'))
@@ -75,11 +76,12 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
        <div className="workspace-hero-copy"><Tag color="cyan">KHÔNG GIAN LÀM VIỆC</Tag><Title level={1}>Một khuôn viên. Một kết nối.</Title><Paragraph>Chào mừng trở lại, <strong>{user.email}</strong>. Mọi điểm chạm quan trọng của Campus được sắp xếp gọn trong một nơi.</Paragraph><Space wrap><Link to="/portal"><Button type="primary" icon={<ArrowRightOutlined />}>Mở cổng cá nhân</Button></Link>{admin && <Link to="/admin"><Button icon={<PieChartOutlined />}>Đi tới quản trị</Button></Link>}</Space></div>
        <div className="hero-orbit" aria-hidden="true"><div className="hero-orbit-core">C</div><span><BellOutlined /></span><span><CalendarOutlined /></span><span><TeamOutlined /></span></div>
       </section>
+      <StudentSnapshot />
       <section className="workspace-section-heading"><div><Text className="section-kicker">TỔNG QUAN</Text><Title level={2}>Bắt đầu từ nơi bạn cần</Title></div><Text type="secondary">Cập nhật theo quyền truy cập của bạn</Text></section>
       <div className="workspace-launch-grid">
        <Link className="launch-card launch-card-primary" to="/portal"><div className="launch-icon"><UserOutlined /></div><div><Text className="launch-kicker">DÀNH CHO BẠN</Text><Title level={3}>Cổng cá nhân</Title><Paragraph>Thông báo, sự kiện và các đăng ký đang theo dõi.</Paragraph></div><ArrowRightOutlined className="launch-arrow" /></Link>
        {admin && <Link className="launch-card" to="/admin"><div className="launch-icon"><PieChartOutlined /></div><div><Text className="launch-kicker">VẬN HÀNH</Text><Title level={3}>Không gian quản trị</Title><Paragraph>Điều phối hồ sơ, học vụ, dịch vụ và báo cáo.</Paragraph></div><ArrowRightOutlined className="launch-arrow" /></Link>}
-       <Card className="status-card" bordered={false}><div className="status-card-heading"><span className="status-dot" /> <Text strong>Phiên làm việc đang hoạt động</Text></div><Text type="secondary">Tài khoản</Text><div className="status-email">{user.email}</div><Space wrap>{user.roles.map((role) => <Tag color="cyan" key={role}>{role}</Tag>)}</Space></Card>
+       <Card className="status-card" variant="borderless"><div className="status-card-heading"><span className="status-dot" /> <Text strong>Phiên làm việc đang hoạt động</Text></div><Text type="secondary">Tài khoản</Text><div className="status-email">{user.email}</div><Space wrap>{user.roles.map((role) => <Tag color="cyan" key={role}>{role}</Tag>)}</Space></Card>
       </div>
       <section className="workspace-lower-grid"><Card className="activity-card" title={<Space><ClockCircleOutlined /> Thông báo gần đây</Space>} extra={<Link to="/portal/inbox">Xem tất cả</Link>}>
        {inbox.isFetching && <p role="status">Đang tải thông báo…</p>}
@@ -90,7 +92,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
         <div><Text strong>{item.title}</Text><div><Text type="secondary" ellipsis>{item.body}</Text></div></div>
         <Text type="secondary"><CampusTime value={item.delivery.deliveredAt} /></Text>
        </div>)}
-      </Card><Card className="tip-card" bordered={false}><Text className="section-kicker">GỢI Ý NHANH</Text><Title level={3}>Tìm đúng không gian</Title><Paragraph>Nhóm điều hướng bên trái sẽ thay đổi theo quyền của tài khoản. Bạn chỉ thấy những nghiệp vụ mình được phép sử dụng.</Paragraph><Link className="text-action" to="/portal">Khám phá cổng cá nhân <ArrowRightOutlined /></Link></Card></section>
+      </Card><Card className="tip-card" variant="borderless"><Text className="section-kicker">GỢI Ý NHANH</Text><Title level={3}>Tìm đúng không gian</Title><Paragraph>Nhóm điều hướng bên trái sẽ thay đổi theo quyền của tài khoản. Bạn chỉ thấy những nghiệp vụ mình được phép sử dụng.</Paragraph><Link className="text-action" to="/portal">Khám phá cổng cá nhân <ArrowRightOutlined /></Link></Card></section>
      </>} />
      <Route path="/admin/*" element={<AccessBoundary user={user} roles={Object.values(administrationRoles).flat()}><Suspense fallback={<p role="status">Đang tải…</p>}><AdminPeople user={user} /></Suspense></AccessBoundary>} />
      <Route path="/portal/*" element={<Suspense fallback={<p role="status">Đang tải…</p>}><Portal /></Suspense>} />
