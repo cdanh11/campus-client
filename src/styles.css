@@ -11,7 +11,7 @@
   --accent: #f0a35e;
   --navy: #102a43;
   --ink: #19324a;
-  --muted: #6b8094;
+  --muted: #5a7183;
   --border: #dce7ee;
   --surface: #ffffff;
   --canvas: #f5f8fa;
@@ -93,7 +93,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 .login-form form { margin-top: 32px; }
 .support-note { margin-top: 28px; font-size: 13px; }
 .login-error { margin-top: 20px; }
-.eyebrow { color: var(--teal); font-size: 11px; font-weight: 800; letter-spacing: .16em; }
+.eyebrow { color: var(--primary); font-size: 11px; font-weight: 800; letter-spacing: .16em; }
 
 /* Workspace shell */
 .workspace { display: flex; flex-direction: row; min-height: 100dvh; background: var(--canvas); }
@@ -160,7 +160,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 .sidebar-link:hover { color: #fff; background: rgba(78, 195, 190, .13); transform: translateX(2px); }
 .sidebar-link.active {
   color: #fff;
-  background: linear-gradient(100deg, #167b91, #15958d);
+  background: linear-gradient(100deg, #167b91, #12807a);
   box-shadow: 0 10px 24px rgba(9, 77, 99, .30);
   font-weight: 700;
 }
@@ -364,13 +364,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   transition: transform .2s, box-shadow .2s, border-color .2s;
 }
 .launch-card:hover { color: var(--ink); border-color: #9bd7d5; box-shadow: var(--shadow-md); transform: translateY(-4px); }
-.launch-card-primary { color: #fff; background: linear-gradient(145deg, var(--primary), #15958d); border: 0; }
+.launch-card-primary { color: #fff; background: linear-gradient(145deg, var(--primary), #12807a); border: 0; }
 .launch-card-primary:hover { color: #fff; }
 .launch-icon { display: grid; place-items: center; width: 42px; height: 42px; color: var(--primary); background: var(--primary-soft); border-radius: 13px; font-size: 19px; }
 .launch-card-primary .launch-icon { color: #fff; background: rgba(255, 255, 255, .16); }
 .launch-card h3 { margin: 5px 0 6px; color: inherit; letter-spacing: -.025em; }
 .launch-card p { margin: 0; color: var(--muted); line-height: 1.55; }
-.launch-card-primary p { color: #d5f1f0; }
+.launch-card-primary p { color: #f2fbfa; }
 .launch-arrow { align-self: flex-end; margin-top: auto; }
 .status-card { background: #fffaf2 !important; border-color: #f3dfc5 !important; }
 .status-card-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 22px; }

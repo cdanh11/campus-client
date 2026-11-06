@@ -4,7 +4,7 @@ export const campusTheme: ThemeConfig = {
  token: {
   colorPrimary: '#176b87', colorInfo: '#176b87', colorLink: '#176b87', colorSuccess: '#188b83',
   colorWarning: '#b45309', colorError: '#b91c1c',
-  colorText: '#19324a', colorTextSecondary: '#6b8094', colorTextDescription: '#6b8094',
+  colorText: '#19324a', colorTextSecondary: '#5a7183', colorTextDescription: '#5a7183',
   colorBgLayout: '#f5f8fa', colorBgContainer: '#ffffff', colorBorder: '#dce7ee',
   borderRadius: 10, borderRadiusLG: 14,
   fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',

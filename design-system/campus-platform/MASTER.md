@@ -15,7 +15,7 @@ Source: UI UX Pro Max installed locally with `uipro init --ai codex` and used as
 | `--accent` | `#f0a35e` | Warm accent, used sparingly |
 | `--navy` | `#102a43` | Headings and sidebar |
 | `--ink` | `#19324a` | Body text |
-| `--muted` | `#6b8094` | Secondary text |
+| `--muted` | `#5a7183` | Secondary text |
 | `--border` | `#dce7ee` | Dividers and input borders |
 | `--canvas` | `#f5f8fa` | Page background |
 | `--surface` | `#ffffff` | Cards and tables |
