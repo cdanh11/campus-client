@@ -6,6 +6,7 @@ test.beforeEach(async ({ page }) => {
   const path = new URL(route.request().url()).pathname
   if (path.endsWith('/login')) return route.fulfill({ json: { accessToken: 'mock-token', tokenType: 'Bearer', expiresIn: 900, user: { id: 'mock-user', email: 'demo@example.test', status: 'ACTIVE', roles: ['ADMIN'] } } })
   if (path.endsWith('/logout')) return route.fulfill({ status: 204 })
+  if (path === '/api/v1/notifications') return route.fulfill({ json: { content: [], totalElements: 0, totalPages: 0 } })
   return route.fulfill({ status: 401, json: { code: 'REFRESH_TOKEN_MISSING' } })
  })
 })
