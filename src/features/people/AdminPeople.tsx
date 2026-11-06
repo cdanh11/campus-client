@@ -32,7 +32,7 @@ export default function AdminPeople({ user }: { user: User }) {
    <Route path="organizations" element={gate('organizations', <RegistryPage key={resources.organizations.path} resource={resources.organizations} />)} />
    <Route path="students" element={gate('students', <RegistryPage key={resources.students.path} resource={resources.students} />)} />
    <Route path="personnel" element={gate('personnel', <RegistryPage key={resources.personnel.path} resource={resources.personnel} />)} />
-   <Route path="*" element={<Typography.Title level={2}>Không tìm thấy trang quản trị</Typography.Title>} />
+   <Route path="*" element={<EmptyState title="Không tìm thấy trang quản trị" description="Kiểm tra lại đường dẫn hoặc quay về trung tâm điều phối." />} />
   </Routes>
  </PageChrome>
 }
