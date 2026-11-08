@@ -7,7 +7,7 @@ import { PublishNotice } from './PublishNotice'
 import { PageChrome, EmptyState } from '../../components/PageChrome'
 function NoticesPage() {
  const [publishId, setPublishId] = useState<string>()
- return <><RegistryPage resource={notices} rowActions={(row) => <Button disabled={row.status !== 'DRAFT'} onClick={() => setPublishId(row.id)}>Phát hành</Button>} />
+ return <><RegistryPage resource={notices} rowActions={(row) => <Button type="link" size="small" disabled={row.status !== 'DRAFT'} onClick={() => setPublishId(row.id)}>Phát hành</Button>} />
   {publishId && <PublishNotice key={publishId} id={publishId} onClose={() => setPublishId(undefined)} />}
  </>
 }

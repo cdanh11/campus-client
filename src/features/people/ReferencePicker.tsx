@@ -57,11 +57,11 @@ export function ReferenceLabel({ kind, value }: { kind: ReferenceKind; value: un
  if (!value) return <>—</>
  const id = String(value)
  const row = tracked ? labels?.row(kind, id) : selected.data
- if (row) return <span title={id}>{kind === 'offering' ? <OfferingSummary row={row} /> : source.label(row)}</span>
+ if (row) return <span title={id}>{kind === 'offering' ? <OfferingSummary row={row} compact /> : source.label(row)}</span>
  const status = tracked ? labels?.status(kind) : selected.error ? 'error' : 'loading'
  return <span title={id}>{status === 'loading' ? 'Đang tải…' : 'Không tải được tham chiếu'}</span>
 }
 
-function OfferingSummary({ row }: { row: RegistryRow }) {
- return <span><ReferenceLabel kind="course" value={row.courseId} /> · <ReferenceLabel kind="term" value={row.termId} /> · {String(row.status)}</span>
+function OfferingSummary({ row, compact }: { row: RegistryRow; compact?: boolean }) {
+ return <span><ReferenceLabel kind="course" value={row.courseId} /> · <ReferenceLabel kind="term" value={row.termId} />{compact ? null : <> · {String(row.status)}</>}</span>
 }

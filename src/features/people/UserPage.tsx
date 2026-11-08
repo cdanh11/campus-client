@@ -34,21 +34,21 @@ export function UserPage() {
   <div className="page-heading"><Typography.Title level={1}>Tài khoản</Typography.Title><Button type="primary" onClick={() => setEdit({ action: 'create' })}>Thêm tài khoản</Button></div>
   <Typography.Paragraph type="secondary">ADMIN quản trị toàn hệ thống; các quyền khác giới hạn theo chức năng. Nhiều quyền kết hợp phạm vi truy cập; quyền tham chiếu không cho phép sửa hồ sơ.</Typography.Paragraph>
   <Space wrap className="list-filters">
-   <Input.Search aria-label="Tìm tài khoản" maxLength={100} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} allowClear />
+   <Input.Search aria-label="Tìm tài khoản" placeholder="Tìm theo email hoặc tên…" maxLength={100} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} allowClear />
    <Select aria-label="Lọc trạng thái" value={filters.status} options={[{ value: '', label: 'Tất cả trạng thái' }, ...statuses]} onChange={(status) => setFilters({ ...filters, status, page: 0 })} />
    <Select aria-label="Lọc quyền" value={filters.role} options={[{ value: '', label: 'Tất cả quyền' }, ...roles]} onChange={(role) => setFilters({ ...filters, role, page: 0 })} />
    <Select aria-label="Sắp xếp" value={filters.sort} options={sortOptions(['createdAt', 'email', 'displayName', 'status', 'updatedAt'], 'createdAt,desc')} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })} />
   </Space>
   {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
-  <Table<AdminUser> rowKey="id" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 950 }} locale={{ emptyText: 'Chưa có tài khoản phù hợp.' }}
+  <Table<AdminUser> rowKey="id" tableLayout="fixed" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 1050 }} locale={{ emptyText: 'Chưa có tài khoản phù hợp.' }}
    columns={[
-    { title: 'Email', dataIndex: 'email' }, { title: 'Tên hiển thị', dataIndex: 'displayName' },
-    { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={statusColor(value)}>{statusText(value)}</Tag> }, { title: 'Quyền', render: (_, row) => row.roles.map(roleText).join(', ') },
-    { title: 'Thao tác', render: (_, row) => <Space wrap>
-     <Button onClick={() => setEdit({ action: 'detail', id: row.id })}>Chi tiết</Button>
-     <Button disabled={row.id === session.user?.id} onClick={() => setEdit({ action: 'status', id: row.id })}>Đổi trạng thái</Button>
-     <Button disabled={row.id === session.user?.id} onClick={() => setEdit({ action: 'roles', id: row.id })}>Đổi quyền</Button>
-     <Button disabled={row.id === session.user?.id} onClick={() => setEdit({ action: 'password', id: row.id })}>Đặt lại mật khẩu</Button>
+    { title: 'Email', dataIndex: 'email', width: 200, ellipsis: { showTitle: true } }, { title: 'Tên hiển thị', dataIndex: 'displayName', width: 160, ellipsis: { showTitle: true } },
+    { title: 'Trạng thái', dataIndex: 'status', width: 130, render: (value: unknown) => <Tag color={statusColor(value)}>{statusText(value)}</Tag> }, { title: 'Quyền', width: 175, render: (_, row) => <span className="cell-ellipsis" title={row.roles.map(roleText).join(', ')}>{row.roles.map(roleText).join(', ')}</span> },
+    { title: 'Thao tác', width: 370, render: (_, row) => <Space size={0} separator={<span className="row-divider" aria-hidden="true" />}>
+     <Button type="link" size="small" onClick={() => setEdit({ action: 'detail', id: row.id })}>Chi tiết</Button>
+     <Button type="link" size="small" disabled={row.id === session.user?.id} onClick={() => setEdit({ action: 'status', id: row.id })}>Đổi trạng thái</Button>
+     <Button type="link" size="small" disabled={row.id === session.user?.id} onClick={() => setEdit({ action: 'roles', id: row.id })}>Đổi quyền</Button>
+     <Button type="link" size="small" aria-label="Đặt lại mật khẩu" disabled={row.id === session.user?.id} onClick={() => setEdit({ action: 'password', id: row.id })}>Mật khẩu</Button>
     </Space> },
    ]}
    pagination={{ current: filters.page + 1, pageSize: filters.size, total: result.data?.totalElements ?? 0, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setFilters({ ...filters, page: page - 1, size }) }} />

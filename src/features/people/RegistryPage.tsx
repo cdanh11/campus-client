@@ -15,6 +15,8 @@ import { ReferenceLabelsProvider, type ReferenceRequests } from './reference-lab
 import type { PageResult } from './contracts'
 
 const referenceKind = (type: string): type is ReferenceKind => type in referenceSources
+const columnWidths: Record<string, number> = { id: 140, code: 140, capacity: 80, credits: 80, amount: 130, dueDate: 120, startDate: 115, endDate: 115, schedule: 200, createdAt: 150, updatedAt: 150 }
+const actionDivider = <span className="row-divider" aria-hidden="true" />
 
 export function RegistryPage({ resource, rowActions }: { resource: Resource; rowActions?: (row: RegistryRow) => ReactNode }) {
  const [filters, setFilters] = useState({ page: 0, size: 20, q: '', status: '', personnelType: '', sort: resource.sorts[0].value })
@@ -55,14 +57,19 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
   </Space>
   {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
   <ReferenceLabelsProvider requests={labelRequests} expandOfferings={resource.columns.some((column) => column.reference === 'offering')}>
-   <Table<RegistryRow> rowKey="id" loading={result.isFetching} dataSource={rows} scroll={{ x: 850 }}
+   <Table<RegistryRow> rowKey="id" tableLayout="fixed" loading={result.isFetching} dataSource={rows} scroll={{ x: 1060 }}
    columns={[
-    ...resource.columns.map((column) => ({ title: column.title, key: column.key, dataIndex: column.key, render: (value: unknown) => column.format ? column.format(value) : column.reference
+    ...resource.columns.map((column) => ({
+     title: column.title, key: column.key, dataIndex: column.key,
+     width: columnWidths[column.key] ?? (column.reference ? 190 : undefined),
+     ellipsis: column.reference || ['id', 'code', 'email'].includes(column.key) ? { showTitle: true } : undefined,
+     render: (value: unknown) => column.format ? column.format(value) : column.reference
      ? <ReferenceLabel kind={column.reference} value={value} />
      : isInstant(value) ? campusTimeText(value)
-     : resource.fields.find((field) => field.name === column.key)?.options?.find((option) => option.value === value)?.label ?? String(value ?? '—') })),
-    { title: 'Trạng thái', dataIndex: 'status', render: (value: unknown) => <Tag color={statusColor(value)}>{states.find((state) => state.value === value)?.label ?? statusText(value)}</Tag> },
-    { title: 'Thao tác', key: 'actions', render: (_, row) => <Space wrap><Button onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space> },
+     : resource.fields.find((field) => field.name === column.key)?.options?.find((option) => option.value === value)?.label ?? String(value ?? '—'),
+    })),
+    { title: 'Trạng thái', dataIndex: 'status', width: 125, render: (value: unknown) => <Tag color={statusColor(value)}>{states.find((state) => state.value === value)?.label ?? statusText(value)}</Tag> },
+    { title: 'Thao tác', key: 'actions', width: 160, render: (_, row) => <Space size={0} separator={actionDivider}><Button type="link" size="small" onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space> },
    ]}
    locale={{ emptyText: 'Chưa có bản ghi phù hợp.' }}
    pagination={{ current: filters.page + 1, pageSize: filters.size, total, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setFilters({ ...filters, page: page - 1, size }) }}

@@ -73,8 +73,8 @@ export default function AdminHome({ user }: { user: User }) {
     const value = valueOf(dashboard.data, kpi.group, kpi.key)
     const body = <><span className="admin-kpi-label">{kpi.label}</span><strong className="admin-kpi-value">{value === undefined ? '—' : metricText(value, kpi.money)}</strong></>
     return canAdminister(user, kpi.area)
-     ? <Link key={kpi.key} className="admin-kpi" to={kpi.path}>{body}</Link>
-     : <div key={kpi.key} className="admin-kpi">{body}</div>
+     ? <Link key={kpi.key} className="admin-kpi" data-group={kpi.group} to={kpi.path}>{body}</Link>
+     : <div key={kpi.key} className="admin-kpi" data-group={kpi.group}>{body}</div>
    })}</div>}
    {alerts.length > 0 && <div className="admin-alerts">{alerts.map((alert) => <Link key={alert.text} to={alert.path}>{metricText(alert.value)} {alert.text} · Xử lý ngay</Link>)}</div>}
   </section>}
