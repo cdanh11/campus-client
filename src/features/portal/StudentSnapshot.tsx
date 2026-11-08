@@ -1,11 +1,12 @@
 import { Card, Space, Tag, Typography } from 'antd'
 import { CalendarOutlined, WalletOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import type { User } from '../../api/client'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { daysAheadText, moneyText, nextMeetings, openCharges, overdueCharges, scheduleText, totalCredits, useEnrollments, useFinance, useStudentProfile, useTimetable } from './student'
 
-export default function StudentSnapshot() {
- const profile = useStudentProfile()
+export default function StudentSnapshot({ user }: { user: User }) {
+ const profile = useStudentProfile(user.roles.includes('USER'))
  const student = profile.data?.studentNumber ? profile.data : null
  const timetable = useTimetable(undefined, !!student)
  const enrollments = useEnrollments(!!student)
@@ -25,7 +26,7 @@ export default function StudentSnapshot() {
      : upcoming.length === 0 ? <Typography.Text type="secondary">Chưa có lớp nào được xếp lịch.</Typography.Text>
      : upcoming.map(({ item, daysAhead }) => <div className="meeting-row" key={item.enrollmentId ?? item.sectionId}>
       <div className="meeting-time">{daysAheadText(daysAhead)}<span>{scheduleText(item.schedule)}</span></div>
-      <div className="meeting-copy"><Typography.Text strong>{item.course?.title}</Typography.Text><span>{item.course?.code} · Lớp {item.sectionCode}</span></div>
+      <div className="meeting-copy"><Typography.Text strong>{item.course?.title}</Typography.Text><span>Lớp {item.sectionCode}</span></div>
      </div>)}
    </Card>
    <Card className="snapshot-card" title={<Space><WalletOutlined /> Học phí</Space>} extra={<Link to="/portal/finance">Chi tiết</Link>}>

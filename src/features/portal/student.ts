@@ -22,9 +22,10 @@ export const financePath = '/api/v1/me/finance'
 export const isMissingStudentProfile = (error: unknown) =>
  error instanceof ApiError && error.status === 404 && (error.detail.code === 'STUDENT_PROFILE_NOT_FOUND' || error.detail.code === 'ACADEMIC_RESOURCE_NOT_FOUND')
 
-export function useStudentProfile() {
+export function useStudentProfile(enabled = true) {
  return useQuery({
   queryKey: ['me', 'student'],
+  enabled,
   queryFn: ({ signal }) => api.request<StudentProfile>(profilePath, { signal }),
  })
 }
@@ -54,7 +55,7 @@ export function useFinance(enabled = true) {
  })
 }
 
-export { clockText, scheduleText, weekdayText } from '../academic/schedule'
+export { clockText, scheduleSlotText, scheduleText, weekdayText } from '../academic/schedule'
 export const dateText = (value?: string) => {
  if (!value) return '—'
  const [year, month, day] = value.slice(0, 10).split('-')
@@ -64,7 +65,7 @@ export function moneyText(value: unknown) {
  try { return formatVnd(value) } catch { return '—' }
 }
 
-export const enrollmentState: Record<string, string> = { ENROLLED: 'Đang học', WITHDRAWN: 'Đã rút' }
+export const enrollmentState: Record<string, string> = { ENROLLED: 'Đã ghi danh', WITHDRAWN: 'Đã rút' }
 export const sectionState: Record<string, string> = { DRAFT: 'Bản nháp', OPEN: 'Đang mở', CLOSED: 'Đã đóng', CANCELLED: 'Đã hủy' }
 export const termState: Record<string, string> = { PLANNED: 'Sắp diễn ra', ACTIVE: 'Đang diễn ra', CLOSED: 'Đã kết thúc', CANCELLED: 'Đã hủy' }
 export const studentState: Record<string, string> = { ACTIVE: 'Đang học', INACTIVE: 'Tạm dừng' }

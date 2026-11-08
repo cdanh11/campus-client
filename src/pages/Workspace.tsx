@@ -47,13 +47,18 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
   enabled: location.pathname === '/',
   queryFn: ({ signal }) => api.request<{ content: InboxItem[] }>('/api/v1/notifications?' + queryParams({ page: 0, size: 3, sort: 'deliveredAt,desc' }), { signal }),
  })
+ const studentLinks = user.roles.includes('USER')
+  ? [{ path: '/portal/timetable', label: 'Thời khóa biểu', icon: <CalendarOutlined />, sub: true },
+   { path: '/portal/courses', label: 'Môn học', icon: <BookOutlined />, sub: true },
+   { path: '/portal/finance', label: 'Học phí', icon: <WalletOutlined />, sub: true }]
+  : []
  const links = [{ path: '/', label: 'Trang chủ', icon: <HomeOutlined /> },
-  ...visibleAdminLinks, { path: '/portal', label: 'Cổng cá nhân', icon: <UserOutlined /> }]
+  ...visibleAdminLinks, { path: '/portal', label: 'Cổng cá nhân', icon: <UserOutlined /> }, ...studentLinks]
  const active = [...links].reverse().find((link) => link.path === location.pathname || (link.path !== '/' && location.pathname.startsWith(link.path + '/')))
  const navigation = <nav className="sidebar-navigation" aria-label="Điều hướng chính">
   <p className="nav-caption">KHÔNG GIAN LÀM VIỆC</p>
-  {links.map((link) => <NavLink key={link.path} to={link.path} end={link.path === '/' || link.path === '/admin'} onClick={() => setOpen(false)}
-   className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}>
+  {links.map((link) => <NavLink key={link.path} to={link.path} end={link.path === '/' || link.path === '/admin' || link.path === '/portal'} onClick={() => setOpen(false)}
+   className={({ isActive }) => 'sidebar-link' + ('sub' in link && link.sub ? ' sidebar-link-sub' : '') + (isActive ? ' active' : '')}>
    <span aria-hidden="true">{link.icon}</span><span>{link.label}</span>
   </NavLink>)}
  </nav>
@@ -77,7 +82,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
        <div className="workspace-hero-copy"><Tag color="cyan">KHÔNG GIAN LÀM VIỆC</Tag><Title level={1}>Một khuôn viên. Một kết nối.</Title><Paragraph>Chào mừng trở lại, <strong>{user.email}</strong>. Mọi điểm chạm quan trọng của Campus được sắp xếp gọn trong một nơi.</Paragraph><Space wrap><Link to="/portal"><Button type="primary" icon={<ArrowRightOutlined />}>Mở cổng cá nhân</Button></Link>{admin && <Link to="/admin"><Button icon={<PieChartOutlined />}>Đi tới quản trị</Button></Link>}</Space></div>
        <div className="hero-orbit" aria-hidden="true"><div className="hero-orbit-core">C</div><span><BellOutlined /></span><span><CalendarOutlined /></span><span><TeamOutlined /></span></div>
       </section>
-      <StudentSnapshot />
+      <StudentSnapshot user={user} />
       <section className="workspace-section-heading"><div><Text className="section-kicker">TỔNG QUAN</Text><Title level={2}>Bắt đầu từ nơi bạn cần</Title></div><Text type="secondary">Cập nhật theo quyền truy cập của bạn</Text></section>
       <div className="workspace-launch-grid">
        <Link className="launch-card launch-card-primary" to="/portal"><div className="launch-icon"><UserOutlined /></div><div><Text className="launch-kicker">DÀNH CHO BẠN</Text><Title level={3}>Cổng cá nhân</Title><Paragraph>Thông báo, sự kiện và các đăng ký đang theo dõi.</Paragraph></div><ArrowRightOutlined className="launch-arrow" /></Link>

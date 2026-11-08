@@ -46,11 +46,11 @@ export default function PortalHome() {
   {overdue.length > 0 && <Alert type="error" showIcon className="student-alert" title={`${overdue.length} khoản thu đã quá hạn`}
    description="Kiểm tra học phí và liên hệ phòng tài chính để hoàn tất thanh toán." action={<Link to="/portal/finance"><Button size="small" danger>Xem chi tiết</Button></Link>} />}
   <div className="portal-metrics">
-   <Card className="metric-card"><span className="metric-icon"><CalendarOutlined /></span><Typography.Text type="secondary">Lớp sắp tới</Typography.Text>
-    {upcoming[0] ? <><div className="metric-value">{upcoming[0].item.course?.title}</div><Typography.Text type="secondary">{daysAheadText(upcoming[0].daysAhead)} · {scheduleText(upcoming[0].item.schedule)}</Typography.Text></> : <Typography.Text type="secondary">Chưa có lịch học sắp tới.</Typography.Text>}</Card>
-   <Card className="metric-card"><span className="metric-icon"><BookOutlined /></span><Typography.Text type="secondary">Tín chỉ đang học</Typography.Text>
+   <Card className="metric-card metric-card-schedule"><span className="metric-icon"><CalendarOutlined /></span><Typography.Text type="secondary">Lớp sắp tới</Typography.Text>
+    {upcoming[0] ? <><div className="metric-value">{upcoming[0].item.course?.title}</div><Typography.Text type="secondary">{daysAheadText(upcoming[0].daysAhead)} · {scheduleText(upcoming[0].item.schedule)}</Typography.Text></> : <Typography.Paragraph type="secondary" className="metric-empty">Chưa có lịch học sắp tới.</Typography.Paragraph>}</Card>
+   <Card className="metric-card metric-card-credits"><span className="metric-icon"><BookOutlined /></span><Typography.Text type="secondary">Tín chỉ đang học</Typography.Text>
     <div className="metric-value">{totalCredits(items, currentTerm?.id ?? undefined)}</div><Typography.Text type="secondary">{currentTerm ? `${currentItems.length} lớp trong ${currentTerm.name}` : 'Đang xác định học kỳ hiện tại'}</Typography.Text></Card>
-   <Card className="metric-card"><span className="metric-icon"><WalletOutlined /></span><Typography.Text type="secondary">Học phí còn nợ</Typography.Text>
+   <Card className="metric-card metric-card-fee"><span className="metric-icon"><WalletOutlined /></span><Typography.Text type="secondary">Học phí còn nợ</Typography.Text>
     <div className="metric-value">{outstanding === undefined ? '—' : moneyText(outstanding)}</div><Typography.Text type="secondary">{unpaid.length ? `${unpaid.length} khoản thu đang mở` : 'Không có khoản thu đang mở'}</Typography.Text></Card>
   </div>
   <div className="portal-home-grid">
@@ -60,7 +60,7 @@ export default function PortalHome() {
     {!timetable.isFetching && !timetable.error && upcoming.length === 0 && <Empty description="Chưa có lịch học trong học kỳ này." />}
     {upcoming.map(({ item, daysAhead }) => <div className="meeting-row" key={item.enrollmentId ?? item.sectionId}>
      <div className="meeting-time">{daysAheadText(daysAhead)}<span>{scheduleText(item.schedule)}</span></div>
-     <div className="meeting-copy"><Typography.Text strong>{item.course?.title}</Typography.Text><span>{item.course?.code} · Lớp {item.sectionCode} · {item.facultyName}</span></div>
+     <div className="meeting-copy"><Typography.Text strong>{item.course?.title}</Typography.Text><span>Lớp {item.sectionCode} · {item.facultyName}</span></div>
     </div>)}
    </Card>
    <Card title={<Space><WalletOutlined /> Khoản thu cần chú ý</Space>} extra={<Link to="/portal/finance">Học phí</Link>}>
@@ -68,7 +68,7 @@ export default function PortalHome() {
     {finance.error && <ErrorNotice error={finance.error} onRetry={() => { void finance.refetch() }} />}
     {!finance.isFetching && !finance.error && unpaid.length === 0 && <Empty description="Không có khoản thu đang mở." />}
     {!finance.error && unpaid.slice(0, 3).map((charge) => <div className="charge-row" key={charge.id}>
-     <div><Typography.Text strong>{charge.feeName}</Typography.Text><span>{charge.chargeNumber} · Hạn {dateText(charge.dueDate)}</span></div>
+     <div><Typography.Text strong>{charge.feeName}</Typography.Text><span>Hạn {dateText(charge.dueDate)}</span></div>
      <div className="charge-amount"><Typography.Text strong>{moneyText(charge.outstanding)}</Typography.Text><Tag color={charge.overdue ? 'red' : 'orange'}>{charge.overdue ? 'Quá hạn' : chargeState[charge.status ?? '']}</Tag></div>
     </div>)}
    </Card>

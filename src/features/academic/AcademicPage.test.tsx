@@ -47,7 +47,7 @@ it('restores a withdrawn enrollment through PUT with fresh exact version and imm
  await dialog.findByText('Chọn trạng thái.')
  expect(mutation).not.toHaveBeenCalled()
  await userEvent.click(dialog.getByRole('combobox', { name: 'Trạng thái' }))
- await userEvent.click(await screen.findByText('Đang học', { selector: '.ant-select-item-option-content' }))
+ await userEvent.click(await screen.findByText('Đã ghi danh', { selector: '.ant-select-item-option-content' }))
  await userEvent.click(dialog.getByRole('button', { name: 'Lưu' }))
  await waitFor(() => expect(mutation).toHaveBeenCalledWith('/api/v1/admin/academic/enrollments/e', 'PUT', { status: 'ENROLLED', expectedVersion: 9223372036854775806n }))
  expect(request).toHaveBeenCalledWith('/api/v1/admin/academic/enrollments/e', expect.objectContaining({ signal: expect.any(AbortSignal) }))

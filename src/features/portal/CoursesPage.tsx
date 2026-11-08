@@ -2,7 +2,7 @@ import { Alert, Card, Empty, Space, Tag, Typography } from 'antd'
 import { Link } from 'react-router-dom'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import {
- dateText, enrollmentState, enrolledTerms, isMissingStudentProfile, scheduleText, sectionState, termPhase, totalCredits, useEnrollments, useStudentProfile,
+ dateText, enrollmentState, enrolledTerms, isMissingStudentProfile, scheduleSlotText, sectionState, termPhase, totalCredits, useEnrollments, useStudentProfile,
 } from './student'
 
 export default function CoursesPage() {
@@ -34,10 +34,10 @@ export default function CoursesPage() {
     {rows.map((item) => <div className="course-row" key={item.enrollmentId ?? item.sectionId}>
      <div className="course-copy">
       <Typography.Text strong>{item.course?.title}</Typography.Text>
-      <span>{item.course?.code} · Lớp {item.sectionCode} · {item.course?.credits} tín chỉ</span>
+      <span>Lớp {item.sectionCode} · {item.course?.credits} tín chỉ</span>
       <span>Giảng viên: {item.facultyName ?? 'Chưa phân công'}</span>
      </div>
-     <div className="course-schedule"><strong>{scheduleText(item.schedule)}</strong><span>{item.schedule?.room ?? 'Chưa có phòng'}</span></div>
+     <div className="course-schedule"><strong>{scheduleSlotText(item.schedule)}</strong><span>{item.schedule?.room ?? 'Chưa có phòng'}</span></div>
      <Space wrap><Tag color={item.status === 'ENROLLED' ? 'cyan' : 'default'}>{enrollmentState[item.status ?? ''] ?? item.status}</Tag><Tag>{sectionState[item.sectionStatus ?? ''] ?? item.sectionStatus}</Tag></Space>
     </div>)}
    </Card>

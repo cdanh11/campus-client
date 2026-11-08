@@ -2,7 +2,7 @@ export const statusLabels: Record<string, string> = {
  ACTIVE: 'Đang hoạt động', INACTIVE: 'Ngừng hoạt động', SUSPENDED: 'Tạm khóa', DISABLED: 'Đã khóa',
  UNREAD: 'Chưa đọc', READ: 'Đã đọc',
  PLANNED: 'Sắp mở', DRAFT: 'Bản nháp', OPEN: 'Đang mở', CLOSED: 'Đã đóng', CANCELLED: 'Đã hủy', PUBLISHED: 'Đã phát hành',
- ENROLLED: 'Đang học', WITHDRAWN: 'Đã rút',
+ ENROLLED: 'Đã ghi danh', WITHDRAWN: 'Đã rút',
  RETURNED: 'Đã trả', REGISTERED: 'Đã đăng ký', ATTENDED: 'Đã tham dự',
  ASSIGNED: 'Đang ở', RELEASED: 'Đã trả chỗ',
  RECORDED: 'Đã ghi nhận', REVERSED: 'Đã đảo',

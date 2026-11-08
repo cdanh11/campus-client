@@ -5,10 +5,14 @@ export type SectionSchedule = components['schemas']['com.campus.academic.domain.
 const weekdayNames = ['', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật']
 export const weekdayText = (weekday?: number) => (weekday && weekday >= 1 && weekday <= 7 ? weekdayNames[weekday] : 'Chưa xếp lịch')
 export const clockText = (value?: string) => (value ? value.slice(0, 5) : '—')
-export const scheduleText = (schedule?: SectionSchedule) => {
+export const scheduleSlotText = (schedule?: SectionSchedule) => {
  if (!schedule?.weekday) return 'Chưa xếp lịch'
  const time = schedule.startsAt && schedule.endsAt ? `${clockText(schedule.startsAt)}–${clockText(schedule.endsAt)}` : ''
- return [weekdayText(schedule.weekday), time, schedule.room].filter(Boolean).join(' · ')
+ return [weekdayText(schedule.weekday), time].filter(Boolean).join(' · ')
+}
+export const scheduleText = (schedule?: SectionSchedule) => {
+ const slot = scheduleSlotText(schedule)
+ return slot === 'Chưa xếp lịch' ? slot : [slot, schedule?.room].filter(Boolean).join(' · ')
 }
 export const weekdayOptions = weekdayNames.slice(1).map((label, index) => ({ value: String(index + 1), label }))
 

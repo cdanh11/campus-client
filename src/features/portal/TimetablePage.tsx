@@ -51,7 +51,7 @@ export default function TimetablePage() {
     </div>
     <div className="timetable-copy">
      <Typography.Text strong>{item.course?.title}</Typography.Text>
-     <span>{item.course?.code} · Lớp {item.sectionCode} · {item.course?.credits} tín chỉ</span>
+     <span>Lớp {item.sectionCode} · {item.course?.credits} tín chỉ</span>
      <span>Giảng viên: {item.facultyName ?? 'Chưa phân công'}</span>
     </div>
     <Space wrap><Tag>{sectionState[item.sectionStatus ?? ''] ?? item.sectionStatus}</Tag><Tag color={item.status === 'ENROLLED' ? 'cyan' : 'default'}>{enrollmentState[item.status ?? ''] ?? item.status}</Tag></Space>
