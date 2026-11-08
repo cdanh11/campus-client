@@ -2,8 +2,17 @@ import { useState } from 'react'
 import { Alert, Button, Form, Input, Tag, Typography } from 'antd'
 import { ArrowRightOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import { ApiError } from '../api/errors'
 import { api } from '../api/runtime'
 const { Title, Paragraph, Text } = Typography
+
+const loginError = (error: unknown) => {
+ if (!(error instanceof ApiError)) return 'Không kết nối được máy chủ. Kiểm tra kết nối mạng và thử lại.'
+ if (error.status === 401) return 'Email hoặc mật khẩu không đúng.'
+ if (error.status === 400) return 'Email hoặc mật khẩu chưa hợp lệ. Kiểm tra lại và thử lại.'
+ if (error.status >= 500) return 'Máy chủ đang gặp sự cố. Vui lòng thử lại sau.'
+ return 'Không thể đăng nhập. Vui lòng thử lại.'
+}
 
 export default function LoginPage() {
  const navigate = useNavigate()
@@ -15,8 +24,8 @@ export default function LoginPage() {
   try {
    await api.login(values.email, values.password)
    navigate('/', { replace: true })
-  } catch {
-   setError('Không thể đăng nhập. Kiểm tra thông tin, trạng thái tài khoản và kết nối máy chủ.')
+  } catch (error) {
+   setError(loginError(error))
   } finally { setBusy(false) }
  }
  return <main className="login-page">
