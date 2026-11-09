@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Alert, Button, Form, Input, Tag, Typography } from 'antd'
-import { ArrowRightOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
+import { Alert, Button, Form, Input, Typography } from 'antd'
+import { ArrowRightOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { ApiError } from '../api/errors'
 import { api } from '../api/runtime'
@@ -29,29 +29,27 @@ export default function LoginPage() {
   } finally { setBusy(false) }
  }
  return <main className="login-page">
-  <section className="intro">
-   <div className="wordmark">CAMPUS / PLATFORM</div>
-   <div><Tag color="cyan">SMART CAMPUS MANAGEMENT</Tag><h1>Kết nối hoạt động.<br />Đơn giản mỗi ngày.</h1><p>Không gian chung cho con người, học tập và dịch vụ trong khuôn viên.</p></div>
-   <div className="intro-footer"><SafetyCertificateOutlined aria-hidden="true" /> Quyền truy cập theo vai trò · Dữ liệu theo nghiệp vụ</div>
-  </section>
-  <section className="login-panel">
-   <div className="login-form">
-    <Text className="eyebrow">CHÀO MỪNG TRỞ LẠI</Text>
+  <section className="login-card">
+   <div className="login-brand">
+    <span className="brand-mark" aria-hidden="true">C</span>
+    <span><span className="login-brand-name">Campus</span><span className="login-brand-subtitle">PLATFORM</span></span>
+   </div>
+   <div className="login-heading">
     <Title level={2}>Đăng nhập</Title>
     <Paragraph type="secondary">Sử dụng tài khoản được quản trị viên cấp.</Paragraph>
-    {error && <Alert type="error" showIcon title={error} className="login-error" />}
-    <Form layout="vertical" onFinish={submit} requiredMark={false}>
-     <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Nhập email.' }, { type: 'email', message: 'Email không hợp lệ.' }]}>
-      <Input size="large" autoComplete="username" placeholder="ten@truong.edu.vn" disabled={busy} />
-     </Form.Item>
-     <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: 'Nhập mật khẩu.' }]}>
-      <Input.Password size="large" autoComplete="current-password" disabled={busy} />
-     </Form.Item>
-     <Button type="primary" htmlType="submit" size="large" block loading={busy} icon={<ArrowRightOutlined aria-hidden="true" />}>Đăng nhập</Button>
-    </Form>
-    <Paragraph className="support-note" type="secondary">Cần tài khoản hoặc quên mật khẩu? Liên hệ quản trị viên của bạn.</Paragraph>
    </div>
-   <Text type="secondary">Campus Platform · Campus Client</Text>
+   {error && <Alert type="error" showIcon title={error} className="login-error" />}
+   <Form layout="vertical" onFinish={submit} requiredMark={false}>
+    <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Nhập email.' }, { type: 'email', message: 'Email không hợp lệ.' }]}>
+     <Input size="large" autoComplete="username" placeholder="ten@truong.edu.vn" disabled={busy} />
+    </Form.Item>
+    <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: 'Nhập mật khẩu.' }]}>
+     <Input.Password size="large" autoComplete="current-password" disabled={busy} />
+    </Form.Item>
+    <Button type="primary" htmlType="submit" size="large" block loading={busy} icon={<ArrowRightOutlined aria-hidden="true" />}>Đăng nhập</Button>
+   </Form>
+   <Text className="login-support" type="secondary">Cần tài khoản hoặc quên mật khẩu? Liên hệ quản trị viên của bạn.</Text>
   </section>
+  <Text className="login-footnote" type="secondary">Campus Platform · Không gian quản lý khuôn viên</Text>
  </main>
 }

@@ -2,6 +2,7 @@ import { Alert, Button, Card, Empty, Space, Tag, Typography } from 'antd'
 import { ArrowRightOutlined, BookOutlined, CalendarOutlined, WalletOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { ErrorNotice } from '../../components/ErrorNotice'
+import NewsBoard from './NewsBoard'
 import {
  activeEnrollments, chargeState, dateText, daysAheadText, isMissingStudentProfile,
  moneyText, nextMeetings, openCharges, overdueCharges, scheduleText, studentState, totalCredits,
@@ -15,10 +16,13 @@ export default function PortalHome() {
  const enrollments = useEnrollments(!!student)
  const finance = useFinance(!!student)
  if (profile.isFetching) return <p role="status">Đang tải hồ sơ sinh viên…</p>
- if (isMissingStudentProfile(profile.error)) return <Alert type="info" showIcon title="Tài khoản chưa liên kết hồ sơ sinh viên"
-  description="Bạn vẫn dùng được hộp thư và sự kiện. Liên hệ quản trị viên để liên kết tài khoản với hồ sơ sinh viên và xem thời khóa biểu, học phí." />
- if (profile.error) return <ErrorNotice error={profile.error} onRetry={() => { void profile.refetch() }} />
- if (!student) return <Alert type="info" showIcon title="Chưa có hồ sơ sinh viên" description="Tài khoản này chưa được liên kết với hồ sơ sinh viên." />
+ const missingProfile = isMissingStudentProfile(profile.error)
+ if (profile.error && !missingProfile) return <ErrorNotice error={profile.error} onRetry={() => { void profile.refetch() }} />
+ if (!student) return <>
+  <Alert type="info" showIcon title={missingProfile ? 'Tài khoản chưa liên kết hồ sơ sinh viên' : 'Chưa có hồ sơ sinh viên'}
+   description={missingProfile ? 'Bạn vẫn dùng được hộp thư và sự kiện. Liên hệ quản trị viên để liên kết tài khoản với hồ sơ sinh viên và xem thời khóa biểu, học phí.' : 'Tài khoản này chưa được liên kết với hồ sơ sinh viên.'} />
+  <NewsBoard />
+ </>
 
  const items = enrollments.data?.items ?? []
  const currentTerm = timetable.data?.term
@@ -53,6 +57,7 @@ export default function PortalHome() {
    <Card className="metric-card metric-card-fee"><span className="metric-icon"><WalletOutlined /></span><Typography.Text type="secondary">Học phí còn nợ</Typography.Text>
     <div className="metric-value">{outstanding === undefined ? '—' : moneyText(outstanding)}</div><Typography.Text type="secondary">{unpaid.length ? `${unpaid.length} khoản thu đang mở` : 'Không có khoản thu đang mở'}</Typography.Text></Card>
   </div>
+  <NewsBoard />
   <div className="portal-home-grid">
    <Card title={<Space><CalendarOutlined /> Lịch học sắp tới</Space>} extra={<Link to="/portal/timetable">Toàn bộ lịch</Link>}>
     {timetable.isFetching && <p role="status">Đang tải thời khóa biểu…</p>}

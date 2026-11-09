@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { expect, it, vi } from 'vitest'
 import Workspace from './Workspace'
 import { api } from '../api/runtime'
+vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} })
 const user = { id: '1', email: 'user@example.test', status: 'ACTIVE', roles: ['USER'] }
 function renderAt(entry: string, account = user) {
  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
