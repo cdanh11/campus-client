@@ -1,9 +1,9 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useState, type ReactNode } from 'react'
 import { Button, Card, Drawer, Layout, Result, Space, Tag, Typography } from 'antd'
 import { ApartmentOutlined, ArrowRightOutlined, BellOutlined, BookOutlined, CalendarOutlined, HomeOutlined, LogoutOutlined, MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined, NotificationOutlined, PieChartOutlined, ReadOutlined, TeamOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons'
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import type { User } from '../api/client'
-import { administrationRoles, canAdminister, canEnterAdministration } from '../api/administration'
+import { administrationRoles, canAdminister, canEnterAdministration, type AdministrationArea } from '../api/administration'
 import { AccessBoundary } from '../components/AccessBoundary'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { roleText } from '../features/roles'
@@ -13,28 +13,23 @@ import StudentSnapshot from '../features/portal/StudentSnapshot'
 const Portal = lazy(() => import('../features/portal/Portal'))
 const AdminPeople = lazy(() => import('../features/people/AdminPeople'))
 const { Title, Paragraph, Text } = Typography
-const adminLinks = [
+const adminLinks: { path: string; label: string; icon: ReactNode; areas?: AdministrationArea[] }[] = [
  { path: '/admin', label: 'Quản trị', icon: <HomeOutlined /> },
- { path: '/admin/users', label: 'Tài khoản', icon: <UserOutlined /> },
- { path: '/admin/organizations', label: 'Đơn vị', icon: <ApartmentOutlined /> },
- { path: '/admin/students', label: 'Sinh viên', icon: <TeamOutlined /> },
- { path: '/admin/personnel', label: 'Giảng viên & nhân sự', icon: <TeamOutlined /> },
- { path: '/admin/academic', label: 'Học vụ', icon: <ReadOutlined /> },
- { path: '/admin/operations', label: 'Ký túc xá & tài chính', icon: <WalletOutlined /> },
- { path: '/admin/notifications', label: 'Thông báo', icon: <NotificationOutlined /> },
- { path: '/admin/events', label: 'Sự kiện', icon: <CalendarOutlined /> },
- { path: '/admin/library', label: 'Thư viện', icon: <BookOutlined /> },
- { path: '/admin/insights', label: 'Audit & báo cáo', icon: <PieChartOutlined /> },
+ { path: '/admin/students', label: 'Sinh viên', icon: <TeamOutlined />, areas: ['students'] },
+ { path: '/admin/personnel', label: 'Giảng viên & nhân sự', icon: <TeamOutlined />, areas: ['personnel'] },
+ { path: '/admin/academic', label: 'Học vụ', icon: <ReadOutlined />, areas: ['academic'] },
+ { path: '/admin/operations/buildings', label: 'Ký túc xá', icon: <ApartmentOutlined />, areas: ['dormitory'] },
+ { path: '/admin/notifications', label: 'Thông báo', icon: <NotificationOutlined />, areas: ['notifications'] },
+ { path: '/admin/events', label: 'Sự kiện', icon: <CalendarOutlined />, areas: ['events'] },
+ { path: '/admin/library', label: 'Thư viện', icon: <BookOutlined />, areas: ['library'] },
+ { path: '/admin/operations/fees', label: 'Tài chính', icon: <WalletOutlined />, areas: ['finance'] },
+ { path: '/admin/users', label: 'Tài khoản', icon: <UserOutlined />, areas: ['users'] },
+ { path: '/admin/organizations', label: 'Đơn vị', icon: <ApartmentOutlined />, areas: ['organizations'] },
+ { path: '/admin/insights', label: 'Audit & báo cáo', icon: <PieChartOutlined />, areas: ['audit', 'reporting'] },
 ]
 export default function Workspace({ user, onLogout }: { user: User; onLogout: () => void }) {
  const admin = canEnterAdministration(user)
- const visibleAdminLinks = adminLinks.filter((link) => {
-  const segment = link.path.split('/')[2]
-  if (!segment) return admin
-  if (segment === 'operations') return canAdminister(user, 'dormitory') || canAdminister(user, 'finance')
-  if (segment === 'insights') return canAdminister(user, 'audit') || canAdminister(user, 'reporting')
-  return canAdminister(user, segment as keyof typeof administrationRoles)
- })
+ const visibleAdminLinks = adminLinks.filter((link) => link.areas ? link.areas.some((area) => canAdminister(user, area)) : admin)
  const [open, setOpen] = useState(false)
  const [collapsed, setCollapsed] = useState(() => localStorage.getItem('campus.sidebar.collapsed') === '1')
  const toggleSidebar = () => setCollapsed((current) => {

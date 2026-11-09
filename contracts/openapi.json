@@ -2,7 +2,7 @@
   "openapi" : "3.1.0",
   "info" : {
     "title" : "Campus Service API",
-    "description" : "Bearer JWT authorization. Global ADMIN manages accounts/roles; functional operators access their own domains with explicit read references. AUDIT_VIEWER and REPORTING_VIEWER are read-only. See docs/permissions.md for the full method/path matrix and scope limits.",
+    "description" : "Bearer JWT authorization. Global ADMIN manages accounts/roles. ACADEMIC_AFFAIRS, CAMPUS_SERVICES and FINANCE operate their department domains with explicit reference reads, while AUDITOR is read-only for audits, reports and approved reference lists. See docs/permissions.md for the full method/path matrix and scope limits.",
     "version" : "v1"
   },
   "servers" : [ {

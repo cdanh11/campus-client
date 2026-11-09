@@ -10,17 +10,17 @@ The approved Phase 7 frontend is complete and reviewed PASS locally and on GitHu
 
 | Audience | Features |
 | --- | --- |
-| ADMIN | Accounts and roles; organization units; Student and Faculty/Staff profiles |
-| ADMIN | Academic programs, courses, terms, offerings, sections and enrollment |
-| ADMIN | Dormitory buildings/rooms/beds and current accommodation; VND fees, charges, manual receipts and reversal |
-| ADMIN | Notification publication; Event membership/attendance; Library borrowing/return; read-only Audit |
-| ADMIN | Eight-group dashboard, five reports and filtered CSV export |
-| Authenticated accounts | Own inbox and explicit mark-read; Event catalog and own registration history |
+| ADMIN | Accounts and roles; every department area; read-only Audit and Reporting as break-glass |
+| ACADEMIC_AFFAIRS — Phòng Đào tạo | Organization units; Student and Faculty/Staff profiles; programs, courses, terms, offerings, sections, enrollment and timetable |
+| CAMPUS_SERVICES — Phòng Công tác sinh viên và dịch vụ | Dormitory buildings/rooms/beds and accommodation; notification publication; Events and attendance; Library circulation |
+| FINANCE — Phòng Tài chính | VND fees, charges, manual receipts, reversal and cancellation |
+| AUDITOR — Kiểm soát nội bộ | Read-only retained Audit, dashboard, reports and filtered CSV |
+| Authenticated accounts | Own inbox and explicit mark-read; Event catalog and own registration history; own timetable, courses and tuition |
 | Accounts linked to a Student | Own Event membership cancellation; registration/restoration additionally require an ACTIVE Student and OPEN Event under backend capacity rules |
 
-Phase 8A2 adds nine function-specific operators and separate Audit/Reporting viewers, with backend-enforced grants and restricted menus/direct routes. Only global ADMIN manages accounts and roles. 8A2 is [reviewed PASS](docs/reviews/phase-8a2-permissions-review.md); whole Phase 8 subsequently passed its [local acceptance/regression review](docs/reviews/phase-8-acceptance-review.md).
+The frontend uses the six-role department model from [ADR 0018](https://github.com/cdanh11/campus-service/blob/main/docs/decisions/0018-department-functional-roles.md): navigation is grouped by department, direct routes outside a role are blocked before API calls, and only global ADMIN manages accounts and roles. Phase 8A2 remains [reviewed PASS](docs/reviews/phase-8a2-permissions-review.md) for its historical role model; whole Phase 8 subsequently passed its [local acceptance/regression review](docs/reviews/phase-8-acceptance-review.md).
 
-Student Academic, Dormitory, Finance and Library self-service screens are outside the approved frontend scope. See the [portal API contract](docs/api/portal.md).
+The Student portal reads the signed-in Student's timetable, enrollment history and tuition charges. Dormitory and Library self-service screens remain outside the approved frontend scope. See the [portal API contract](docs/api/portal.md).
 
 ## Technology
 

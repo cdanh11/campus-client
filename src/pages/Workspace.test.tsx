@@ -24,30 +24,49 @@ it('rejects a direct ADMIN route without issuing owner API calls', () => {
  expect(request).not.toHaveBeenCalled()
 })
 
-it('shows only the functional navigation of a finance administrator', () => {
- renderAt('/', { ...user, roles: ['FINANCE_ADMIN'] })
- expect(screen.getByRole('link', { name: 'Ký túc xá & tài chính' })).toBeInTheDocument()
+it('shows only the department navigation of a finance account', () => {
+ renderAt('/', { ...user, roles: ['FINANCE'] })
+ expect(screen.getByRole('link', { name: 'Tài chính' })).toHaveAttribute('href', '/admin/operations/fees')
+ expect(screen.queryByRole('link', { name: 'Ký túc xá' })).not.toBeInTheDocument()
  expect(screen.queryByRole('link', { name: 'Sinh viên' })).not.toBeInTheDocument()
  expect(screen.queryByRole('link', { name: 'Tài khoản' })).not.toBeInTheDocument()
  expect(screen.queryByRole('link', { name: 'Audit & báo cáo' })).not.toBeInTheDocument()
 })
+it('groups the campus services department under one navigation set', () => {
+ renderAt('/', { ...user, roles: ['CAMPUS_SERVICES'] })
+ for (const [name, href] of [['Ký túc xá', '/admin/operations/buildings'], ['Sự kiện', '/admin/events'], ['Thư viện', '/admin/library']] as const) {
+  expect(screen.getByRole('link', { name })).toHaveAttribute('href', href)
+ }
+ expect(screen.queryByRole('link', { name: 'Tài chính' })).not.toBeInTheDocument()
+ expect(screen.queryByRole('link', { name: 'Học vụ' })).not.toBeInTheDocument()
+})
+it('keeps the auditor read-only navigation free of operator areas', () => {
+ renderAt('/', { ...user, roles: ['AUDITOR'] })
+ expect(screen.getByRole('link', { name: 'Audit & báo cáo' })).toBeInTheDocument()
+ for (const name of ['Sinh viên', 'Tài chính', 'Ký túc xá', 'Tài khoản']) {
+  expect(screen.queryByRole('link', { name })).not.toBeInTheDocument()
+ }
+})
 it.each([
- ['FINANCE_ADMIN', '/admin/students'],
- ['FINANCE_ADMIN', '/admin/operations/buildings'],
- ['DORMITORY_ADMIN', '/admin/operations/payments'],
- ['AUDIT_VIEWER', '/admin/insights/dashboard'],
- ['REPORTING_VIEWER', '/admin/insights/audits'],
- ['EVENT_ADMIN', '/admin/users'],
- ['ACADEMIC_ADMIN', '/admin/personnel'],
+ ['FINANCE', '/admin/students'],
+ ['FINANCE', '/admin/operations/buildings'],
+ ['CAMPUS_SERVICES', '/admin/operations/fees'],
+ ['CAMPUS_SERVICES', '/admin/academic'],
+ ['ACADEMIC_AFFAIRS', '/admin/notifications'],
+ ['ACADEMIC_AFFAIRS', '/admin/operations/fees'],
+ ['AUDITOR', '/admin/users'],
+ ['AUDITOR', '/admin/operations/fees'],
+ ['USER', '/admin/insights/dashboard'],
 ])('rejects %s direct access to %s before owner requests', async (role, path) => {
  const request = vi.spyOn(api, 'request')
  renderAt(path, { ...user, roles: [role] })
  expect(await screen.findByText('Bạn không có quyền truy cập')).toBeInTheDocument()
  expect(request).not.toHaveBeenCalled()
 })
-it('offers useful overview destinations for combined functional roles', async () => {
- renderAt('/admin', { ...user, roles: ['EVENT_ADMIN', 'LIBRARY_ADMIN'] })
+it('offers useful overview destinations for combined department roles', async () => {
+ renderAt('/admin', { ...user, roles: ['CAMPUS_SERVICES', 'FINANCE'] })
  expect(await screen.findByRole('link', { name: 'Mở Sự kiện' })).toHaveAttribute('href', '/admin/events')
  expect(screen.getByRole('link', { name: 'Mở Thư viện' })).toHaveAttribute('href', '/admin/library')
+ expect(screen.getByRole('link', { name: 'Mở Tài chính' })).toHaveAttribute('href', '/admin/operations/fees')
  expect(screen.queryByRole('link', { name: 'Mở Tài khoản' })).not.toBeInTheDocument()
 })
