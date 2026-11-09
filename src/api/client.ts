@@ -107,10 +107,13 @@ export class ApiClient {
  }
  logout(): Promise<void> {
   this.clear()
-  this.onExplicitChange()
   return this.schedule(async () => {
-   if (this.refreshTask) await this.refreshTask.catch(() => {})
-   await this.send<void>('/api/v1/auth/logout', { method: 'POST' }, null)
+   try {
+    if (this.refreshTask) await this.refreshTask.catch(() => {})
+    await this.send<void>('/api/v1/auth/logout', { method: 'POST' }, null)
+   } finally {
+    this.onExplicitChange()
+   }
   })
  }
  request<T>(path: string, options: RequestInit = {}): Promise<T> { return this.authorized<T>(path, options, 'json') }

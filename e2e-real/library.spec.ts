@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { statusLabels, statusText } from '../src/features/status-options'
 async function save(page: Page, path: string, method: string) {
  const response = page.waitForResponse((value) => new URL(value.url()).pathname === path && value.request().method() === method)
  await page.getByRole('dialog').getByRole('button', { name: 'Lưu', exact: true }).click()
@@ -68,7 +69,7 @@ test('real Library enforces occupied copies, server due date and retained return
  await page.getByRole('row').filter({ hasText: 'LBSV1' }).getByRole('button', { name: 'Xem / sửa' }).click()
  await expect(dialog.getByRole('combobox', { name: 'Bản sao', exact: true })).toBeDisabled()
  await dialog.getByLabel('Thao tác', { exact: true }).click()
- await page.getByTitle('RETURN', { exact: true }).click()
+ await page.getByTitle(statusLabels.RETURN, { exact: true }).click()
  const returnResponse = await save(page, '/api/v1/admin/library/loans/' + firstLoan!.id + '/return', 'PUT')
  expect(returnResponse.status()).toBe(200)
  const returned = await returnResponse.json()
@@ -80,7 +81,7 @@ test('real Library enforces occupied copies, server due date and retained return
  expect(returned.status).toBe('RETURNED')
  await expect(dialog).not.toBeVisible()
  await page.getByRole('row').filter({ hasText: 'LBSV1' }).getByRole('button', { name: 'Xem / sửa' }).click()
- await expect(dialog.getByText(/Trạng thái hiện tại: RETURNED/)).toBeVisible()
+ await expect(dialog.getByText('Trạng thái hiện tại: ' + statusText('RETURNED'))).toBeVisible()
  await expect(dialog.getByRole('button', { name: 'Lưu', exact: true })).toHaveCount(0)
  await dialog.getByRole('button', { name: 'Hủy', exact: true }).click()
  const nextLoan = await page.evaluate(async (ids) => {

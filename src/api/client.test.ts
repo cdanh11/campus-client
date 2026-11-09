@@ -122,6 +122,21 @@ describe('session and API lifecycle', () => {
   await api.restore()
   expect(api.getSession().status).toBe('anonymous')
  })
+ it('notifies other tabs only after the server revokes the refresh cookie', async () => {
+  const fetcher = vi.fn(); const clear = vi.fn(); const changed = vi.fn()
+  fetcher.mockResolvedValueOnce(json({ accessToken: 'initial', user }))
+  const api = new ApiClient(fetcher as typeof fetch, clear, changed)
+  await api.login('test@example.test', 'test-only')
+  changed.mockClear()
+  let finish!: (response: Response) => void
+  fetcher.mockImplementationOnce(() => new Promise<Response>((done) => { finish = done }))
+  const logout = api.logout()
+  await vi.waitFor(() => expect(finish).toBeDefined())
+  expect(changed).not.toHaveBeenCalled()
+  finish(new Response(null, { status: 204 }))
+  await logout
+  expect(changed).toHaveBeenCalledTimes(1)
+ })
 
  it('does not recover a cookie session through a protected request after failed logout', async () => {
   const fetcher = vi.fn(); const api = await loggedIn(fetcher)

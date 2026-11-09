@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test'
+import { statusText } from '../src/features/status-options'
+import { roleText } from '../src/features/roles'
 
 test('real ADMIN creates account, changes roles/status, resets password and cannot mutate self', async ({ page }) => {
  test.setTimeout(60_000)
@@ -24,19 +26,19 @@ test('real ADMIN creates account, changes roles/status, resets password and cann
  await row.getByRole('button', { name: 'Đổi quyền', exact: true }).click()
  dialog = page.getByRole('dialog')
  await dialog.getByLabel('Quyền mới', { exact: true }).click()
- await page.getByTitle('ADMIN', { exact: true }).click()
+ await page.locator('.ant-select-dropdown').getByTitle(roleText('ADMIN'), { exact: true }).click()
  await page.keyboard.press('Escape')
  await dialog.getByRole('button', { name: 'Lưu', exact: true }).click()
  await expect(dialog).not.toBeVisible()
  row = page.getByRole('row').filter({ hasText: 'ui-managed@example.test' })
- await expect(row).toContainText('ADMIN')
+ await expect(row).toContainText(roleText('ADMIN'))
  await row.getByRole('button', { name: 'Đổi trạng thái', exact: true }).click()
  dialog = page.getByRole('dialog')
  await dialog.getByLabel('Trạng thái mới', { exact: true }).click()
- await page.getByTitle('SUSPENDED', { exact: true }).click()
+ await page.locator('.ant-select-dropdown').getByTitle(statusText('SUSPENDED'), { exact: true }).click()
  await dialog.getByRole('button', { name: 'Lưu', exact: true }).click()
  await expect(dialog).not.toBeVisible()
- await expect(row).toContainText('SUSPENDED')
+ await expect(row).toContainText(statusText('SUSPENDED'))
  await row.getByRole('button', { name: 'Đặt lại mật khẩu', exact: true }).click()
  dialog = page.getByRole('dialog')
  await dialog.getByLabel('Mật khẩu mới', { exact: true }).fill(process.env.CAMPUS_TEST_PASSWORD! + 'x')
@@ -45,8 +47,8 @@ test('real ADMIN creates account, changes roles/status, resets password and cann
  expect((await reset).status()).toBe(204)
  await expect(dialog).not.toBeVisible()
  await row.getByRole('button', { name: 'Chi tiết', exact: true }).click()
- await expect(page.getByRole('dialog')).toContainText('SUSPENDED')
- await expect(page.getByRole('dialog')).toContainText('ADMIN')
+ await expect(page.getByRole('dialog')).toContainText(statusText('SUSPENDED'))
+ await expect(page.getByRole('dialog')).toContainText(roleText('ADMIN'))
  await page.getByRole('dialog').getByRole('button', { name: 'Đóng biểu mẫu', exact: true }).click()
  await page.getByRole('button', { name: 'Thêm tài khoản', exact: true }).click()
  dialog = page.getByRole('dialog')
