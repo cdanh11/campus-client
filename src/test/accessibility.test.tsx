@@ -33,7 +33,7 @@ it('login page has no structural accessibility violations', async () => {
 it('registry page has no structural accessibility violations', async () => {
  vi.spyOn(api, 'request').mockResolvedValue({ content: [{ id: 'term-1', code: 'HK1', name: 'Học kỳ 1', status: 'ACTIVE' }], totalElements: 1, totalPages: 1 })
  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
- const { container } = render(<AntApp><QueryClientProvider client={client}><RegistryPage resource={academicResources.terms} /></QueryClientProvider></AntApp>)
+ const { container } = render(<MemoryRouter><AntApp><QueryClientProvider client={client}><RegistryPage resource={academicResources.terms} /></QueryClientProvider></AntApp></MemoryRouter>)
  await waitFor(() => expect(container.querySelector('tbody tr')).not.toBeNull())
  expect(await runAxe(container)).toEqual([])
 })

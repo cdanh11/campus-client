@@ -15,14 +15,19 @@ import { amountRule, formatVnd, paymentAmount } from './money'
 import { balancePath, BalanceSummary, type Balance } from './ChargeBalancePanel'
 import { sortOptions } from '../sort-options'
 import { statusText } from '../status-options'
+import { useListQuery } from '../list-query'
 type Payment = Required<components['schemas']['com.campus.finance.domain.ManualPayment']>
 type PaymentCreate = components['schemas']['FinancePaymentCreate']
 type PaymentReverse = components['schemas']['FinancePaymentReverse']
 interface Values { receiptNumber: string; chargeId: string; amount: string; reason: string }
 type Mode = 'create' | 'detail' | 'reverse'
 const path = '/api/v1/admin/finance/payments'
+const paymentSorts = sortOptions(['recordedAt', 'receiptNumber', 'amount', 'status', 'createdAt', 'updatedAt'], 'recordedAt,desc')
 export function PaymentsPage() {
- const [filters, setFilters] = useState({ page: 0, size: 20, q: '', status: '', chargeId: '', sort: 'recordedAt,desc' })
+ const [filters, setFilters] = useListQuery({ page: 0, size: 20, q: '', status: '', chargeId: '', sort: 'recordedAt,desc' }, {
+  sorts: paymentSorts.map((option) => option.value),
+  choices: { status: ['RECORDED', 'REVERSED'] },
+ })
  const [edit, setEdit] = useState<{ mode: Mode; id?: string } | null>(null)
  const params = queryParams(filters)
  const result = useQuery({
@@ -34,10 +39,10 @@ export function PaymentsPage() {
   <div className="page-heading"><Typography.Title level={1}>Biên nhận thanh toán</Typography.Title><Button type="primary" onClick={() => setEdit({ mode: 'create' })}>Ghi nhận thanh toán</Button></div>
   <Typography.Paragraph>Ghi nhận thủ công, hỗ trợ thanh toán từng phần. Đảo toàn bộ biên nhận để sửa sai và giữ lịch sử; không chuyển tiền qua cổng thanh toán.</Typography.Paragraph>
   <Space wrap className="list-filters">
-   <Input.Search aria-label="Tìm biên nhận" maxLength={100} allowClear onSearch={(q) => setFilters({ ...filters, q, page: 0 })} />
+   <Input.Search aria-label="Tìm biên nhận" maxLength={100} allowClear defaultValue={filters.q} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} />
    <Select aria-label="Lọc trạng thái" value={filters.status} options={[{ value: '', label: 'Tất cả trạng thái' }, { value: 'RECORDED', label: 'Đã ghi nhận' }, { value: 'REVERSED', label: 'Đã đảo' }]} onChange={(status) => setFilters({ ...filters, status, page: 0 })} />
    <div style={{ minWidth: 240 }}><ReferencePicker kind="charge" label="Lọc khoản thu" eligible={false} allowClear value={filters.chargeId} onChange={(chargeId) => setFilters({ ...filters, chargeId: chargeId ?? '', page: 0 })} /></div>
-   <Select aria-label="Sắp xếp" value={filters.sort} options={sortOptions(['recordedAt', 'receiptNumber', 'amount', 'status', 'createdAt', 'updatedAt'], 'recordedAt,desc')} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })} />
+   <Select aria-label="Sắp xếp" value={filters.sort} options={paymentSorts} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })} />
   </Space>
   {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
   <ReferenceLabelsProvider requests={{ charge: (result.data?.content ?? []).map((payment) => payment.chargeId) }}>

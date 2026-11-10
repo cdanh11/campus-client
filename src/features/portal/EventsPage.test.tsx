@@ -2,6 +2,7 @@ import { render, screen, within, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { App as AntApp } from 'antd'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MemoryRouter } from 'react-router-dom'
 import { expect, it, vi } from 'vitest'
 import EventsPage, { ownActions, type CampusEvent, type Registration } from './EventsPage'
 import { api } from '../../api/runtime'
@@ -19,7 +20,7 @@ function show({ current = event, record = null, missing = false, history = false
   return path.includes('?') ? { content: [event], totalElements: total } : current
  })
  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
- render(<AntApp><QueryClientProvider client={client}><EventsPage history={history} /></QueryClientProvider></AntApp>)
+ render(<MemoryRouter><AntApp><QueryClientProvider client={client}><EventsPage history={history} /></QueryClientProvider></AntApp></MemoryRouter>)
 }
 async function open() {
  await userEvent.click(await screen.findByRole('button', { name: 'Xem sự kiện' }))

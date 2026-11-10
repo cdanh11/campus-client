@@ -13,6 +13,7 @@ import { columnLabels, reportConfig, reportReferences } from './config'
 import { metricText, reportParams, type Filters } from './query'
 import { TimeFilters } from './TimeFilters'
 import { statusOptions, statusText } from '../status-options'
+import { useListQuery } from '../list-query'
 const columnWidths: Record<string, number> = {
  studentId: 190, chargeCount: 110, principalVnd: 130, paidVnd: 130, outstandingVnd: 140,
  bedId: 160, roomId: 140, buildingId: 160, assignedAt: 140,
@@ -36,7 +37,7 @@ export function ReportsPage() {
 }
 function ReportList({ kind }: { kind: ReportKind }) {
  const [filters, setFilters] = useState<Filters>({})
- const [paging, setPaging] = useState({ page: 0, size: 20, sort: 'id,asc' })
+ const [paging, setPaging] = useListQuery({ page: 0, size: 20, sort: 'id,asc' }, { sorts: ['id,asc', 'id,desc'] })
  const config = reportConfig[kind]
  const params = reportParams(kind, filters, paging.page, paging.size, paging.sort)
  const path = '/api/v1/admin/reports/' + kind

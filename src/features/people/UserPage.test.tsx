@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { App as AntApp } from 'antd'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, expect, it, vi } from 'vitest'
 import { api } from '../../api/runtime'
 import { ApiError } from '../../api/client'
@@ -13,7 +14,7 @@ const user = { id: 'target', email: 'target@example.test', displayName: 'Target'
 function show() {
  vi.spyOn(api, 'request').mockImplementation(async (path) => path.includes('?') ? { content: [user], totalElements: 1, totalPages: 1, page: 0, size: 20 } : user)
  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
- return render(<AntApp><QueryClientProvider client={client}><UserPage /></QueryClientProvider></AntApp>)
+ return render(<MemoryRouter><AntApp><QueryClientProvider client={client}><UserPage /></QueryClientProvider></AntApp></MemoryRouter>)
 }
 it('sends the exact current version for password reset and blocks repeated stale writes', async () => {
  const mutation = vi.spyOn(api, 'mutation').mockRejectedValue(new ApiError(409, { code: 'CONCURRENT_MODIFICATION' }))

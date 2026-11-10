@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Alert, Button, Card, Empty, Input, Modal, Pagination, Select, Space, Tag, Typography, App as AntApp } from 'antd'
 import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
@@ -8,12 +7,15 @@ import { queryParams, safePageTotal } from '../../api/query-params'
 import { CampusTime } from '../../components/CampusTime'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { useDialogSelection } from './useDialogSelection'
+import { useListQuery } from '../list-query'
 export type CampusEvent = Required<components['schemas']['com.campus.event.domain.CampusEvent']>
 export type Registration = Omit<Required<components['schemas']['com.campus.event.domain.EventRegistration']>, 'cancelledAt' | 'attendedAt'> & { cancelledAt: string | null; attendedAt: string | null }
 type Page<T> = { content: T[]; totalElements: number | bigint }
 const eventPath = '/api/v1/events'
 const ownPath = '/api/v1/event-registrations'
 const states = { DRAFT: 'Bản nháp', OPEN: 'Đang mở', CLOSED: 'Đã đóng', CANCELLED: 'Đã hủy', REGISTERED: 'Đã đăng ký', ATTENDED: 'Đã tham dự' }
+const catalogSorts = [{ value: 'startsAt,asc', label: 'Bắt đầu tăng dần' }, { value: 'startsAt,desc', label: 'Bắt đầu giảm dần' }, { value: 'title,asc', label: 'Tên A–Z' }]
+const historySorts = [{ value: 'registeredAt,desc', label: 'Đăng ký mới nhất' }, { value: 'registeredAt,asc', label: 'Đăng ký cũ nhất' }]
 const unlinked = (error: unknown) => error instanceof ApiError && error.status === 404 && error.detail.code === 'EVENT_REGISTRATION_NOT_FOUND'
 function LinkNotice() { return <Alert type="info" showIcon title="Chưa có hồ sơ sinh viên liên kết" description="Bạn vẫn có thể xem sự kiện. Liên hệ quản trị viên để liên kết tài khoản với hồ sơ sinh viên trước khi đăng ký." /> }
 export function ownActions(registration: Registration | null, event: CampusEvent): ('REGISTER' | 'CANCEL' | 'RESTORE')[] {
@@ -22,7 +24,11 @@ export function ownActions(registration: Registration | null, event: CampusEvent
  return registration.status === 'CANCELLED' && event.status === 'OPEN' ? ['RESTORE'] : []
 }
 export default function EventsPage({ history = false }: { history?: boolean }) {
- const [filters, setFilters] = useState({ page: 0, size: 20, q: '', status: history ? '' : 'OPEN', sort: history ? 'registeredAt,desc' : 'startsAt,asc' })
+ const sorts = history ? historySorts : catalogSorts
+ const [filters, setFilters] = useListQuery({ page: 0, size: 20, q: '', status: history ? '' : 'OPEN', sort: history ? 'registeredAt,desc' : 'startsAt,asc' }, {
+  sorts: sorts.map((option) => option.value),
+  choices: { status: history ? ['REGISTERED', 'CANCELLED', 'ATTENDED'] : [] },
+ })
  const { selected, open, close } = useDialogSelection()
  const params = queryParams({ ...filters, q: history ? undefined : filters.q })
  const result = useQuery({
@@ -36,12 +42,11 @@ export default function EventsPage({ history = false }: { history?: boolean }) {
   <div className="page-heading"><div><Typography.Title level={1}>{history ? 'Đăng ký của bạn' : 'Khám phá sự kiện'}</Typography.Title>
    <Typography.Paragraph type="secondary">{history ? 'Lịch sử đăng ký, hủy và khôi phục được giữ lại.' : 'Tìm hoạt động trong khuôn viên. Chỉ sự kiện đang mở nhận đăng ký.'}</Typography.Paragraph></div></div>
   <Space wrap className="list-filters">
-   {!history && <Input.Search aria-label="Tìm sự kiện" maxLength={100} placeholder="Tìm mã hoặc tên sự kiện" allowClear onSearch={(q) => setFilters({ ...filters, q, page: 0 })} style={{ width: 260 }} />}
+   {!history && <Input.Search aria-label="Tìm sự kiện" maxLength={100} placeholder="Tìm mã hoặc tên sự kiện" allowClear defaultValue={filters.q} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} style={{ width: 260 }} />}
    {history && <Select aria-label="Lọc trạng thái sự kiện" value={filters.status} onChange={(status) => setFilters({ ...filters, status, page: 0 })}
     options={[{ value: '', label: 'Tất cả trạng thái' }, ...statuses.map((value) => ({ value, label: states[value as keyof typeof states] }))]} style={{ minWidth: 180 }} />}
    <Select aria-label="Sắp xếp sự kiện" value={filters.sort} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })}
-    options={history ? [{ value: 'registeredAt,desc', label: 'Đăng ký mới nhất' }, { value: 'registeredAt,asc', label: 'Đăng ký cũ nhất' }]
-     : [{ value: 'startsAt,asc', label: 'Bắt đầu tăng dần' }, { value: 'startsAt,desc', label: 'Bắt đầu giảm dần' }, { value: 'title,asc', label: 'Tên A–Z' }]} style={{ minWidth: 180 }} />
+    options={sorts} style={{ minWidth: 180 }} />
   </Space>
   {result.isFetching && <p role="status">Đang tải sự kiện…</p>}
   {unlinked(result.error) ? <LinkNotice /> : result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}

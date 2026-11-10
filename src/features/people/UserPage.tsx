@@ -12,15 +12,20 @@ import { sortOptions } from '../sort-options'
 import { statusColor, statusOptions, statusText } from '../status-options'
 import { roleOptions, roleText } from '../roles'
 import type { AdminUser, PageResult, UserCreate, UserPassword, UserRoles, UserStatus } from './contracts'
+import { useListQuery } from '../list-query'
 
 const path = '/api/v1/admin/users'
 const statuses = statusOptions(['ACTIVE', 'SUSPENDED', 'DISABLED'])
 const roles = roleOptions(roleCodes)
+const userSorts = sortOptions(['createdAt', 'email', 'displayName', 'status', 'updatedAt'], 'createdAt,desc')
 type Action = 'create' | 'detail' | 'status' | 'roles' | 'password'
 interface Values { email: string; displayName: string; initialPassword: string; newPassword: string; roles: string[]; status: 'ACTIVE' | 'SUSPENDED' | 'DISABLED' }
 
 export function UserPage() {
- const [filters, setFilters] = useState({ page: 0, size: 20, q: '', status: '', role: '', sort: 'createdAt,desc' })
+ const [filters, setFilters] = useListQuery({ page: 0, size: 20, q: '', status: '', role: '', sort: 'createdAt,desc' }, {
+  sorts: userSorts.map((option) => option.value),
+  choices: { status: statuses.map((option) => option.value), role: roleCodes },
+ })
  const [edit, setEdit] = useState<{ action: Action; id?: string } | null>(null)
  const params = queryParams(filters)
  const session = useSyncExternalStore(api.subscribe, api.getSession)
@@ -34,10 +39,10 @@ export function UserPage() {
   <div className="page-heading"><Typography.Title level={1}>Tài khoản</Typography.Title><Button type="primary" onClick={() => setEdit({ action: 'create' })}>Thêm tài khoản</Button></div>
   <Typography.Paragraph type="secondary">ADMIN quản trị toàn hệ thống; các quyền khác giới hạn theo chức năng. Nhiều quyền kết hợp phạm vi truy cập; quyền tham chiếu không cho phép sửa hồ sơ.</Typography.Paragraph>
   <Space wrap className="list-filters">
-   <Input.Search aria-label="Tìm tài khoản" placeholder="Tìm theo email hoặc tên…" maxLength={100} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} allowClear />
+   <Input.Search aria-label="Tìm tài khoản" placeholder="Tìm theo email hoặc tên…" maxLength={100} defaultValue={filters.q} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} allowClear />
    <Select aria-label="Lọc trạng thái" value={filters.status} options={[{ value: '', label: 'Tất cả trạng thái' }, ...statuses]} onChange={(status) => setFilters({ ...filters, status, page: 0 })} />
    <Select aria-label="Lọc quyền" value={filters.role} options={[{ value: '', label: 'Tất cả quyền' }, ...roles]} onChange={(role) => setFilters({ ...filters, role, page: 0 })} />
-   <Select aria-label="Sắp xếp" value={filters.sort} options={sortOptions(['createdAt', 'email', 'displayName', 'status', 'updatedAt'], 'createdAt,desc')} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })} />
+   <Select aria-label="Sắp xếp" value={filters.sort} options={userSorts} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })} />
   </Space>
   {result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
   <Table<AdminUser> rowKey="id" tableLayout="fixed" loading={result.isFetching} dataSource={result.data?.content ?? []} scroll={{ x: 1050 }} locale={{ emptyText: 'Chưa có tài khoản phù hợp.' }}

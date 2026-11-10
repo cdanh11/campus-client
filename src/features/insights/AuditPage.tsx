@@ -12,6 +12,7 @@ import { statusText } from '../status-options'
 import { auditParams, uuidRule, type Filters } from './query'
 import { TimeFilters } from './TimeFilters'
 import { sortOptions } from '../sort-options'
+import { useListQuery } from '../list-query'
 const auditText = (value: unknown) => isInstant(value) ? campusTimeText(value) : String(value ?? '—')
 export function AuditsPage() {
  const [source, setSource] = useState<AuditSource>('IDENTITY')
@@ -19,7 +20,7 @@ export function AuditsPage() {
 }
 function AuditList({ source }: { source: AuditSource }) {
  const [filters, setFilters] = useState<Filters>({})
- const [paging, setPaging] = useState({ page: 0, size: 20, sort: 'occurredAt,desc' })
+ const [paging, setPaging] = useListQuery({ page: 0, size: 20, sort: 'occurredAt,desc' }, { sorts: ['occurredAt,asc', 'occurredAt,desc'] })
  const [id, setId] = useState<string>()
  const params = auditParams(source, filters, paging.page, paging.size, paging.sort)
  const path = '/api/v1/admin/audits/' + source

@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { App as AntApp } from 'antd'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, expect, it, vi } from 'vitest'
 import { api } from '../../api/runtime'
 import { ApiError } from '../../api/client'
@@ -14,7 +15,7 @@ vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect()
 afterEach(() => vi.restoreAllMocks())
 function show(node: ReactNode) {
  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
- render(<AntApp><QueryClientProvider client={client}>{node}</QueryClientProvider></AntApp>)
+ render(<MemoryRouter><AntApp><QueryClientProvider client={client}>{node}</QueryClientProvider></AntApp></MemoryRouter>)
 }
 it('renders all dashboard groups and aggregate VND exactly', async () => {
  const groups = Object.fromEntries(['IDENTITY', 'PEOPLE', 'ACADEMIC', 'DORMITORY', 'FINANCE', 'NOTIFICATION', 'EVENT', 'LIBRARY'].map((group) => [group, group === 'FINANCE' ? { outstanding_vnd: 19999999999999999998n } : { count: 0 }]))

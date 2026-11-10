@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event'
 import { App as AntApp } from 'antd'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, expect, it, vi } from 'vitest'
 import { api } from '../../api/runtime'
 import { ApiError } from '../../api/client'
@@ -22,7 +23,7 @@ function requests(returnedBalance = balance) {
 }
 function show() {
  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
- render(<AntApp><QueryClientProvider client={client}><PaymentsPage /></QueryClientProvider></AntApp>)
+ render(<MemoryRouter><AntApp><QueryClientProvider client={client}><PaymentsPage /></QueryClientProvider></AntApp></MemoryRouter>)
 }
 it('reversal uses freshly read receipt and charge versions, validates reason and blocks replay after conflict', async () => {
  const request = requests()

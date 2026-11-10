@@ -13,7 +13,7 @@ vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect()
 afterEach(() => vi.restoreAllMocks())
 function show(resource: Resource) {
  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
- render(<AntApp><QueryClientProvider client={client}><RegistryPage resource={resource} /></QueryClientProvider></AntApp>)
+ render(<MemoryRouter><AntApp><QueryClientProvider client={client}><RegistryPage resource={resource} /></QueryClientProvider></AntApp></MemoryRouter>)
 }
 it('rejects reversed times and fractional capacity in the form without submitting a write', async () => {
  vi.spyOn(api, 'request').mockResolvedValue({ content: [], totalElements: 0, totalPages: 0 })
