@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { statusText } from '../src/features/status-options'
 test('real Notification preserves snapshots, rejects stale publication and retains immutable publication', async ({ page }) => {
  test.setTimeout(90000)
  await page.goto('/')
@@ -63,7 +64,7 @@ test('real Notification preserves snapshots, rejects stale publication and retai
  expect((await publishedResponse).status()).toBe(200)
  await expect(dialog).not.toBeVisible()
  const row = page.getByRole('row').filter({ hasText: 'Thông báo phiên mới' })
- await expect(row).toContainText('PUBLISHED')
+ await expect(row).toContainText(statusText('PUBLISHED'))
  await expect(row.getByRole('button', { name: 'Phát hành', exact: true })).toBeDisabled()
  await row.getByRole('button', { name: 'Xem / sửa', exact: true }).click()
  await expect(dialog.getByLabel('Nội dung', { exact: true })).toHaveValue('Nội dung đã chỉnh')

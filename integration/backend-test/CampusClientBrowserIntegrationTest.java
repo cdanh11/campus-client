@@ -73,9 +73,15 @@ class CampusClientBrowserIntegrationTest {
         builder.redirectOutput(browserLog.toFile());
         Process browser = builder.start();
         try {
-            boolean finished = browser.waitFor(10, TimeUnit.MINUTES);
-            assertThat(finished).as("Browser suite must complete within 10 minutes").isTrue();
-            System.out.println(Files.readString(browserLog));
+            boolean finished = browser.waitFor(15, TimeUnit.MINUTES);
+            if (!finished) {
+                browser.descendants().forEach(ProcessHandle::destroy);
+                browser.destroy();
+                browser.waitFor(30, TimeUnit.SECONDS);
+            }
+            String log = browserLog(browserLog);
+            System.out.println(log);
+            assertThat(finished).as("Browser suite must complete within 15 minutes; log:%n%s", tail(log)).isTrue();
             assertThat(browser.exitValue()).as("Real frontend/backend browser result").isZero();
         } finally {
             if (browser.isAlive()) {
@@ -83,6 +89,18 @@ class CampusClientBrowserIntegrationTest {
                 browser.destroy();
             }
         }
+    }
+
+    private static String browserLog(Path path) {
+        try {
+            return Files.exists(path) ? Files.readString(path) : "";
+        } catch (java.io.IOException unavailable) {
+            return "(browser log unavailable)";
+        }
+    }
+
+    private static String tail(String value) {
+        return value.length() <= 20_000 ? value : value.substring(value.length() - 20_000);
     }
 
     private void seed(String email, RoleCode role, String password) {

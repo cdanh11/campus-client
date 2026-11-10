@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { statusText } from '../src/features/status-options'
 import { parseJson } from '../src/api/json'
 async function login(page: Page) {
  await page.goto('/')
@@ -66,13 +67,13 @@ test('real Dormitory inventory prevents occupied-bed deactivation and preserves 
  await navigate(page, 'Giường')
  await page.getByRole('row').filter({ hasText: 'OPSBED' }).getByRole('button', { name: 'Xem / sửa' }).click()
  await expect(page.getByRole('dialog').getByRole('combobox', { name: 'Phòng', exact: true })).toBeDisabled()
- await select(page, 'Trạng thái', 'INACTIVE')
+ await select(page, 'Trạng thái', statusText('INACTIVE'))
  expect((await save(page, '/api/v1/admin/dormitory/beds', 'PUT')).status()).toBe(409)
  await expect(page.getByRole('dialog').getByText('Mã lỗi: INVALID_DORMITORY_STATE')).toBeVisible()
  await page.getByRole('dialog').getByRole('button', { name: 'Hủy', exact: true }).click()
  await navigate(page, 'Phân chỗ ở')
  await page.getByRole('row').filter({ hasText: 'OPSSV1' }).getByRole('button', { name: 'Xem / sửa' }).click()
- await select(page, 'Thao tác', 'RELEASED')
+ await select(page, 'Thao tác', 'Trả chỗ')
  const released = await (await save(page, '/api/v1/admin/dormitory/assignments', 'PUT')).json()
  expect(released.id).toBe(original.id)
  expect(released.status).toBe('RELEASED')
@@ -84,7 +85,7 @@ test('real Dormitory inventory prevents occupied-bed deactivation and preserves 
  const next = await (await save(page, '/api/v1/admin/dormitory/assignments', 'POST')).json()
  expect(next.id).not.toBe(original.id)
  await expect(page.getByRole('dialog')).not.toBeVisible()
- const history = page.getByRole('row').filter({ hasText: 'OPSSV1' }).filter({ hasText: 'RELEASED' })
+ const history = page.getByRole('row').filter({ hasText: 'OPSSV1' }).filter({ hasText: statusText('RELEASED') })
  await history.getByRole('button', { name: 'Xem / sửa' }).click()
  await expect(page.getByRole('dialog').getByRole('button', { name: 'Lưu', exact: true })).toHaveCount(0)
 })
@@ -150,7 +151,7 @@ test('real Finance keeps exact VND snapshots, partial payments, overpayment reje
  await page.getByRole('row').filter({ hasText: 'FINCHARGE' }).getByRole('button', { name: 'Xem / sửa' }).click()
  dialog = page.getByRole('dialog')
  await expect(dialog.getByText('9.007.199.254.740.993 VND', { exact: true })).toBeVisible()
- await select(page, 'Thao tác', 'CANCELLED')
+ await select(page, 'Thao tác', 'Hủy khoản thu')
  expect((await save(page, '/api/v1/admin/finance/charges', 'PUT')).status()).toBe(409)
  await expect(dialog.getByText('Mã lỗi: INVALID_FINANCE_STATE')).toBeVisible()
  await dialog.getByRole('button', { name: 'Hủy', exact: true }).click()
@@ -170,7 +171,7 @@ test('real Finance keeps exact VND snapshots, partial payments, overpayment reje
  await navigate(page, 'Khoản thu')
  await page.getByRole('row').filter({ hasText: 'FINCHARGE' }).getByRole('button', { name: 'Xem / sửa' }).click()
  await expect(dialog.getByText('0 VND', { exact: true })).toBeVisible()
- await select(page, 'Thao tác', 'CANCELLED')
+ await select(page, 'Thao tác', 'Hủy khoản thu')
  expect((await save(page, '/api/v1/admin/finance/charges', 'PUT')).status()).toBe(200)
  await expect(dialog).not.toBeVisible()
  await page.getByRole('row').filter({ hasText: 'FINCHARGE' }).getByRole('button', { name: 'Xem / sửa' }).click()

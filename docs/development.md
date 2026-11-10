@@ -13,7 +13,7 @@ Frontend and backend remain independent repositories. Node 24 is the frontend ru
 
 For the real suite install Chromium first: npx playwright install chromium. The PowerShell runner refuses unrelated backend changes, copies exactly one frontend-owned test fixture, and removes only that unchanged file in finally. The backend test profile uses a new PostgreSQL Testcontainer, Flyway and Hibernate validate. Test accounts are created only in that database; the password is random per run and passed to the child browser process, never tracked. Existing developer databases/volumes are not touched. No production provisioning endpoint is introduced.
 
-The real suite starts Vite on fixed port 3000. Stop a frontend development server before running it; the runner never reuses an unknown existing server. Maven remains a persistent process while browser tests execute, then Spring closes its context and pool.
+The real suite builds the app and serves that bundle with `vite preview` on fixed port 3000, so tests exercise production output and never depend on dev-server optimisation or reloads. Stop a frontend development server before running it; the runner never reuses an unknown existing server. Maven remains a persistent process while browser tests execute, then Spring closes its context and pool. If the browser process exceeds the 15-minute gate, the harness stops it and prints the Playwright output into the failure message.
 
 ## API snapshot
 

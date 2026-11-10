@@ -28,14 +28,14 @@ test('real insights keep aggregate VND exact, export applied filters and expose 
  })
  await page.goto('/admin/insights/dashboard')
  await expect(page.locator('.ant-card-head-title')).toHaveCount(8)
- await expect(page.getByText(/Thời điểm UTC:/)).toBeVisible()
+ await expect(page.getByText(/Dữ liệu tại thời điểm:/)).toBeVisible()
  await page.getByRole('navigation', { name: 'Audit và báo cáo' }).getByRole('link', { name: 'Báo cáo', exact: true }).click()
  await page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }).click()
  await page.getByTitle('INSV1 · Sinh viên báo cáo', { exact: true }).click()
  const debtQuery = page.waitForResponse((response) => response.url().includes('/reports/STUDENT_DEBT?') && new URL(response.url()).searchParams.get('studentId') === seed.studentId)
  await page.getByRole('button', { name: 'Áp dụng bộ lọc', exact: true }).click()
  expect((await debtQuery).status()).toBe(200)
- const row = page.getByRole('row').filter({ hasText: seed.studentId })
+ const row = page.getByRole('row').filter({ hasText: 'INSV1' })
  await expect(row.getByText('19.999.999.999.999.999.998 VND', { exact: true })).toHaveCount(2)
  const debtDownload = page.waitForEvent('download')
  await page.getByRole('button', { name: 'Tải CSV', exact: true }).click()
@@ -50,14 +50,14 @@ test('real insights keep aggregate VND exact, export applied filters and expose 
   await page.getByTitle(label, { exact: true }).click()
   expect((await response).status()).toBe(200)
   await expect(page.getByRole('heading', { name: label, exact: true })).toBeVisible()
-  await expect(page.getByText(/Thời điểm UTC:/)).toBeVisible()
+  await expect(page.getByText(/Dữ liệu tại thời điểm:/)).toBeVisible()
  }
  await page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }).click()
  await page.getByTitle('INSV1 · Sinh viên báo cáo', { exact: true }).click()
  const eventQuery = page.waitForResponse((response) => response.url().includes('/reports/EVENT_MEMBERSHIP?') && new URL(response.url()).searchParams.get('studentId') === seed.studentId)
  await page.getByRole('button', { name: 'Áp dụng bộ lọc', exact: true }).click()
  expect((await eventQuery).status()).toBe(200)
- await expect(page.getByRole('row').filter({ hasText: seed.studentId }).getByText('=2+2', { exact: true })).toBeVisible()
+ await expect(page.getByRole('row').filter({ hasText: 'INSV1' }).getByText('=2+2', { exact: true })).toBeVisible()
  const eventDownload = page.waitForEvent('download')
  await page.getByRole('button', { name: 'Tải CSV', exact: true }).click()
  const eventFile = await eventDownload
@@ -65,17 +65,15 @@ test('real insights keep aggregate VND exact, export applied filters and expose 
  expect(await readFile((await eventFile.path())!, 'utf8')).toContain('"\'=2+2"')
 
  const exportError = await page.evaluate(async () => {
-  const modulePath = '/src/api/runtime.ts'
-  const { api } = await import(modulePath)
-  try {
-   await api.downloadCsv('/api/v1/admin/reports/STUDENT_DEBT/export?resourceId=00000000-0000-0000-0000-000000000001')
-   throw new Error('Unsupported export filter unexpectedly succeeded')
-  } catch (error) {
-   if (typeof error === 'object' && error !== null && 'status' in error && 'detail' in error) return { status: error.status, detail: error.detail }
-   throw error
-  }
+  const tokens = await navigator.locks.request('campus-auth-cookie', async () => (await fetch('/api/v1/auth/refresh', { method: 'POST', credentials: 'include' })).json())
+  const response = await fetch('/api/v1/admin/reports/STUDENT_DEBT/export?resourceId=00000000-0000-0000-0000-000000000001', {
+   credentials: 'include',
+   headers: { Accept: 'text/csv, application/json', Authorization: 'Bearer ' + tokens.accessToken },
+  })
+  const body = await response.json()
+  return { status: response.status, code: body.code }
  })
- expect(exportError).toMatchObject({ status: 400, detail: { code: 'INVALID_QUERY_PARAMETER' } })
+ expect(exportError).toEqual({ status: 400, code: 'INVALID_QUERY_PARAMETER' })
 
  await page.getByRole('navigation', { name: 'Audit và báo cáo' }).getByRole('link', { name: 'Audit', exact: true }).click()
  await page.getByRole('combobox', { name: 'Nguồn audit', exact: true }).click()

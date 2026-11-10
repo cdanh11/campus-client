@@ -316,6 +316,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 .ant-result { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); }
 .ant-alert { border-radius: var(--radius-md); }
 .ant-modal-content { border-radius: 18px !important; box-shadow: var(--shadow-md); }
+/* Ant Design scales a portaled dropdown to zero before its enter animation runs. rc-trigger measures
+   that element, reads a 0×0 box and skips positioning, so the popup can stay parked off-screen at -1000vw. */
+.ant-select-dropdown.ant-slide-up-appear,
+.ant-select-dropdown.ant-slide-up-enter { transform: none !important; }
 .ant-statistic-content-value { letter-spacing: -.04em; }
 .ant-drawer-content { background: var(--surface); }
 .ant-drawer-header { border-bottom-color: var(--border); }

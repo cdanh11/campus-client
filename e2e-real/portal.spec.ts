@@ -121,12 +121,14 @@ test('real unlinked USER can browse events without ADMIN reads or registration w
  await login(page, 'browser-admin@example.test')
  await page.evaluate(async (password) => {
   const tokens = await navigator.locks.request('campus-auth-cookie', async () => (await fetch('/api/v1/auth/refresh', { method: 'POST', credentials: 'include' })).json())
-  async function post(path: string, body: unknown) {
-   const response = await fetch('/api/v1/admin/' + path, { method: 'POST', headers: { Authorization: 'Bearer ' + tokens.accessToken, 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+  async function call(path: string, method: string, body: unknown) {
+   const response = await fetch('/api/v1/admin/' + path, { method, headers: { Authorization: 'Bearer ' + tokens.accessToken, 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
    if (!response.ok) throw new Error('Unlinked seed status: ' + response.status)
+   return response.json()
   }
-  await post('users', { email: 'portal-unlinked@example.test', displayName: 'Tài khoản chưa liên kết', initialPassword: password, roles: ['USER'], status: 'ACTIVE' })
-  await post('events', { code: 'PCUNLINK', title: 'Danh mục dành cho mọi tài khoản', description: 'Sự kiện tham khảo', startsAt: '2026-09-01T09:00:00Z', endsAt: '2026-09-01T10:00:00Z', capacity: 1 })
+  await call('users', 'POST', { email: 'portal-unlinked@example.test', displayName: 'Tài khoản chưa liên kết', initialPassword: password, roles: ['USER'], status: 'ACTIVE' })
+  const event = await call('events', 'POST', { code: 'PCUNLINK', title: 'Danh mục dành cho mọi tài khoản', description: 'Sự kiện tham khảo', startsAt: '2026-09-01T09:00:00Z', endsAt: '2026-09-01T10:00:00Z', capacity: 1 })
+  await call('events/' + event.id, 'PUT', { ...event, status: 'OPEN', expectedVersion: event.rowVersion })
  }, process.env.CAMPUS_TEST_PASSWORD!)
  await page.getByRole('button', { name: 'Đăng xuất', exact: true }).click()
  await expect(page.getByRole('button', { name: 'Đăng nhập', exact: true })).toBeVisible()
