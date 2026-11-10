@@ -113,7 +113,8 @@ function EventDetail({ id, onClose }: { id: string; onClose: () => void }) {
  </Modal>
 }
 
+// Titles are cached per event so paging back and remounting rows do not repeat requests.
 function EventTitle({ id }: { id: string }) {
- const event = useQuery({ queryKey: ['portal-event-title', id], queryFn: ({ signal }) => api.request<CampusEvent>(eventPath + '/' + encodeURIComponent(id), { signal }) })
+ const event = useQuery({ queryKey: ['portal-event-title', id], queryFn: ({ signal }) => api.request<CampusEvent>(eventPath + '/' + encodeURIComponent(id), { signal }), staleTime: 5 * 60_000, refetchOnWindowFocus: false })
  return <>{event.data?.title ?? (event.isFetching ? 'Đang tải tên sự kiện…' : 'Sự kiện ' + id)}</>
 }

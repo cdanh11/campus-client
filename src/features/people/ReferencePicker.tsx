@@ -1,5 +1,5 @@
 import { Button, Select, Space } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../api/runtime'
 import { queryParams } from '../../api/query-params'
@@ -14,15 +14,21 @@ const referenceOptions = { staleTime: 5 * 60_000, refetchOnWindowFocus: false }
 export function ReferencePicker({ kind, value, onChange, id, label, disabled, eligible = true, allowClear }: {
  kind: ReferenceKind; value?: string; onChange?: (value?: string) => void; id?: string; label: string; disabled?: boolean; eligible?: boolean; allowClear?: boolean
 }) {
+ const [open, setOpen] = useState(false)
+ const [search, setSearch] = useState('')
  const [q, setQ] = useState('')
  const [page, setPage] = useState(0)
+ useEffect(() => {
+  const timer = setTimeout(() => { setQ(search); setPage(0) }, 250)
+  return () => clearTimeout(timer)
+ }, [search])
  const source = referenceSources[kind]
  const path = source.path
  const params = queryParams({ ...(eligible ? source.eligible : {}), q: source.search === false ? undefined : q, page, size: 20, sort: source.sort })
  const list = useQuery({
   queryKey: ['reference', path, params],
   queryFn: ({ signal }) => api.request<PageResult<RegistryRow>>(path + '?' + params, { signal }),
-  enabled: !disabled, ...referenceOptions,
+  enabled: open && !disabled, ...referenceOptions,
  })
  const selected = useQuery({
   queryKey: ['reference-selected', path, value],
@@ -33,7 +39,8 @@ export function ReferencePicker({ kind, value, onChange, id, label, disabled, el
  if (selected.data && !rows.some((row) => row.id === selected.data?.id)) rows.unshift(selected.data)
  const picker = <Select
   id={id} aria-label={label} value={value || undefined} onChange={onChange} disabled={disabled}
-  allowClear={allowClear ?? kind === 'identity'} showSearch={source.search === false ? false : { filterOption: false, onSearch: (text) => { setQ(Array.from(text).slice(0, 100).join('')); setPage(0) } }}
+  onOpenChange={setOpen}
+  allowClear={allowClear ?? kind === 'identity'} showSearch={source.search === false ? false : { filterOption: false, onSearch: (text) => setSearch(Array.from(text).slice(0, 100).join('')) }}
   loading={list.isFetching || selected.isFetching} options={rows.map((row) => ({ value: row.id, title: source.label(row), disabled: eligible && source.available ? !source.available(row) : false, label: kind === 'offering' ? <OfferingSummary row={row} /> : source.label(row) }))}
   placeholder="Tìm và chọn từ danh sách"
   popupRender={(menu) => <>{menu}{list.error && <ErrorNotice error={list.error} onRetry={() => { void list.refetch() }} />}

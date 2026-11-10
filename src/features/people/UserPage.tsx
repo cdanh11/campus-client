@@ -83,6 +83,7 @@ function UserEditor({ action, id, onClose }: { action: Action; id?: string; onCl
    void queryClient.invalidateQueries({ queryKey: ['user-detail'] })
    void queryClient.invalidateQueries({ queryKey: ['reference'] })
    void queryClient.invalidateQueries({ queryKey: ['reference-selected'] })
+   void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
    onClose()
   },
   onError: (error) => { if (error instanceof ApiError && error.detail.code === 'CONCURRENT_MODIFICATION') setBlocked(true) },

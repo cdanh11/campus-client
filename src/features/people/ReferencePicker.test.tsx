@@ -23,6 +23,18 @@ it('uses only ACTIVE organization pages while retaining an inactive selected own
  await waitFor(() => expect(request).toHaveBeenCalledWith(expect.stringContaining('page=1&size=20&sort=code%2Casc&status=ACTIVE'), expect.objectContaining({ signal: expect.any(AbortSignal) })))
  expect(request).toHaveBeenCalledWith('/api/v1/admin/organization-units/old', expect.anything())
 })
+it('loads options only after opening and debounces typed search text', async () => {
+ const request = vi.spyOn(api, 'request').mockResolvedValue({ content: [], totalPages: 1 })
+ show('organization')
+ await new Promise((resolve) => setTimeout(resolve, 350))
+ expect(request).not.toHaveBeenCalled()
+ await userEvent.click(screen.getByRole('combobox', { name: 'Tham chiếu' }))
+ await waitFor(() => expect(request).toHaveBeenCalledWith(expect.stringContaining('/organization-units?'), expect.anything()))
+ await userEvent.type(screen.getByRole('combobox', { name: 'Tham chiếu' }), 'abc')
+ await new Promise((resolve) => setTimeout(resolve, 150))
+ expect(request.mock.calls.some(([path]) => path.includes('q=abc'))).toBe(false)
+ await waitFor(() => expect(request).toHaveBeenCalledWith(expect.stringContaining('q=abc'), expect.anything()), { timeout: 2000 })
+})
 it('allows existing suspended Identity references instead of inventing ACTIVE-only linking', async () => {
  const request = vi.spyOn(api, 'request').mockResolvedValue({ content: [{ id: 'suspended', email: 'suspended@example.test', status: 'SUSPENDED' }], totalPages: 1 })
  show('identity')

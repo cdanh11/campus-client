@@ -1,14 +1,19 @@
-import type { CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Typography } from 'antd'
 import { clockText, weekdayText, type Enrollment } from './student'
 import { campusNow, courseTone, HOUR_HEIGHT, layoutWeek, weekDays } from './timetable-layout'
 
 const percent = (value: number) => `${value}%`
 
-export default function WeekTimetable({ items, anchor = new Date() }: { items: Enrollment[]; anchor?: Date }) {
+export default function WeekTimetable({ items, anchor }: { items: Enrollment[]; anchor?: Date }) {
+ const [now, setNow] = useState(() => new Date())
+ useEffect(() => {
+  const timer = window.setInterval(() => setNow(new Date()), 60_000)
+  return () => window.clearInterval(timer)
+ }, [])
  const layout = layoutWeek(items)
- const days = weekDays(anchor)
- const clock = campusNow()
+ const days = weekDays(anchor ?? now, now)
+ const clock = campusNow(now)
  const span = layout.axisEnd - layout.axisStart
  const nowTop = ((clock.minutes - layout.axisStart) / span) * 100
  const style = { '--week-axis-height': `${(span / 60) * HOUR_HEIGHT}px` } as CSSProperties

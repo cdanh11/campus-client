@@ -69,7 +69,11 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
      : resource.fields.find((field) => field.name === column.key)?.options?.find((option) => option.value === value)?.label ?? String(value ?? '—'),
     })),
     { title: 'Trạng thái', dataIndex: 'status', width: 125, render: (value: unknown) => <Tag color={statusColor(value)}>{states.find((state) => state.value === value)?.label ?? statusText(value)}</Tag> },
-    { title: 'Thao tác', key: 'actions', width: 160, render: (_, row) => <Space size={0} separator={actionDivider}><Button type="link" size="small" onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space> },
+    { title: 'Thao tác', key: 'actions', width: 160, render: (_, row) => {
+     const describedBy = 'row-action-' + row.id
+     return <Space size={0} separator={actionDivider}><span id={describedBy} hidden>{'Mã ' + String(row.code ?? row.name ?? row.id)}</span><Button type="link" size="small"
+      aria-describedby={describedBy} onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space>
+    } },
    ]}
    locale={{ emptyText: 'Chưa có bản ghi phù hợp.' }}
    pagination={{ current: filters.page + 1, pageSize: filters.size, total, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setFilters({ ...filters, page: page - 1, size }) }}
@@ -94,6 +98,8 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
    void queryClient.invalidateQueries({ queryKey: ['reference'] })
    void queryClient.invalidateQueries({ queryKey: ['reference-selected'] })
    void queryClient.invalidateQueries({ queryKey: ['reference-labels'] })
+   void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+   void queryClient.invalidateQueries({ queryKey: ['report'] })
    onClose()
   },
  })
