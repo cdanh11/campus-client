@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { statusLabels } from '../src/features/status-options'
+import { pickReference } from './reference'
 const base = '/api/v1/admin/academic/'
 async function open(page: Page, link: string) {
  await page.getByRole('navigation', { name: 'Quản trị học vụ' }).getByRole('link', { name: link, exact: true }).click()
@@ -10,9 +11,7 @@ async function save(page: Page, resource: string, method: string) {
  return response
 }
 async function select(page: Page, label: string, option: string) {
- await page.getByRole('dialog').getByRole('combobox', { name: label, exact: true }).click()
- await page.getByTitle(option, { exact: true }).click()
- if (label === 'Đơn vị') await expect(page.getByRole('dialog').getByTitle(option, { exact: true })).toBeVisible()
+ await pickReference(page, page.getByRole('dialog').getByRole('combobox', { name: label, exact: true }), option)
 }
 test('real Academic catalog and delivery enforce faculty/capacity and preserve restored membership', async ({ page }) => {
  test.setTimeout(120_000)
