@@ -4,10 +4,24 @@ import { requireTokens, requireUser } from './auth-contract'
 import { ApiError, SessionChanged, type ErrorBody } from './errors'
 export { ApiError, SessionChanged } from './errors'
 
+const parseBody = (text: string): unknown => {
+ if (!text) return undefined
+ // Reverse proxies can answer with HTML; keep the status/traceId instead of throwing a parse error.
+ try { return parseJson(text) } catch { return undefined }
+}
+
 export type User = Required<components['schemas']['com.campus.identity.api.AuthController.UserResponse']>
 type Tokens = Required<Pick<components['schemas']['com.campus.identity.api.AuthController.RefreshResponse'], 'accessToken'>>
 type LoginResponse = Tokens & { user: User }
 export type Session = { status: 'loading' | 'anonymous' | 'authenticated'; user: User | null }
+
+const LOGOUT_PENDING_KEY = 'campus.logout-pending'
+const logoutPending = () => {
+ try { return localStorage.getItem(LOGOUT_PENDING_KEY) === '1' } catch { return false }
+}
+const rememberLogoutPending = (pending: boolean) => {
+ try { if (pending) localStorage.setItem(LOGOUT_PENDING_KEY, '1'); else localStorage.removeItem(LOGOUT_PENDING_KEY) } catch { /* storage unavailable */ }
+}
 
 export class ApiClient {
  private token: string | null = null
@@ -35,7 +49,8 @@ export class ApiClient {
   const headers = new Headers(options.headers)
   headers.set('Accept', format === 'csv' ? 'text/csv, application/json' : 'application/json')
   if (token) headers.set('Authorization', 'Bearer ' + token)
-  const timeout = AbortSignal.timeout(20_000)
+  // CSV export scans the whole report and can legitimately outlast the JSON request budget.
+  const timeout = AbortSignal.timeout(format === 'csv' ? 120_000 : 20_000)
   const signal = options.signal ? AbortSignal.any([options.signal, timeout]) : timeout
   const perform = () => this.fetcher(path, { ...options, signal, headers, credentials: 'include', cache: 'no-store' })
   // Cookie rotation must be serialized across tabs on secure browser contexts.
@@ -48,11 +63,12 @@ export class ApiClient {
    if (response.headers.get('Content-Type')?.split(';')[0].trim().toLowerCase() !== 'text/csv') throw new ApiError(502, { code: 'INVALID_CSV_RESPONSE', message: 'Máy chủ không trả về CSV hợp lệ.' })
    return text as T
   }
-  const value = text ? parseJson(text) : undefined
+  const value = parseBody(text)
   if (!response.ok) {
    const detail = value && typeof value === 'object' ? value as ErrorBody : {}
    throw new ApiError(response.status, { ...detail, traceId: detail.traceId ?? response.headers.get('X-Request-ID') })
   }
+  if (text && value === undefined) throw new ApiError(502, { code: 'INVALID_JSON_RESPONSE', message: 'Máy chủ trả về dữ liệu không hợp lệ.', traceId: response.headers.get('X-Request-ID') })
   return value as T
  }
  private refresh(): Promise<void> {
@@ -74,11 +90,23 @@ export class ApiClient {
  }
  async restore(): Promise<void> {
   const epoch = this.epoch
+  if (logoutPending()) {
+   // A previous logout reached the browser but not the server: finish it instead of silently signing in again.
+   try { await this.send<void>('/api/v1/auth/logout', { method: 'POST' }, null); rememberLogoutPending(false) } catch { /* keep the marker for the next attempt */ }
+   if (epoch === this.epoch) this.publish('anonymous', null)
+   return
+  }
+  const previous = this.snapshot.user
   try {
    await this.refresh()
-   const user = await this.request<User>('/api/v1/auth/me')
+   const user = requireUser(await this.request<User>('/api/v1/auth/me'))
    if (epoch !== this.epoch) throw new SessionChanged()
-   this.publish('authenticated', requireUser(user))
+   if (previous && previous.id !== user.id) {
+    // Another tab switched accounts: drop cached owner data and reject in-flight reads of the old account.
+    this.epoch++
+    this.onSessionChange()
+   }
+   this.publish('authenticated', user)
   } catch (error) {
    if (error instanceof ApiError && (error.status === 401 || error.status === 403)) { if (epoch === this.epoch) this.clear(); return }
    throw error
@@ -101,16 +129,20 @@ export class ApiClient {
    if (epoch !== this.epoch) throw new SessionChanged()
    const user = requireUser(result.user)
    this.token = requireTokens(result).accessToken
+   rememberLogoutPending(false)
    this.publish('authenticated', user)
    this.onExplicitChange()
   })
  }
  logout(): Promise<void> {
+  // Survives a reload: never let a failed logout restore the still-valid refresh cookie.
+  rememberLogoutPending(true)
   this.clear()
   return this.schedule(async () => {
    try {
     if (this.refreshTask) await this.refreshTask.catch(() => {})
     await this.send<void>('/api/v1/auth/logout', { method: 'POST' }, null)
+    rememberLogoutPending(false)
    } finally {
     this.onExplicitChange()
    }
@@ -144,7 +176,7 @@ export class ApiClient {
    }
   }
  }
- mutation<T>(path: string, method: 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: unknown): Promise<T> {
-  return this.request<T>(path, { method, headers: { 'Content-Type': 'application/json' }, body: body === undefined ? undefined : encodeJson(body) })
+ mutation<T>(path: string, method: 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: unknown, headers: Record<string, string> = {}): Promise<T> {
+  return this.request<T>(path, { method, headers: { 'Content-Type': 'application/json', ...headers }, body: body === undefined ? undefined : encodeJson(body) })
  }
 }

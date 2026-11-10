@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { App as AntApp } from 'antd'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, expect, it, vi } from 'vitest'
 import { api } from '../../api/runtime'
 import { ApiError } from '../../api/client'
@@ -19,7 +20,7 @@ function show(status = 'OPEN') {
   return { content: [], totalElements: 0, totalPages: 0 }
  })
  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
- render(<AntApp><QueryClientProvider client={client}><RegistryPage resource={loans} /></QueryClientProvider></AntApp>)
+ render(<MemoryRouter><AntApp><QueryClientProvider client={client}><RegistryPage resource={loans} /></QueryClientProvider></AntApp></MemoryRouter>)
  return current
 }
 it('requires explicit return and blocks stale retry while retaining inactive references', async () => {

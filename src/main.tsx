@@ -5,12 +5,13 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router-dom'
 import { queryClient } from './api/runtime'
 import { App } from './App'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import 'antd/dist/reset.css'
 import './styles.css'
 import { campusTheme } from './theme'
 
 createRoot(document.getElementById('root')!).render(
  <ConfigProvider locale={viVN} theme={campusTheme}>
-  <AntApp><QueryClientProvider client={queryClient}><BrowserRouter><App /></BrowserRouter></QueryClientProvider></AntApp>
+  <AntApp><QueryClientProvider client={queryClient}><BrowserRouter><ErrorBoundary><App /></ErrorBoundary></BrowserRouter></QueryClientProvider></AntApp>
  </ConfigProvider>,
 )

@@ -1,5 +1,22 @@
 import type { AuditSource, ReportKind } from './contracts'
 import type { ReferenceKind } from '../people/references'
+export const auditSourceLabels: Record<AuditSource, string> = {
+ IDENTITY: 'Tài khoản', PEOPLE: 'Tổ chức & con người', ACADEMIC: 'Học vụ', DORMITORY: 'Ký túc xá',
+ FINANCE: 'Tài chính', NOTIFICATION: 'Thông báo', EVENT: 'Sự kiện', LIBRARY: 'Thư viện',
+}
+export const auditResourceLabels: Record<string, string> = {
+ USER: 'Tài khoản', ORGANIZATION_UNIT: 'Đơn vị', STUDENT: 'Sinh viên', FACULTY_STAFF: 'Giảng viên & nhân sự',
+ PROGRAM: 'Chương trình', COURSE: 'Môn học', TERM: 'Học kỳ', COURSE_OFFERING: 'Đợt mở môn', CLASS_SECTION: 'Lớp học phần', ENROLLMENT: 'Ghi danh',
+ BUILDING: 'Tòa nhà', ROOM: 'Phòng', BED: 'Giường', ASSIGNMENT: 'Chỗ ở',
+ FEE: 'Loại phí', CHARGE: 'Khoản thu', PAYMENT: 'Phiếu thu',
+ TEMPLATE: 'Mẫu thông báo', NOTICE: 'Thông báo', DELIVERY: 'Lượt gửi',
+ EVENT: 'Sự kiện', REGISTRATION: 'Đăng ký sự kiện', TITLE: 'Đầu sách', COPY: 'Bản sao', LOAN: 'Lượt mượn',
+}
+export const auditColumnLabels: Record<string, string> = {
+ id: 'Mã audit', source: 'Nguồn', resource: 'Tài nguyên', targetId: 'Đối tượng', actorId: 'Người thao tác',
+ action: 'Hành động', resourceVersion: 'Phiên bản', occurredAt: 'Thời điểm', status: 'Trạng thái metadata',
+}
+export const auditResourceText = (value: unknown) => auditResourceLabels[String(value)] ?? String(value ?? '—')
 export const auditResources: Record<AuditSource, string[]> = {
  IDENTITY: ['USER'], PEOPLE: ['ORGANIZATION_UNIT', 'STUDENT', 'FACULTY_STAFF'],
  ACADEMIC: ['PROGRAM', 'COURSE', 'TERM', 'COURSE_OFFERING', 'CLASS_SECTION', 'ENROLLMENT'],

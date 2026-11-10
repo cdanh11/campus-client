@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { pickReference } from './reference'
 async function login(page: Page) {
  await page.goto('/')
  await page.getByLabel('Email', { exact: true }).fill('browser-admin@example.test')
@@ -14,8 +15,7 @@ test('real owner forms create profiles and require reload after stale organizati
  let dialog = page.getByRole('dialog')
  await dialog.getByLabel('Mã đơn vị', { exact: true }).fill('UIORG')
  await dialog.getByLabel('Tên đơn vị', { exact: true }).fill('Khoa thử nghiệm UI')
- await dialog.getByLabel('Loại đơn vị', { exact: true }).click()
- await page.getByTitle('Khoa', { exact: true }).click()
+ await pickReference(page, dialog.getByRole('combobox', { name: 'Loại đơn vị', exact: true }), 'Khoa')
  const create = page.waitForResponse((response) => new URL(response.url()).pathname === '/api/v1/admin/organization-units' && response.request().method() === 'POST')
  await dialog.getByRole('button', { name: 'Lưu', exact: true }).click()
  const created = await (await create).json()
@@ -58,11 +58,9 @@ test('real owner forms create profiles and require reload after stale organizati
   await dialog.getByLabel(profile.number, { exact: true }).fill(profile.code)
   await dialog.getByLabel('Họ tên', { exact: true }).fill(profile.name)
   if (profile.personnel) {
-   await dialog.getByLabel('Loại hồ sơ', { exact: true }).click()
-   await page.getByTitle('Giảng viên', { exact: true }).click()
+   await pickReference(page, dialog.getByRole('combobox', { name: 'Loại hồ sơ', exact: true }), 'Giảng viên')
   }
-  await dialog.getByRole('combobox', { name: 'Đơn vị', exact: true }).click()
-  await page.getByTitle('UIORG · Khoa dữ liệu mới', { exact: true }).click()
+  await pickReference(page, dialog.getByRole('combobox', { name: 'Đơn vị', exact: true }), 'UIORG · Khoa dữ liệu mới')
   await expect(dialog.getByTitle('UIORG · Khoa dữ liệu mới', { exact: true })).toBeVisible()
   await dialog.getByRole('button', { name: 'Lưu', exact: true }).click()
   await expect(dialog).not.toBeVisible()
@@ -71,9 +69,7 @@ test('real owner forms create profiles and require reload after stale organizati
   dialog = page.getByRole('dialog')
   await expect(dialog.getByLabel('Họ tên', { exact: true })).toHaveValue(profile.name)
   await dialog.getByLabel('Họ tên', { exact: true }).fill(profile.name + ' cập nhật')
-  await dialog.getByLabel('Trạng thái', { exact: true }).click()
-  await page.getByTitle('Ngừng hoạt động', { exact: true }).click()
-  await expect(dialog.getByTitle('Ngừng hoạt động', { exact: true })).toBeVisible()
+  await pickReference(page, dialog.getByRole('combobox', { name: 'Trạng thái', exact: true }), 'Ngừng hoạt động')
   await dialog.getByRole('button', { name: 'Lưu', exact: true }).click()
   await expect(dialog).not.toBeVisible()
   await expect(page.getByRole('row').filter({ hasText: profile.code })).toContainText('Ngừng hoạt động')

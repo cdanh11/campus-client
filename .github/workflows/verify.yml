@@ -35,10 +35,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: campus-client
+      - name: Resolve contract-pinned backend commit
+        id: contract
+        run: |
+          $ref = (Get-Content contracts/source.json -Raw | ConvertFrom-Json).backendCommit
+          if ($ref -notmatch '^[0-9a-f]{40}$') { throw "contracts/source.json has an invalid backendCommit: $ref" }
+          "ref=$ref" >> $env:GITHUB_OUTPUT
       - uses: actions/checkout@v4
         with:
           repository: cdanh11/campus-service
-          ref: 27b5d55a01c3a195e8077e215115e6cc8c2b1dea
+          ref: ${{ steps.contract.outputs.ref }}
           path: campus-service
       - uses: actions/setup-node@v4
         with:

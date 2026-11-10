@@ -13,6 +13,7 @@ import { columnLabels, reportConfig, reportReferences } from './config'
 import { metricText, reportParams, type Filters } from './query'
 import { TimeFilters } from './TimeFilters'
 import { statusOptions, statusText } from '../status-options'
+import { useListQuery } from '../list-query'
 const columnWidths: Record<string, number> = {
  studentId: 190, chargeCount: 110, principalVnd: 130, paidVnd: 130, outstandingVnd: 140,
  bedId: 160, roomId: 140, buildingId: 160, assignedAt: 140,
@@ -21,7 +22,8 @@ const columnWidths: Record<string, number> = {
  copyId: 150, titleId: 180, copyCode: 130, title: 180, borrowedAt: 140, dueAt: 140, overdue: 90,
 }
 export function saveCsv(csv: string, kind: ReportKind) {
- const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=UTF-8' }))
+ // Excel needs a BOM to read Vietnamese diacritics from UTF-8 CSV.
+ const url = URL.createObjectURL(new Blob([csv.startsWith('\uFEFF') ? csv : '\uFEFF' + csv], { type: 'text/csv;charset=UTF-8' }))
  const link = document.createElement('a'); link.href = url; link.download = kind.toLowerCase() + '.csv'
  document.body.append(link)
  link.click()
@@ -35,7 +37,7 @@ export function ReportsPage() {
 }
 function ReportList({ kind }: { kind: ReportKind }) {
  const [filters, setFilters] = useState<Filters>({})
- const [paging, setPaging] = useState({ page: 0, size: 20, sort: 'id,asc' })
+ const [paging, setPaging] = useListQuery({ page: 0, size: 20, sort: 'id,asc' }, { sorts: ['id,asc', 'id,desc'] })
  const config = reportConfig[kind]
  const params = reportParams(kind, filters, paging.page, paging.size, paging.sort)
  const path = '/api/v1/admin/reports/' + kind

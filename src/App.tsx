@@ -1,11 +1,18 @@
 import { lazy, Suspense, useEffect, useState, useSyncExternalStore } from 'react'
 import { Alert, Button, Result, Spin } from 'antd'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { api } from './api/runtime'
 
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const Workspace = lazy(() => import('./pages/Workspace'))
 function Loading() { return <div className="loading" role="status"><Spin size="large" /><p>Đang kiểm tra phiên làm việc…</p></div> }
+function AnonymousRoutes() {
+ const location = useLocation()
+ return <Routes>
+  <Route path="/login" element={<LoginPage />} />
+  <Route path="*" element={<Navigate to="/login" replace state={{ from: location.pathname + location.search }} />} />
+ </Routes>
+}
 
 export function App() {
  const session = useSyncExternalStore(api.subscribe, api.getSession)
@@ -21,7 +28,7 @@ export function App() {
  if (session.status === 'loading') return <Loading />
  return <Suspense fallback={<Loading />}>
   {session.status === 'anonymous' ? <>
-   <Routes><Route path="/login" element={<LoginPage />} /><Route path="*" element={<Navigate to="/login" replace />} /></Routes>
+   <AnonymousRoutes />
    {logoutError && <Alert className="session-warning" type="warning" showIcon title="Đã xóa phiên trên trình duyệt nhưng chưa xác nhận thu hồi cookie ở máy chủ. Hãy kết nối lại để đăng xuất hoàn toàn." action={<Button onClick={logout}>Thử đăng xuất lại</Button>} />}
   </> : <Workspace user={session.user!} onLogout={logout} />}
  </Suspense>

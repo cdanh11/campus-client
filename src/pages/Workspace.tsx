@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, type ReactNode } from 'react'
+import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
 import { Button, Card, Drawer, Layout, Result, Space, Tag, Typography } from 'antd'
 import { ApartmentOutlined, ArrowRightOutlined, BellOutlined, BookOutlined, CalendarOutlined, HomeOutlined, LogoutOutlined, MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined, NotificationOutlined, PieChartOutlined, ReadOutlined, TeamOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons'
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -46,6 +46,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
  const links = [{ path: '/', label: 'Trang chủ', icon: <HomeOutlined /> },
   ...visibleAdminLinks, { path: '/portal', label: 'Cổng cá nhân', icon: <UserOutlined /> }, ...studentLinks]
  const active = [...links].reverse().find((link) => link.path === location.pathname || (link.path !== '/' && location.pathname.startsWith(link.path + '/')))
+ useEffect(() => { document.title = (active?.label ?? 'Không gian làm việc') + ' · Campus Platform' }, [active?.label])
  const renderNavigation = (compact: boolean) => <nav className="sidebar-navigation" aria-label="Điều hướng chính">
   <p className="nav-caption">KHÔNG GIAN LÀM VIỆC</p>
   {links.map((link) => <NavLink key={link.path} to={link.path} end={link.path === '/' || link.path === '/admin' || link.path === '/portal'} onClick={() => setOpen(false)}

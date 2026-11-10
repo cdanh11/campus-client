@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
+import { pickReference } from './reference'
 test('real insights keep aggregate VND exact, export applied filters and expose selected-source recorded audit', async ({ page }) => {
  test.setTimeout(120000)
  await page.goto('/')
@@ -30,8 +31,7 @@ test('real insights keep aggregate VND exact, export applied filters and expose 
  await expect(page.locator('.ant-card-head-title')).toHaveCount(8)
  await expect(page.getByText(/Dữ liệu tại thời điểm:/)).toBeVisible()
  await page.getByRole('navigation', { name: 'Audit và báo cáo' }).getByRole('link', { name: 'Báo cáo', exact: true }).click()
- await page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }).click()
- await page.getByTitle('INSV1 · Sinh viên báo cáo', { exact: true }).click()
+ await pickReference(page, page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }), 'INSV1 · Sinh viên báo cáo')
  const debtQuery = page.waitForResponse((response) => response.url().includes('/reports/STUDENT_DEBT?') && new URL(response.url()).searchParams.get('studentId') === seed.studentId)
  await page.getByRole('button', { name: 'Áp dụng bộ lọc', exact: true }).click()
  expect((await debtQuery).status()).toBe(200)
@@ -52,8 +52,7 @@ test('real insights keep aggregate VND exact, export applied filters and expose 
   await expect(page.getByRole('heading', { name: label, exact: true })).toBeVisible()
   await expect(page.getByText(/Dữ liệu tại thời điểm:/)).toBeVisible()
  }
- await page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }).click()
- await page.getByTitle('INSV1 · Sinh viên báo cáo', { exact: true }).click()
+ await pickReference(page, page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }), 'INSV1 · Sinh viên báo cáo')
  const eventQuery = page.waitForResponse((response) => response.url().includes('/reports/EVENT_MEMBERSHIP?') && new URL(response.url()).searchParams.get('studentId') === seed.studentId)
  await page.getByRole('button', { name: 'Áp dụng bộ lọc', exact: true }).click()
  expect((await eventQuery).status()).toBe(200)
@@ -77,17 +76,17 @@ test('real insights keep aggregate VND exact, export applied filters and expose 
 
  await page.getByRole('navigation', { name: 'Audit và báo cáo' }).getByRole('link', { name: 'Audit', exact: true }).click()
  await page.getByRole('combobox', { name: 'Nguồn audit', exact: true }).click()
- await page.getByTitle('FINANCE', { exact: true }).click()
+ await page.getByTitle('Tài chính', { exact: true }).click()
  await page.getByRole('combobox', { name: 'Tài nguyên audit', exact: true }).click()
- await page.getByTitle('CHARGE', { exact: true }).click()
- await page.getByLabel('Đối tượng UUID', { exact: true }).fill(seed.chargeId)
- await page.getByLabel('Action', { exact: true }).fill('CREATED')
+ await page.getByTitle('Khoản thu', { exact: true }).click()
+ await page.getByLabel('UUID đối tượng', { exact: true }).fill(seed.chargeId)
+ await page.getByLabel('Hành động', { exact: true }).fill('CREATED')
  const auditQuery = page.waitForResponse((response) => response.url().includes('/audits/FINANCE?') && new URL(response.url()).searchParams.get('targetId') === seed.chargeId)
  await page.getByRole('button', { name: 'Áp dụng bộ lọc', exact: true }).click()
  expect((await auditQuery).status()).toBe(200)
  await page.getByRole('row').filter({ hasText: seed.chargeId }).getByRole('button', { name: 'Xem audit', exact: true }).click()
  const dialog = page.getByRole('dialog')
- await expect(dialog.getByText('OPEN', { exact: true })).toBeVisible()
+ await expect(dialog.getByText('Đang mở', { exact: true })).toBeVisible()
  await expect(dialog.getByText(seed.chargeId, { exact: true })).toBeVisible()
  await expect(dialog.getByRole('button', { name: 'Lưu', exact: true })).toHaveCount(0)
 })

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Alert, Button, Card, Empty, Modal, Pagination, Select, Space, Tag, Typography, App as AntApp } from 'antd'
 import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
@@ -8,13 +7,17 @@ import { queryParams, safePageTotal } from '../../api/query-params'
 import { CampusTime } from '../../components/CampusTime'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { useDialogSelection } from './useDialogSelection'
+import { useListQuery } from '../list-query'
 
 type Delivery = Omit<Required<components['schemas']['com.campus.notification.domain.NotificationDelivery']>, 'readAt'> & { readAt: string | null }
 export type InboxItem = Omit<Required<components['schemas']['com.campus.notification.domain.InboxItem']>, 'delivery'> & { delivery: Delivery }
 type InboxPageResult = { content: InboxItem[]; totalElements: number | bigint }
 const path = '/api/v1/notifications'
 export default function InboxPage() {
- const [filters, setFilters] = useState({ page: 0, size: 20, status: '', sort: 'deliveredAt,desc' })
+ const [filters, setFilters] = useListQuery({ page: 0, size: 20, status: '', sort: 'deliveredAt,desc' }, {
+  sorts: ['deliveredAt,desc', 'deliveredAt,asc'],
+  choices: { status: ['UNREAD', 'READ'] },
+ })
  const { selected, open, close } = useDialogSelection()
  const params = queryParams(filters)
  const result = useQuery({

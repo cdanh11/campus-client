@@ -22,6 +22,7 @@ export function PublishNotice({ id, onClose }: { id: string; onClose: () => void
    void queryClient.invalidateQueries({ queryKey: ['registry', '/api/v1/admin/notifications/notices'] })
    void queryClient.invalidateQueries({ queryKey: ['registry-detail', '/api/v1/admin/notifications/notices'] })
    void queryClient.invalidateQueries({ queryKey: ['inbox'] })
+   void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
    onClose()
   },
  })

@@ -13,13 +13,18 @@ import { statusColor, statusText } from '../status-options'
 import { referenceSources, type ReferenceKind } from './references'
 import { ReferenceLabelsProvider, type ReferenceRequests } from './reference-labels'
 import type { PageResult } from './contracts'
+import { useListQuery } from '../list-query'
 
 const referenceKind = (type: string): type is ReferenceKind => type in referenceSources
 const columnWidths: Record<string, number> = { id: 140, code: 140, capacity: 80, credits: 80, amount: 130, dueDate: 120, startDate: 115, endDate: 115, schedule: 200, createdAt: 150, updatedAt: 150 }
 const actionDivider = <span className="row-divider" aria-hidden="true" />
 
 export function RegistryPage({ resource, rowActions }: { resource: Resource; rowActions?: (row: RegistryRow) => ReactNode }) {
- const [filters, setFilters] = useState({ page: 0, size: 20, q: '', status: '', personnelType: '', sort: resource.sorts[0].value })
+ const states = resource.states ?? [{ value: 'ACTIVE', label: 'Đang hoạt động' }, { value: 'INACTIVE', label: 'Ngừng hoạt động' }]
+ const [filters, setFilters] = useListQuery({ page: 0, size: 20, q: '', status: '', personnelType: '', sort: resource.sorts[0].value }, {
+  sorts: resource.sorts.map((option) => option.value),
+  choices: { status: states.map((state) => state.value), personnelType: ['FACULTY', 'STAFF'] },
+ })
  const [referenceFilters, setReferenceFilters] = useState<Record<string, string | undefined>>({})
  const [edit, setEdit] = useState<{ id?: string } | null>(null)
  const params = queryParams({ ...filters, ...referenceFilters })
@@ -39,12 +44,11 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
   for (const column of resource.columns) if (column.reference) collect(column.reference, rows.map((row) => row[column.key]))
   return requests
  }, [resource, rows])
- const states = resource.states ?? [{ value: 'ACTIVE', label: 'Đang hoạt động' }, { value: 'INACTIVE', label: 'Ngừng hoạt động' }]
  return <>
   <div className="page-heading"><div><Typography.Title level={1}>{resource.title}</Typography.Title><Typography.Paragraph type="secondary">Tra cứu và quản lý theo dữ liệu hiện tại.</Typography.Paragraph></div><Button type="primary" onClick={() => setEdit({})}>Thêm {resource.singular}</Button></div>
   {resource.note && <Typography.Paragraph>{resource.note}</Typography.Paragraph>}
   <Space wrap className="list-filters">
-   {resource.search !== false && <Input.Search aria-label="Tìm kiếm" placeholder="Tìm mã, tên…" maxLength={100} allowClear onSearch={(q) => setFilters({ ...filters, q, page: 0 })} style={{ width: 260 }} />}
+   {resource.search !== false && <Input.Search aria-label="Tìm kiếm" placeholder="Tìm mã, tên…" maxLength={100} allowClear defaultValue={filters.q} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} style={{ width: 260 }} />}
    <Select aria-label="Lọc trạng thái" value={filters.status} onChange={(status) => setFilters({ ...filters, status, page: 0 })} options={[{ value: '', label: 'Tất cả trạng thái' }, ...states]} style={{ minWidth: 180 }} />
    {resource.fields.some((field) => field.name === 'personnelType') && <Select aria-label="Lọc loại nhân sự" value={filters.personnelType}
     onChange={(personnelType) => setFilters({ ...filters, personnelType, page: 0 })}
@@ -69,7 +73,11 @@ export function RegistryPage({ resource, rowActions }: { resource: Resource; row
      : resource.fields.find((field) => field.name === column.key)?.options?.find((option) => option.value === value)?.label ?? String(value ?? '—'),
     })),
     { title: 'Trạng thái', dataIndex: 'status', width: 125, render: (value: unknown) => <Tag color={statusColor(value)}>{states.find((state) => state.value === value)?.label ?? statusText(value)}</Tag> },
-    { title: 'Thao tác', key: 'actions', width: 160, render: (_, row) => <Space size={0} separator={actionDivider}><Button type="link" size="small" onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space> },
+    { title: 'Thao tác', key: 'actions', width: 160, render: (_, row) => {
+     const describedBy = 'row-action-' + row.id
+     return <Space size={0} separator={actionDivider}><span id={describedBy} hidden>{'Mã ' + String(row.code ?? row.name ?? row.id)}</span><Button type="link" size="small"
+      aria-describedby={describedBy} onClick={() => setEdit({ id: row.id })}>Xem / sửa</Button>{rowActions?.(row)}</Space>
+    } },
    ]}
    locale={{ emptyText: 'Chưa có bản ghi phù hợp.' }}
    pagination={{ current: filters.page + 1, pageSize: filters.size, total, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], onChange: (page, size) => setFilters({ ...filters, page: page - 1, size }) }}
@@ -94,6 +102,8 @@ function RegistryEditor({ resource, id, onClose }: { resource: Resource; id?: st
    void queryClient.invalidateQueries({ queryKey: ['reference'] })
    void queryClient.invalidateQueries({ queryKey: ['reference-selected'] })
    void queryClient.invalidateQueries({ queryKey: ['reference-labels'] })
+   void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+   void queryClient.invalidateQueries({ queryKey: ['report'] })
    onClose()
   },
  })

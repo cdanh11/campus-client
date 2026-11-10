@@ -2,6 +2,7 @@ import { render, screen, within, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { App as AntApp } from 'antd'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MemoryRouter } from 'react-router-dom'
 import { expect, it, vi } from 'vitest'
 import InboxPage, { type InboxItem } from './InboxPage'
 import { api } from '../../api/runtime'
@@ -15,7 +16,7 @@ const item: InboxItem = {
 function show(detail = item) {
  vi.spyOn(api, 'request').mockImplementation(async (path) => path.includes('?') ? { content: [item], totalElements: 1 } : detail)
  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
- render(<AntApp><QueryClientProvider client={client}><InboxPage /></QueryClientProvider></AntApp>)
+ render(<MemoryRouter><AntApp><QueryClientProvider client={client}><InboxPage /></QueryClientProvider></AntApp></MemoryRouter>)
 }
 it('shows private plain text and never writes just by opening the inbox or a message', async () => {
  const mutation = vi.spyOn(api, 'mutation')

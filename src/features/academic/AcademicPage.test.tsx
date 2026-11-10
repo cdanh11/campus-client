@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event'
 import { App as AntApp } from 'antd'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, expect, it, vi } from 'vitest'
 import { api } from '../../api/runtime'
 import { RegistryPage } from '../people/RegistryPage'
@@ -11,7 +12,7 @@ vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect()
 afterEach(() => vi.restoreAllMocks())
 function show(resource: Resource) {
  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
- return render(<AntApp><QueryClientProvider client={client}><RegistryPage resource={resource} /></QueryClientProvider></AntApp>)
+ return render(<MemoryRouter><AntApp><QueryClientProvider client={client}><RegistryPage resource={resource} /></QueryClientProvider></AntApp></MemoryRouter>)
 }
 it('rejects end-before-start in the form without sending a mutation', async () => {
  vi.spyOn(api, 'request').mockResolvedValue({ content: [], totalElements: 0, totalPages: 0 })

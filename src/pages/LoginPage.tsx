@@ -1,10 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Alert, Button, Form, Input, Typography } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ApiError } from '../api/errors'
 import { api } from '../api/runtime'
 const { Title, Paragraph, Text } = Typography
+
+export function loginTarget(state: unknown): string {
+ const from = state && typeof state === 'object' && 'from' in state ? (state as { from?: unknown }).from : undefined
+ return typeof from === 'string' && from.startsWith('/') && !from.startsWith('//') && !/^\/login(?:[/?#]|$)/.test(from) ? from : '/'
+}
 
 const loginError = (error: unknown) => {
  if (!(error instanceof ApiError)) return 'Không kết nối được máy chủ. Kiểm tra kết nối mạng và thử lại.'
@@ -16,14 +21,16 @@ const loginError = (error: unknown) => {
 
 export default function LoginPage() {
  const navigate = useNavigate()
+ const location = useLocation()
  const [error, setError] = useState<string>()
  const [busy, setBusy] = useState(false)
+ useEffect(() => { document.title = 'Đăng nhập · Campus Platform' }, [])
  async function submit(values: { email: string; password: string }) {
   setBusy(true)
   setError(undefined)
   try {
    await api.login(values.email, values.password)
-   navigate('/', { replace: true })
+   navigate(loginTarget(location.state), { replace: true })
   } catch (error) {
    setError(loginError(error))
   } finally { setBusy(false) }

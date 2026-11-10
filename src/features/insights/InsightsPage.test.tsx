@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { App as AntApp } from 'antd'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, expect, it, vi } from 'vitest'
 import { api } from '../../api/runtime'
 import { ApiError } from '../../api/client'
@@ -14,7 +15,7 @@ vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect()
 afterEach(() => vi.restoreAllMocks())
 function show(node: ReactNode) {
  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
- render(<AntApp><QueryClientProvider client={client}>{node}</QueryClientProvider></AntApp>)
+ render(<MemoryRouter><AntApp><QueryClientProvider client={client}>{node}</QueryClientProvider></AntApp></MemoryRouter>)
 }
 it('renders all dashboard groups and aggregate VND exactly', async () => {
  const groups = Object.fromEntries(['IDENTITY', 'PEOPLE', 'ACADEMIC', 'DORMITORY', 'FINANCE', 'NOTIFICATION', 'EVENT', 'LIBRARY'].map((group) => [group, group === 'FINANCE' ? { outstanding_vnd: 19999999999999999998n } : { count: 0 }]))
@@ -52,7 +53,7 @@ it('validates audit filters and shows recorded exact version/status as read-only
  const request = vi.spyOn(api, 'request').mockImplementation(async (path) => path.endsWith('/a') ? current : { content: [current], totalElements: 1, totalPages: 1 })
  const mutation = vi.spyOn(api, 'mutation')
  show(<AuditsPage />)
- fireEvent.change(screen.getByLabelText('Đối tượng UUID'), { target: { value: 'invalid' } })
+ fireEvent.change(screen.getByLabelText('UUID đối tượng'), { target: { value: 'invalid' } })
  await userEvent.click(screen.getByRole('button', { name: 'Áp dụng bộ lọc' }))
  await screen.findByText('Nhập UUID đầy đủ.')
  expect(request.mock.calls.some(([path]) => path.includes('targetId='))).toBe(false)
@@ -69,13 +70,13 @@ it('resets source-specific audit resource and action filters on source change', 
  const request = vi.spyOn(api, 'request').mockResolvedValue({ content: [], totalElements: 0, totalPages: 0 })
  show(<AuditsPage />)
  await userEvent.click(screen.getByRole('combobox', { name: 'Tài nguyên audit' }))
- await userEvent.click(await screen.findByText('USER', { selector: '.ant-select-item-option-content' }))
- fireEvent.change(screen.getByLabelText('Action'), { target: { value: 'A'.repeat(64) } })
+ await userEvent.click(await screen.findByText('Tài khoản', { selector: '.ant-select-item-option-content' }))
+ fireEvent.change(screen.getByLabelText('Hành động'), { target: { value: 'A'.repeat(64) } })
  await userEvent.click(screen.getByRole('button', { name: 'Áp dụng bộ lọc' }))
  await waitFor(() => expect(request).toHaveBeenCalledWith(expect.stringContaining('resource=USER'), expect.anything()))
  await userEvent.click(screen.getByRole('combobox', { name: 'Nguồn audit' }))
- await userEvent.click(await screen.findByText('LIBRARY', { selector: '.ant-select-item-option-content' }))
+ await userEvent.click(await screen.findByText('Thư viện', { selector: '.ant-select-item-option-content' }))
  await waitFor(() => expect(request).toHaveBeenCalledWith('/api/v1/admin/audits/LIBRARY?page=0&size=20&sort=occurredAt%2Cdesc', expect.anything()))
- expect(screen.getByLabelText('Action')).toHaveValue('')
+ expect(screen.getByLabelText('Hành động')).toHaveValue('')
  expect(request.mock.calls.filter(([path]) => path.includes('/audits/LIBRARY?')).every(([path]) => !path.includes('resource=') && !path.includes('action='))).toBe(true)
 }, 15000)
