@@ -41,7 +41,9 @@ for (const width of [375, 768, 1440]) {
   await expect(dialog).not.toBeVisible()
   await expect(page.locator('.portal-inbox')).toContainText('Đã đọc')
   await expect(page.getByRole('button', { name: 'Xem thông báo' })).toBeFocused()
-  await page.getByRole('navigation', { name: 'Cổng cá nhân', exact: true }).getByRole('link', { name: 'Sự kiện', exact: true }).click()
+  const mobileMenu = page.getByRole('button', { name: 'Mở điều hướng' })
+  if (await mobileMenu.isVisible()) await mobileMenu.click()
+  await page.getByRole('navigation', { name: 'Điều hướng chính', exact: true }).getByRole('link', { name: 'Sự kiện', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Khám phá sự kiện' })).toBeVisible()
     const contrast = await page.locator('.portal-event-grid .ant-typography-secondary').evaluate((element) => {
    const numbers = (color: string) => color.match(/[\d.]+/g)!.map(Number)

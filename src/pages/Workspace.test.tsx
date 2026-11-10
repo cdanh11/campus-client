@@ -15,13 +15,15 @@ it('keeps ADMIN navigation and data out of a regular account shell', () => {
  renderAt('/')
  expect(screen.queryByRole('link', { name: 'Sinh viên' })).not.toBeInTheDocument()
  expect(screen.queryByRole('link', { name: 'Quản trị' })).not.toBeInTheDocument()
- expect(screen.getByRole('link', { name: 'Cổng cá nhân' })).toBeInTheDocument()
+ expect(screen.getByRole('link', { name: 'Tổng quan' })).toHaveAttribute('href', '/portal/overview')
+ expect(screen.getByRole('link', { name: 'Hồ sơ cá nhân' })).toHaveAttribute('href', '/portal/profile')
 })
 it('rejects a direct ADMIN route without issuing owner API calls', () => {
  const request = vi.spyOn(api, 'request')
  renderAt('/admin/students')
  expect(screen.getByText('Bạn không có quyền truy cập')).toBeInTheDocument()
- expect(request).not.toHaveBeenCalled()
+ expect(request.mock.calls.some(([path]) => String(path).startsWith('/api/v1/admin'))).toBe(false)
+ expect(request.mock.calls.some(([path]) => String(path).includes('/me/'))).toBe(false)
 })
 
 it('shows only the department navigation of a finance account', () => {
@@ -61,7 +63,7 @@ it.each([
  const request = vi.spyOn(api, 'request')
  renderAt(path, { ...user, roles: [role] })
  expect(await screen.findByText('Bạn không có quyền truy cập')).toBeInTheDocument()
- expect(request).not.toHaveBeenCalled()
+ expect(request.mock.calls.some(([called]) => String(called).startsWith('/api/v1/admin'))).toBe(false)
 })
 it('offers useful overview destinations for combined department roles', async () => {
  renderAt('/admin', { ...user, roles: ['CAMPUS_SERVICES', 'FINANCE'] })

@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
 import { Button, Card, Drawer, Layout, Result, Space, Tag, Typography } from 'antd'
-import { ApartmentOutlined, ArrowRightOutlined, BellOutlined, BookOutlined, CalendarOutlined, HomeOutlined, LogoutOutlined, MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined, NotificationOutlined, PieChartOutlined, ReadOutlined, TeamOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons'
+import { ApartmentOutlined, ArrowRightOutlined, BellOutlined, BookOutlined, CalendarOutlined, CheckSquareOutlined, DashboardOutlined, HomeOutlined, IdcardOutlined, LogoutOutlined, MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined, NotificationOutlined, PieChartOutlined, ReadOutlined, TeamOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons'
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import type { User } from '../api/client'
 import { administrationRoles, canAdminister, canEnterAdministration, type AdministrationArea } from '../api/administration'
@@ -9,6 +9,8 @@ import { ErrorBoundary } from '../components/ErrorBoundary'
 import { roleText } from '../features/roles'
 import NewsBoard from '../features/portal/NewsBoard'
 import StudentSnapshot from '../features/portal/StudentSnapshot'
+import { useStudentProfile } from '../features/portal/student'
+import NotificationBell from '../components/NotificationBell'
 
 const Portal = lazy(() => import('../features/portal/Portal'))
 const AdminPeople = lazy(() => import('../features/people/AdminPeople'))
@@ -38,20 +40,25 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
   return next
  })
  const location = useLocation()
- const studentLinks = user.roles.includes('USER')
-  ? [{ path: '/portal/timetable', label: 'Thời khóa biểu', icon: <CalendarOutlined />, sub: true },
-   { path: '/portal/courses', label: 'Môn học', icon: <BookOutlined />, sub: true },
-   { path: '/portal/finance', label: 'Học phí', icon: <WalletOutlined />, sub: true }]
-  : []
- const links = [{ path: '/', label: 'Trang chủ', icon: <HomeOutlined /> },
-  ...visibleAdminLinks, { path: '/portal', label: 'Cổng cá nhân', icon: <UserOutlined /> }, ...studentLinks]
+ const studentProfile = useStudentProfile(user.roles.includes('USER') && (location.pathname === '/' || location.pathname.startsWith('/portal')))
+ const identity = studentProfile.data?.fullName || user.email
+ const portalLinks = user.roles.includes('USER')
+  ? [{ path: '/portal/overview', label: 'Tổng quan', icon: <DashboardOutlined /> },
+   { path: '/portal/timetable', label: 'Thời khóa biểu', icon: <CalendarOutlined /> },
+   { path: '/portal/courses', label: 'Môn học', icon: <BookOutlined /> },
+   { path: '/portal/finance', label: 'Học phí', icon: <WalletOutlined /> },
+   { path: '/portal/events', label: 'Sự kiện', icon: <NotificationOutlined /> },
+   { path: '/portal/registrations', label: 'Đăng ký của bạn', icon: <CheckSquareOutlined /> },
+   { path: '/portal/profile', label: 'Hồ sơ cá nhân', icon: <IdcardOutlined /> }]
+  : [{ path: '/portal', label: 'Cổng cá nhân', icon: <UserOutlined /> }]
+ const links = [{ path: '/', label: 'Trang chủ', icon: <HomeOutlined /> }, ...visibleAdminLinks, ...portalLinks]
  const active = [...links].reverse().find((link) => link.path === location.pathname || (link.path !== '/' && location.pathname.startsWith(link.path + '/')))
  useEffect(() => { document.title = (active?.label ?? 'Không gian làm việc') + ' · Campus Platform' }, [active?.label])
  const renderNavigation = (compact: boolean) => <nav className="sidebar-navigation" aria-label="Điều hướng chính">
   <p className="nav-caption">KHÔNG GIAN LÀM VIỆC</p>
   {links.map((link) => <NavLink key={link.path} to={link.path} end={link.path === '/' || link.path === '/admin' || link.path === '/portal'} onClick={() => setOpen(false)}
    aria-label={compact ? link.label : undefined} title={compact ? link.label : undefined}
-   className={({ isActive }) => 'sidebar-link' + ('sub' in link && link.sub ? ' sidebar-link-sub' : '') + (isActive ? ' active' : '')}>
+   className={({ isActive }) => 'sidebar-link' + (isActive ? ' active' : '')}>
    <span aria-hidden="true">{link.icon}</span><span>{link.label}</span>
   </NavLink>)}
  </nav>
@@ -68,7 +75,11 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
   <Layout className="workspace-body">
    <Layout.Header className="header">
     <Space><Button className="mobile-menu" aria-label="Mở điều hướng" aria-expanded={open} icon={<MenuOutlined aria-hidden="true" />} onClick={() => setOpen(true)} /><div><Text className="header-eyebrow">CAMPUS PLATFORM</Text><div className="header-title">{active?.label ?? 'Không gian làm việc'}</div></div></Space>
-    <Space wrap className="header-account"><Text className="account-email">{user.email}</Text><Button icon={<LogoutOutlined aria-hidden="true" />} onClick={onLogout}>Đăng xuất</Button></Space>
+    <Space wrap className="header-account">
+     <NotificationBell />
+     <span className="header-identity"><Text className="account-name" title={user.email}>{identity}</Text>{identity !== user.email && <Text className="account-email">{user.email}</Text>}</span>
+     <Button icon={<LogoutOutlined aria-hidden="true" />} onClick={onLogout}>Đăng xuất</Button>
+    </Space>
    </Layout.Header>
    <Drawer title="Campus Platform" placement="left" open={open} onClose={() => setOpen(false)} size={288}>{open && renderNavigation(false)}</Drawer>
    <Layout.Content id="main-content" tabIndex={-1} className="content">
