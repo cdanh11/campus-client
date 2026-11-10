@@ -6,7 +6,8 @@
     "version" : "v1"
   },
   "servers" : [ {
-    "url" : "http://localhost:8080"
+    "url" : "http://localhost:8080",
+    "description" : "Generated server url"
   } ],
   "paths" : {
     "/api/v1/notifications/{id}/read" : {
@@ -39,6 +40,58 @@
               "*/*" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/com.campus.notification.domain.NotificationDelivery"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/me/student" : {
+      "get" : {
+        "tags" : [ "own-student-controller" ],
+        "summary" : "Profile of the student linked to the signed-in account",
+        "operationId" : "profile",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/com.campus.student.application.StudentProfileService.StudentProfile"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "own-student-controller" ],
+        "summary" : "Update the contact fields the student owns",
+        "operationId" : "update",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/StudentContactUpdateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/com.campus.student.application.StudentProfileService.StudentProfile"
                 }
               }
             }
@@ -182,7 +235,7 @@
       },
       "put" : {
         "tags" : [ "admin-student-controller" ],
-        "operationId" : "update",
+        "operationId" : "update_1",
         "parameters" : [ {
           "name" : "studentId",
           "in" : "path",
@@ -244,7 +297,7 @@
       },
       "put" : {
         "tags" : [ "admin-organization-unit-controller" ],
-        "operationId" : "update_1",
+        "operationId" : "update_2",
         "parameters" : [ {
           "name" : "unitId",
           "in" : "path",
@@ -826,7 +879,7 @@
       },
       "put" : {
         "tags" : [ "admin-faculty-staff-controller" ],
-        "operationId" : "update_2",
+        "operationId" : "update_3",
         "parameters" : [ {
           "name" : "memberId",
           "in" : "path",
@@ -891,7 +944,7 @@
       },
       "put" : {
         "tags" : [ "admin-event-controller" ],
-        "operationId" : "update_3",
+        "operationId" : "update_4",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -1036,7 +1089,7 @@
         "tags" : [ "admin-dormitory-inventory-controller" ],
         "summary" : "Update Dormitory inventory (administrative permission)",
         "description" : "expectedVersion required; parents immutable; deactivate active children before their parent.",
-        "operationId" : "update_4",
+        "operationId" : "update_5",
         "parameters" : [ {
           "name" : "resource",
           "in" : "path",
@@ -1183,7 +1236,7 @@
         "tags" : [ "admin-academic-term-controller" ],
         "summary" : "Update term (administrative permission)",
         "description" : "Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.",
-        "operationId" : "update_5",
+        "operationId" : "update_6",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -1253,7 +1306,7 @@
         "tags" : [ "admin-class-section-controller" ],
         "summary" : "Update section (administrative permission)",
         "description" : "Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.",
-        "operationId" : "update_6",
+        "operationId" : "update_7",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -1323,7 +1376,7 @@
         "tags" : [ "admin-academic-program-controller" ],
         "summary" : "Update an academic program (administrative permission)",
         "description" : "Requires expectedVersion from the last read; stale versions and duplicate codes return 409.",
-        "operationId" : "update_7",
+        "operationId" : "update_8",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -1393,7 +1446,7 @@
         "tags" : [ "admin-course-offering-controller" ],
         "summary" : "Update offering (administrative permission)",
         "description" : "Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.",
-        "operationId" : "update_8",
+        "operationId" : "update_9",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -1463,7 +1516,7 @@
         "tags" : [ "admin-enrollment-controller" ],
         "summary" : "Withdraw or re-enroll (administrative permission)",
         "description" : "Requires expectedVersion. Withdrawal releases capacity and is allowed after closure. Re-enrollment rechecks eligibility and capacity. Identifiers cannot change; repeating the current status returns 409.",
-        "operationId" : "update_9",
+        "operationId" : "update_10",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -1533,7 +1586,7 @@
         "tags" : [ "admin-academic-course-controller" ],
         "summary" : "Update an academic course (administrative permission)",
         "description" : "Requires expectedVersion from the last read; stale versions and duplicate codes return 409.",
-        "operationId" : "update_10",
+        "operationId" : "update_11",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -3958,28 +4011,6 @@
         } ]
       }
     },
-    "/api/v1/me/student" : {
-      "get" : {
-        "tags" : [ "own-student-controller" ],
-        "summary" : "Profile of the student linked to the signed-in account",
-        "operationId" : "profile",
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "*/*" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/com.campus.student.application.StudentProfileService.StudentProfile"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ]
-      }
-    },
     "/api/v1/me/finance" : {
       "get" : {
         "tags" : [ "own-finance-controller" ],
@@ -5291,6 +5322,84 @@
           "updatedAt" : {
             "type" : "string",
             "format" : "date-time"
+          }
+        }
+      },
+      "StudentContactUpdateRequest" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "maxLength" : 320,
+            "minLength" : 0
+          },
+          "phone" : {
+            "type" : "string",
+            "maxLength" : 32,
+            "minLength" : 0
+          },
+          "address" : {
+            "type" : "string",
+            "maxLength" : 500,
+            "minLength" : 0
+          },
+          "expectedVersion" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "required" : [ "expectedVersion" ]
+      },
+      "com.campus.student.application.StudentProfileService.StudentProfile" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "studentNumber" : {
+            "type" : "string"
+          },
+          "fullName" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "organizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "organizationUnitName" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          },
+          "phone" : {
+            "type" : "string"
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "dateOfBirth" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "cohort" : {
+            "type" : "string"
+          },
+          "programId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "programName" : {
+            "type" : "string"
+          },
+          "profileVersion" : {
+            "type" : "integer",
+            "format" : "int64"
           }
         }
       },
@@ -7432,35 +7541,6 @@
             "items" : {
               "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.EnrollmentView"
             }
-          }
-        }
-      },
-      "com.campus.student.application.StudentProfileService.StudentProfile" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string",
-            "format" : "uuid"
-          },
-          "studentNumber" : {
-            "type" : "string"
-          },
-          "fullName" : {
-            "type" : "string"
-          },
-          "email" : {
-            "type" : "string"
-          },
-          "organizationUnitId" : {
-            "type" : "string",
-            "format" : "uuid"
-          },
-          "organizationUnitName" : {
-            "type" : "string"
-          },
-          "status" : {
-            "type" : "string",
-            "enum" : [ "ACTIVE", "INACTIVE" ]
           }
         }
       },

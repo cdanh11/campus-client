@@ -17,6 +17,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Profile of the student linked to the signed-in account */
+        get: operations["profile"];
+        /** Update the contact fields the student owns */
+        put: operations["update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/event-registrations/{id}": {
         parameters: {
             query?: never;
@@ -57,7 +75,7 @@ export interface paths {
             cookie?: never;
         };
         get: operations["get"];
-        put: operations["update"];
+        put: operations["update_1"];
         post?: never;
         delete?: never;
         options?: never;
@@ -73,7 +91,7 @@ export interface paths {
             cookie?: never;
         };
         get: operations["get_1"];
-        put: operations["update_1"];
+        put: operations["update_2"];
         post?: never;
         delete?: never;
         options?: never;
@@ -225,7 +243,7 @@ export interface paths {
             cookie?: never;
         };
         get: operations["get_3"];
-        put: operations["update_2"];
+        put: operations["update_3"];
         post?: never;
         delete?: never;
         options?: never;
@@ -241,7 +259,7 @@ export interface paths {
             cookie?: never;
         };
         get: operations["get_4"];
-        put: operations["update_3"];
+        put: operations["update_4"];
         post?: never;
         delete?: never;
         options?: never;
@@ -277,7 +295,7 @@ export interface paths {
          * Update Dormitory inventory (administrative permission)
          * @description expectedVersion required; parents immutable; deactivate active children before their parent.
          */
-        put: operations["update_4"];
+        put: operations["update_5"];
         post?: never;
         delete?: never;
         options?: never;
@@ -317,7 +335,7 @@ export interface paths {
          * Update term (administrative permission)
          * @description Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.
          */
-        put: operations["update_5"];
+        put: operations["update_6"];
         post?: never;
         delete?: never;
         options?: never;
@@ -337,7 +355,7 @@ export interface paths {
          * Update section (administrative permission)
          * @description Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.
          */
-        put: operations["update_6"];
+        put: operations["update_7"];
         post?: never;
         delete?: never;
         options?: never;
@@ -357,7 +375,7 @@ export interface paths {
          * Update an academic program (administrative permission)
          * @description Requires expectedVersion from the last read; stale versions and duplicate codes return 409.
          */
-        put: operations["update_7"];
+        put: operations["update_8"];
         post?: never;
         delete?: never;
         options?: never;
@@ -377,7 +395,7 @@ export interface paths {
          * Update offering (administrative permission)
          * @description Requires expectedVersion; stale version, invalid lifecycle or unavailable references return 409. Parent identifiers are immutable.
          */
-        put: operations["update_8"];
+        put: operations["update_9"];
         post?: never;
         delete?: never;
         options?: never;
@@ -397,7 +415,7 @@ export interface paths {
          * Withdraw or re-enroll (administrative permission)
          * @description Requires expectedVersion. Withdrawal releases capacity and is allowed after closure. Re-enrollment rechecks eligibility and capacity. Identifiers cannot change; repeating the current status returns 409.
          */
-        put: operations["update_9"];
+        put: operations["update_10"];
         post?: never;
         delete?: never;
         options?: never;
@@ -417,7 +435,7 @@ export interface paths {
          * Update an academic course (administrative permission)
          * @description Requires expectedVersion from the last read; stale versions and duplicate codes return 409.
          */
-        put: operations["update_10"];
+        put: operations["update_11"];
         post?: never;
         delete?: never;
         options?: never;
@@ -991,23 +1009,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/me/student": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Profile of the student linked to the signed-in account */
-        get: operations["profile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/me/finance": {
         parameters: {
             query?: never;
@@ -1517,6 +1518,35 @@ export interface components {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+        };
+        StudentContactUpdateRequest: {
+            email?: string;
+            phone?: string;
+            address?: string;
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.student.application.StudentProfileService.StudentProfile": {
+            /** Format: uuid */
+            id?: string;
+            studentNumber?: string;
+            fullName?: string;
+            email?: string;
+            /** Format: uuid */
+            organizationUnitId?: string;
+            organizationUnitName?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+            phone?: string;
+            address?: string;
+            /** Format: date */
+            dateOfBirth?: string;
+            cohort?: string;
+            /** Format: uuid */
+            programId?: string;
+            programName?: string;
+            /** Format: int64 */
+            profileVersion?: number | bigint;
         };
         EventRegistrationChange: {
             /** @enum {string} */
@@ -2392,18 +2422,6 @@ export interface components {
             term?: components["schemas"]["com.campus.academic.application.StudentAcademicService.TermView"];
             meetings?: components["schemas"]["com.campus.academic.application.StudentAcademicService.EnrollmentView"][];
         };
-        "com.campus.student.application.StudentProfileService.StudentProfile": {
-            /** Format: uuid */
-            id?: string;
-            studentNumber?: string;
-            fullName?: string;
-            email?: string;
-            /** Format: uuid */
-            organizationUnitId?: string;
-            organizationUnitName?: string;
-            /** @enum {string} */
-            status?: "ACTIVE" | "INACTIVE";
-        };
         "com.campus.finance.application.StudentFinanceService.ChargeView": {
             /** Format: uuid */
             id?: string;
@@ -2870,6 +2888,50 @@ export interface operations {
             };
         };
     };
+    profile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.student.application.StudentProfileService.StudentProfile"];
+                };
+            };
+        };
+    };
+    update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StudentContactUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.student.application.StudentProfileService.StudentProfile"];
+                };
+            };
+        };
+    };
     own: {
         parameters: {
             query?: never;
@@ -2966,7 +3028,7 @@ export interface operations {
             };
         };
     };
-    update: {
+    update_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3014,7 +3076,7 @@ export interface operations {
             };
         };
     };
-    update_1: {
+    update_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -3424,7 +3486,7 @@ export interface operations {
             };
         };
     };
-    update_2: {
+    update_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -3472,7 +3534,7 @@ export interface operations {
             };
         };
     };
-    update_3: {
+    update_4: {
         parameters: {
             query?: never;
             header?: never;
@@ -3569,7 +3631,7 @@ export interface operations {
             };
         };
     };
-    update_4: {
+    update_5: {
         parameters: {
             query?: never;
             header?: never;
@@ -3666,7 +3728,7 @@ export interface operations {
             };
         };
     };
-    update_5: {
+    update_6: {
         parameters: {
             query?: never;
             header?: never;
@@ -3714,7 +3776,7 @@ export interface operations {
             };
         };
     };
-    update_6: {
+    update_7: {
         parameters: {
             query?: never;
             header?: never;
@@ -3762,7 +3824,7 @@ export interface operations {
             };
         };
     };
-    update_7: {
+    update_8: {
         parameters: {
             query?: never;
             header?: never;
@@ -3810,7 +3872,7 @@ export interface operations {
             };
         };
     };
-    update_8: {
+    update_9: {
         parameters: {
             query?: never;
             header?: never;
@@ -3858,7 +3920,7 @@ export interface operations {
             };
         };
     };
-    update_9: {
+    update_10: {
         parameters: {
             query?: never;
             header?: never;
@@ -3906,7 +3968,7 @@ export interface operations {
             };
         };
     };
-    update_10: {
+    update_11: {
         parameters: {
             query?: never;
             header?: never;
@@ -5251,26 +5313,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["com.campus.academic.application.StudentAcademicService.Timetable"];
-                };
-            };
-        };
-    };
-    profile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["com.campus.student.application.StudentProfileService.StudentProfile"];
                 };
             };
         };
