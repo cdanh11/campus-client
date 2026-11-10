@@ -658,7 +658,10 @@ export interface paths {
         };
         get: operations["list_2"];
         put?: never;
-        /** Record a manual VND payment (administrative permission) */
+        /**
+         * Record a manual VND payment (administrative permission)
+         * @description Send an Idempotency-Key header to make retries safe; replaying a key with the same payload returns the original payment.
+         */
         post: operations["record"];
         delete?: never;
         options?: never;
@@ -4496,7 +4499,9 @@ export interface operations {
     record: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
             path?: never;
             cookie?: never;
         };

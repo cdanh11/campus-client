@@ -2,12 +2,11 @@
   "openapi" : "3.1.0",
   "info" : {
     "title" : "Campus Service API",
-    "description" : "Bearer JWT authorization. Global ADMIN manages accounts/roles. ACADEMIC_AFFAIRS, CAMPUS_SERVICES and FINANCE operate their department domains with explicit reference reads, while AUDITOR is read-only for audits, reports and approved reference lists. See docs/permissions.md for the full method/path matrix and scope limits.",
+    "description" : "Bearer JWT authorization. Global ADMIN manages accounts/roles; ACADEMIC_AFFAIRS, CAMPUS_SERVICES and FINANCE operate their department domains with explicit read references. AUDITOR is read-only for audits, reports and approved references. See docs/permissions.md for the full method/path matrix and department ownership.",
     "version" : "v1"
   },
   "servers" : [ {
-    "url" : "http://localhost",
-    "description" : "Generated server url"
+    "url" : "http://localhost:8080"
   } ],
   "paths" : {
     "/api/v1/notifications/{id}/read" : {
@@ -2534,7 +2533,16 @@
       "post" : {
         "tags" : [ "admin-manual-payment-controller" ],
         "summary" : "Record a manual VND payment (administrative permission)",
+        "description" : "Send an Idempotency-Key header to make retries safe; replaying a key with the same payload returns the original payment.",
         "operationId" : "record",
+        "parameters" : [ {
+          "name" : "Idempotency-Key",
+          "in" : "header",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
         "requestBody" : {
           "content" : {
             "application/json" : {

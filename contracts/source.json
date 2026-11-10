@@ -1,5 +1,5 @@
 {
-  "backendCommit": "27b5d55a01c3a195e8077e215115e6cc8c2b1dea",
+  "backendCommit": "64844dc05cde5edc81b8dac785e75a44f868c9e8",
   "backendRepository": "https://github.com/cdanh11/campus-service",
   "generatedBy": "springdoc /v3/api-docs on isolated Testcontainers backend"
 }
