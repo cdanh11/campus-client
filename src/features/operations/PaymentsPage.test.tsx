@@ -76,6 +76,31 @@ it('creation sends exact VND with the fresh balance version, while fractional in
  expect(mutation).not.toHaveBeenCalled()
  fireEvent.change(dialog.getByLabelText('Số tiền VND'), { target: { value: '9007199254740993' } })
  await userEvent.click(dialog.getByRole('button', { name: 'Lưu' }))
- await waitFor(() => expect(mutation).toHaveBeenCalledWith('/api/v1/admin/finance/payments', 'POST', { receiptNumber: 'R02', chargeId: 'c', amount: 9007199254740993n, expectedChargeVersion: balance.rowVersion }))
+ await waitFor(() => expect(mutation).toHaveBeenCalledWith('/api/v1/admin/finance/payments', 'POST', { receiptNumber: 'R02', chargeId: 'c', amount: 9007199254740993n, expectedChargeVersion: balance.rowVersion }, { 'Idempotency-Key': expect.any(String) }))
  expect(mutation).toHaveBeenCalledOnce()
+}, 15000)
+it('reuses the idempotency key when retrying the same payment after a failure', async () => {
+ vi.spyOn(api, 'request').mockImplementation(async (path) => {
+  if (path.endsWith('/balance')) return balance
+  if (path.includes('/charges?')) return { content: [{ id: 'c', chargeNumber: 'C01', feeName: 'Phí', status: 'OPEN' }], totalElements: 1, totalPages: 1 }
+  if (path.endsWith('/charges/c')) return { id: 'c', chargeNumber: 'C01', feeName: 'Phí', status: 'OPEN' }
+  return { content: [], totalElements: 0, totalPages: 0 }
+ })
+ const mutation = vi.spyOn(api, 'mutation').mockRejectedValueOnce(new Error('network')).mockResolvedValueOnce({})
+ show()
+ await userEvent.click(screen.getByRole('button', { name: 'Ghi nhận thanh toán' }))
+ const dialog = within(screen.getByRole('dialog'))
+ fireEvent.change(dialog.getByLabelText('Mã biên nhận'), { target: { value: 'R03' } })
+ await userEvent.click(dialog.getByRole('combobox', { name: 'Khoản thu' }))
+ await userEvent.click(await screen.findByText('C01 · Phí', { selector: '.ant-select-item-option-content' }))
+ await waitFor(() => expect(dialog.getByRole('button', { name: 'Lưu' })).toBeEnabled())
+ fireEvent.change(dialog.getByLabelText('Số tiền VND'), { target: { value: '10' } })
+ await userEvent.click(dialog.getByRole('button', { name: 'Lưu' }))
+ await waitFor(() => expect(mutation).toHaveBeenCalledTimes(1))
+ await dialog.findByText('Không thể kết nối máy chủ. Kiểm tra kết nối và thử lại.')
+ await userEvent.click(dialog.getByRole('button', { name: 'Lưu' }))
+ await waitFor(() => expect(mutation).toHaveBeenCalledTimes(2))
+ const keys = mutation.mock.calls.map((call) => (call[3] as Record<string, string>)['Idempotency-Key'])
+ expect(keys[0]).toBeTruthy()
+ expect(keys[1]).toBe(keys[0])
 }, 15000)

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button, Descriptions, Form, Input, Modal, Select, Space, Table, Typography } from 'antd'
 import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
@@ -55,6 +55,7 @@ export function PaymentsPage() {
 }
 function PaymentEditor({ mode, id, onClose }: { mode: Mode; id?: string; onClose: () => void }) {
  const [form] = Form.useForm<Values>()
+ const attempt = useRef<{ signature: string; key: string } | null>(null)
  const watchedCharge = Form.useWatch('chargeId', form) as string | undefined
  const detail = useQuery({ queryKey: ['payment-detail', id, mode], queryFn: ({ signal }) => api.request<Payment>(path + '/' + id, { signal }), enabled: !!id, staleTime: 0, refetchOnMount: 'always', refetchOnWindowFocus: false, refetchOnReconnect: false })
  const chargeId = mode === 'create' ? watchedCharge : detail.data?.chargeId
@@ -62,11 +63,17 @@ function PaymentEditor({ mode, id, onClose }: { mode: Mode; id?: string; onClose
  const mutation = useMutation({
   mutationFn: async (values: Values) => {
    if (!balance.data || balance.error || balance.data.chargeId !== (mode === 'create' ? values.chargeId : detail.data?.chargeId)) throw new Error('Chưa tải được công nợ.')
-   if (mode === 'create') return api.mutation(path, 'POST', { receiptNumber: values.receiptNumber, chargeId: values.chargeId, amount: paymentAmount(values.amount), expectedChargeVersion: balance.data.rowVersion } satisfies PaymentCreate)
+   if (mode === 'create') {
+    const payload = { receiptNumber: values.receiptNumber, chargeId: values.chargeId, amount: paymentAmount(values.amount), expectedChargeVersion: balance.data.rowVersion } satisfies PaymentCreate
+    const signature = [payload.receiptNumber, payload.chargeId, String(payload.amount), String(payload.expectedChargeVersion)].join('\u0000')
+    if (attempt.current?.signature !== signature) attempt.current = { signature, key: crypto.randomUUID() }
+    return api.mutation(path, 'POST', payload, { 'Idempotency-Key': attempt.current.key })
+   }
    if (!detail.data || detail.error) throw new Error('Chưa tải được biên nhận.')
    return api.mutation(path + '/' + id, 'PUT', { status: 'REVERSED', expectedVersion: detail.data.rowVersion, expectedChargeVersion: balance.data.rowVersion, reason: values.reason } satisfies PaymentReverse)
   },
   onSuccess: () => {
+   attempt.current = null
    void queryClient.invalidateQueries({ queryKey: ['payments'] })
    void queryClient.invalidateQueries({ queryKey: ['payment-detail'] })
    void queryClient.invalidateQueries({ queryKey: ['registry', '/api/v1/admin/finance/charges'] })
@@ -75,6 +82,8 @@ function PaymentEditor({ mode, id, onClose }: { mode: Mode; id?: string; onClose
    void queryClient.invalidateQueries({ queryKey: ['reference-labels'] })
    void queryClient.invalidateQueries({ queryKey: ['charge-balance'] })
    void queryClient.invalidateQueries({ queryKey: ['charge-balance-mutation'] })
+   void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+   void queryClient.invalidateQueries({ queryKey: ['report'] })
    onClose()
   },
  })
