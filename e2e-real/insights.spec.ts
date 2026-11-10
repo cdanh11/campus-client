@@ -65,17 +65,15 @@ test('real insights keep aggregate VND exact, export applied filters and expose 
  expect(await readFile((await eventFile.path())!, 'utf8')).toContain('"\'=2+2"')
 
  const exportError = await page.evaluate(async () => {
-  const modulePath = '/src/api/runtime.ts'
-  const { api } = await import(modulePath)
-  try {
-   await api.downloadCsv('/api/v1/admin/reports/STUDENT_DEBT/export?resourceId=00000000-0000-0000-0000-000000000001')
-   throw new Error('Unsupported export filter unexpectedly succeeded')
-  } catch (error) {
-   if (typeof error === 'object' && error !== null && 'status' in error && 'detail' in error) return { status: error.status, detail: error.detail }
-   throw error
-  }
+  const tokens = await navigator.locks.request('campus-auth-cookie', async () => (await fetch('/api/v1/auth/refresh', { method: 'POST', credentials: 'include' })).json())
+  const response = await fetch('/api/v1/admin/reports/STUDENT_DEBT/export?resourceId=00000000-0000-0000-0000-000000000001', {
+   credentials: 'include',
+   headers: { Accept: 'text/csv, application/json', Authorization: 'Bearer ' + tokens.accessToken },
+  })
+  const body = await response.json()
+  return { status: response.status, code: body.code }
  })
- expect(exportError).toMatchObject({ status: 400, detail: { code: 'INVALID_QUERY_PARAMETER' } })
+ expect(exportError).toEqual({ status: 400, code: 'INVALID_QUERY_PARAMETER' })
 
  await page.getByRole('navigation', { name: 'Audit và báo cáo' }).getByRole('link', { name: 'Audit', exact: true }).click()
  await page.getByRole('combobox', { name: 'Nguồn audit', exact: true }).click()

@@ -9,12 +9,13 @@ export default defineConfig({
  testDir: './e2e-real',
  workers: 1,
  reporter: 'list',
- use: { baseURL: 'http://localhost:3000', trace: 'off', screenshot: 'only-on-failure' },
+ use: { baseURL: 'http://localhost:3000', trace: 'off', screenshot: 'only-on-failure', actionTimeout: 30_000, reducedMotion: 'reduce' },
  projects: [{ name: 'real-chromium', use: { ...devices['Desktop Chrome'] } }],
  webServer: {
-  command: 'npm run dev -- --host 127.0.0.1',
+  command: 'npm run build && npm run preview',
   url: 'http://localhost:3000',
   reuseExistingServer: false,
+  timeout: 180_000,
   env: { CAMPUS_API_PROXY_TARGET: process.env.CAMPUS_TEST_BACKEND_URL },
  },
 })
