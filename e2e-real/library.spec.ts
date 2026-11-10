@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 import { statusLabels, statusText } from '../src/features/status-options'
+import { pickReference } from './reference'
 async function save(page: Page, path: string, method: string) {
  const response = page.waitForResponse((value) => new URL(value.url()).pathname === path && value.request().method() === method)
  await page.getByRole('dialog').getByRole('button', { name: 'Lưu', exact: true }).click()
@@ -32,8 +33,7 @@ test('real Library enforces occupied copies, server due date and retained return
  await expect(dialog).not.toBeVisible()
  await page.getByRole('navigation', { name: 'Quản trị thư viện' }).getByRole('link', { name: 'Bản sao sách', exact: true }).click()
  await page.getByRole('button', { name: 'Thêm bản sao', exact: true }).click()
- await dialog.getByRole('combobox', { name: 'Đầu sách', exact: true }).click()
- await page.getByTitle('LBUI · Sách UI', { exact: true }).click()
+ await pickReference(page, dialog.getByRole('combobox', { name: 'Đầu sách', exact: true }), 'LBUI · Sách UI')
  await dialog.getByLabel('Mã', { exact: true }).fill('LBCP')
  const copyResponse = await save(page, '/api/v1/admin/library/copies', 'POST')
  expect(copyResponse.status()).toBe(201)
@@ -43,10 +43,8 @@ test('real Library enforces occupied copies, server due date and retained return
  let firstLoan: { id: string; borrowedAt: string; dueAt: string; createdAt: string; rowVersion: number } | undefined
  for (let attempt = 0; attempt < 2; attempt++) {
   await page.getByRole('button', { name: 'Thêm lượt mượn', exact: true }).click()
-  await dialog.getByRole('combobox', { name: 'Bản sao', exact: true }).click()
-  await page.getByTitle('LBCP', { exact: true }).click()
-  await dialog.getByRole('combobox', { name: 'Sinh viên', exact: true }).click()
-  await page.getByTitle('LBSV1 · Sinh viên Library', { exact: true }).click()
+  await pickReference(page, dialog.getByRole('combobox', { name: 'Bản sao', exact: true }), 'LBCP')
+  await pickReference(page, dialog.getByRole('combobox', { name: 'Sinh viên', exact: true }), 'LBSV1 · Sinh viên Library')
   const response = await save(page, '/api/v1/admin/library/loans', 'POST')
   if (attempt === 0) {
    expect(response.status()).toBe(201)

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
+import { pickReference } from './reference'
 test('real insights keep aggregate VND exact, export applied filters and expose selected-source recorded audit', async ({ page }) => {
  test.setTimeout(120000)
  await page.goto('/')
@@ -30,8 +31,7 @@ test('real insights keep aggregate VND exact, export applied filters and expose 
  await expect(page.locator('.ant-card-head-title')).toHaveCount(8)
  await expect(page.getByText(/Dữ liệu tại thời điểm:/)).toBeVisible()
  await page.getByRole('navigation', { name: 'Audit và báo cáo' }).getByRole('link', { name: 'Báo cáo', exact: true }).click()
- await page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }).click()
- await page.getByTitle('INSV1 · Sinh viên báo cáo', { exact: true }).click()
+ await pickReference(page, page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }), 'INSV1 · Sinh viên báo cáo')
  const debtQuery = page.waitForResponse((response) => response.url().includes('/reports/STUDENT_DEBT?') && new URL(response.url()).searchParams.get('studentId') === seed.studentId)
  await page.getByRole('button', { name: 'Áp dụng bộ lọc', exact: true }).click()
  expect((await debtQuery).status()).toBe(200)
@@ -52,8 +52,7 @@ test('real insights keep aggregate VND exact, export applied filters and expose 
   await expect(page.getByRole('heading', { name: label, exact: true })).toBeVisible()
   await expect(page.getByText(/Dữ liệu tại thời điểm:/)).toBeVisible()
  }
- await page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }).click()
- await page.getByTitle('INSV1 · Sinh viên báo cáo', { exact: true }).click()
+ await pickReference(page, page.getByRole('combobox', { name: 'Lọc sinh viên', exact: true }), 'INSV1 · Sinh viên báo cáo')
  const eventQuery = page.waitForResponse((response) => response.url().includes('/reports/EVENT_MEMBERSHIP?') && new URL(response.url()).searchParams.get('studentId') === seed.studentId)
  await page.getByRole('button', { name: 'Áp dụng bộ lọc', exact: true }).click()
  expect((await eventQuery).status()).toBe(200)

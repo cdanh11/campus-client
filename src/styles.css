@@ -695,8 +695,12 @@ a.admin-kpi:hover::before { height: 3px; opacity: 1; }
   .ant-drawer .sidebar-link { color: #526176; }
   .ant-drawer .sidebar-link.active { color: #fff; }
 }
+/* A transition on every property also animates `left`/`top`, which rc-trigger resets and measures
+   synchronously; the stale parked position then gets measured and the popup stays off-screen.
+   Only paint-level properties keep a (near-zero) transition, so popup alignment stays measurable. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  * { transition-duration: .01ms !important; transition-property: opacity, transform, color, background-color, border-color, box-shadow, filter !important; }
 }
 @media (prefers-color-scheme: dark) { body { color-scheme: light; } }
 @media print {

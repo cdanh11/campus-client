@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import { statusText } from '../src/features/status-options'
 import { parseJson } from '../src/api/json'
+import { pickReference } from './reference'
 async function login(page: Page) {
  await page.goto('/')
  await page.getByLabel('Email', { exact: true }).fill('browser-admin@example.test')
@@ -21,9 +22,7 @@ async function seed(page: Page, prefix: string) {
  }, prefix)
 }
 async function select(page: Page, label: string, choice: string) {
- await page.getByRole('dialog').getByRole('combobox', { name: label, exact: true }).click()
- await page.getByTitle(choice, { exact: true }).click()
- await expect(page.getByRole('dialog').getByTitle(choice, { exact: true })).toBeVisible()
+ await pickReference(page, page.getByRole('dialog').getByRole('combobox', { name: label, exact: true }), choice)
 }
 async function navigate(page: Page, title: string) {
  await page.getByRole('navigation', { name: 'Ký túc xá và tài chính' }).getByRole('link', { name: title, exact: true }).click()

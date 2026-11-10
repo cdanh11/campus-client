@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { pickReference } from './reference'
 async function login(page: Page) {
  await page.goto('/')
  await page.getByLabel('Email', { exact: true }).fill('browser-admin@example.test')
@@ -61,8 +62,7 @@ test('real owner forms create profiles and require reload after stale organizati
    await dialog.getByLabel('Loại hồ sơ', { exact: true }).click()
    await page.getByTitle('Giảng viên', { exact: true }).click()
   }
-  await dialog.getByRole('combobox', { name: 'Đơn vị', exact: true }).click()
-  await page.getByTitle('UIORG · Khoa dữ liệu mới', { exact: true }).click()
+  await pickReference(page, dialog.getByRole('combobox', { name: 'Đơn vị', exact: true }), 'UIORG · Khoa dữ liệu mới')
   await expect(dialog.getByTitle('UIORG · Khoa dữ liệu mới', { exact: true })).toBeVisible()
   await dialog.getByRole('button', { name: 'Lưu', exact: true }).click()
   await expect(dialog).not.toBeVisible()

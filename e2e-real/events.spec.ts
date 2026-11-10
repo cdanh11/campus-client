@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test'
 import { statusLabels, statusText } from '../src/features/status-options'
 import { toLocalInput } from '../src/forms/datetime'
+import { pickReference } from './reference'
 async function save(page: Page, path: string, method: string) {
  const response = page.waitForResponse((value) => new URL(value.url()).pathname === path && value.request().method() === method)
  await page.getByRole('dialog').getByRole('button', { name: 'Lưu', exact: true }).click()
@@ -55,10 +56,8 @@ test('real Event enforces stale catalog and capacity, retains restored membershi
  let membership: { id: string; rowVersion: number; status: string; createdAt: string } | undefined
  for (const code of ['EVSV1', 'EVSV2']) {
   await page.getByRole('button', { name: 'Thêm đăng ký sự kiện', exact: true }).click()
-  await dialog.getByRole('combobox', { name: 'Sự kiện', exact: true }).click()
-  await page.getByTitle('EVUI · Sự kiện phiên khác', { exact: true }).click()
-  await dialog.getByRole('combobox', { name: 'Sinh viên', exact: true }).click()
-  await page.getByTitle(code + ' · ' + code, { exact: true }).click()
+  await pickReference(page, dialog.getByRole('combobox', { name: 'Sự kiện', exact: true }), 'EVUI · Sự kiện phiên khác')
+  await pickReference(page, dialog.getByRole('combobox', { name: 'Sinh viên', exact: true }), code + ' · ' + code)
   const response = await save(page, '/api/v1/admin/events/' + event.id + '/registrations', 'POST')
   if (code === 'EVSV1') {
    expect(response.status()).toBe(201)
