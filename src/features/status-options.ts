@@ -5,13 +5,14 @@ export const statusLabels: Record<string, string> = {
  ENROLLED: 'Đã ghi danh', WITHDRAWN: 'Đã rút',
  RETURNED: 'Đã trả', REGISTERED: 'Đã đăng ký', ATTENDED: 'Đã tham dự',
  ASSIGNED: 'Đang ở', RELEASED: 'Đã trả chỗ',
- RECORDED: 'Đã ghi nhận', REVERSED: 'Đã đảo',
+ RECORDED: 'Đã ghi nhận', REVERSED: 'Đã đảo', OVERDUE: 'Quá hạn',
  RETURN: 'Đánh dấu đã trả', CANCEL: 'Hủy đăng ký', RESTORE: 'Khôi phục', ATTEND: 'Đánh dấu tham dự',
+ SUCCESS: 'Thành công', FAILED: 'Thất bại', FAILURE: 'Thất bại',
 }
 const statusTones: Record<string, string> = {
- ACTIVE: 'green', OPEN: 'green', ENROLLED: 'green', RETURNED: 'green', ATTENDED: 'green', RECORDED: 'green',
+ ACTIVE: 'green', OPEN: 'green', ENROLLED: 'green', RETURNED: 'green', ATTENDED: 'green', RECORDED: 'green', SUCCESS: 'green',
  ASSIGNED: 'blue', PUBLISHED: 'blue', PLANNED: 'gold', DRAFT: 'gold', REGISTERED: 'gold', SUSPENDED: 'gold', UNREAD: 'gold',
- CANCELLED: 'red', WITHDRAWN: 'red', REVERSED: 'red', OVERDUE: 'red', DISABLED: 'red',
+ CANCELLED: 'red', WITHDRAWN: 'red', REVERSED: 'red', OVERDUE: 'red', DISABLED: 'red', FAILED: 'red', FAILURE: 'red',
 }
 export const statusText = (value: unknown) => statusLabels[String(value)] ?? String(value ?? '—')
 export const statusColor = (value: unknown) => statusTones[String(value)] ?? 'default'
