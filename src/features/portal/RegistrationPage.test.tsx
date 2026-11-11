@@ -25,8 +25,9 @@ const registration = (state: string): Registration => ({
   ],
  },
  sections: [
-  { sectionId: 'open-section', sectionCode: 'CD-CLASS-001', courseId: 'calc', courseCode: 'CD-COURSE-001', courseTitle: 'Giải tích', credits: 3, facultyName: 'Bùi Khánh Hà', schedule, capacity: 40, remaining: 12, enrolled: false, eligible: true },
-  { sectionId: 'blocked-section', sectionCode: 'CD-CLASS-002', courseId: 'cs', courseCode: 'CD-COURSE-003', courseTitle: 'Lập trình', credits: 3, facultyName: 'Ngô Tuấn Khang', schedule, capacity: 40, remaining: 0, enrolled: false, eligible: false, blockedReason: 'PREREQUISITE_NOT_MET', prerequisiteCourseCode: 'CD-COURSE-002', prerequisiteCourseTitle: 'Tin học cơ sở' },
+  { sectionId: 'open-section', sectionCode: 'CD-CLASS-001', courseId: 'calc', courseCode: 'CD-COURSE-001', courseTitle: 'Giải tích', credits: 3, facultyName: 'Bùi Khánh Hà', schedule, capacity: 40, remaining: 12, enrolled: false, eligible: true, courseOrganizationUnitId: 'unit', courseOrganizationUnitName: 'Khoa Công nghệ thông tin' },
+  { sectionId: 'blocked-section', sectionCode: 'CD-CLASS-002', courseId: 'cs', courseCode: 'CD-COURSE-003', courseTitle: 'Lập trình', credits: 3, facultyName: 'Ngô Tuấn Khang', schedule, capacity: 40, remaining: 0, enrolled: false, eligible: false, blockedReason: 'PREREQUISITE_NOT_MET', prerequisiteCourseCode: 'CD-COURSE-002', prerequisiteCourseTitle: 'Tin học cơ sở', courseOrganizationUnitId: 'unit', courseOrganizationUnitName: 'Khoa Công nghệ thông tin' },
+  { sectionId: 'law-section', sectionCode: 'LAW-01', courseId: 'law', courseCode: 'LAW101', courseTitle: 'Pháp luật đại cương', credits: 2, facultyName: 'Đỗ Minh Anh', schedule, capacity: 50, remaining: 20, enrolled: false, eligible: true, courseOrganizationUnitId: 'law', courseOrganizationUnitName: 'Khoa Luật' },
  ],
  enrolled: [{
   enrollmentId: 'enrolled', status: 'ENROLLED', term, course: { id: 'phy', code: 'CD-COURSE-002', title: 'Vật lý', credits: 3 },
@@ -61,6 +62,8 @@ it('shows the open window, highlights the current cohort slot and registers a se
 it('keeps withdrawal disabled before the student cohort slot opens', async () => {
  show('NOT_OPEN')
  expect((await screen.findAllByText('Chưa đến lượt đăng ký của khóa bạn')).length).toBeGreaterThan(0)
+ expect(await screen.findByText('Không trong thời gian đăng ký')).toBeInTheDocument()
+ expect(screen.queryByText('Lớp đang mở')).not.toBeInTheDocument()
  const card = screen.getByText('Đã đăng ký trong học kỳ').closest('.ant-card') as HTMLElement
  expect(within(card).getByText('Vật lý')).toBeInTheDocument()
  expect(within(card).getByRole('button', { name: 'Rút' })).toBeDisabled()
@@ -72,4 +75,17 @@ it('explains a rejected registration in Vietnamese', async () => {
  show('OPEN')
  await userEvent.click(await screen.findByRole('button', { name: 'Đăng ký' }))
  expect(await screen.findByText('Lớp này trùng lịch với một lớp bạn đã đăng ký trong học kỳ.')).toBeInTheDocument()
+})
+
+it('defaults the faculty filter to the student unit and searches sections', async () => {
+ show('OPEN')
+ expect(await screen.findByText('Giải tích')).toBeInTheDocument()
+ expect(screen.queryByText('Pháp luật đại cương')).not.toBeInTheDocument()
+ await userEvent.click(screen.getByRole('combobox', { name: 'Lọc theo khoa' }))
+ await userEvent.click(await screen.findByText('Tất cả khoa', { selector: '.ant-select-item-option-content' }))
+ expect(await screen.findByText('Pháp luật đại cương')).toBeInTheDocument()
+ await userEvent.type(screen.getByRole('searchbox', { name: 'Tìm lớp học phần' }), 'lập trình')
+ expect(await screen.findByText('Lập trình')).toBeInTheDocument()
+ expect(screen.queryByText('Giải tích')).not.toBeInTheDocument()
+ expect(screen.queryByText('Pháp luật đại cương')).not.toBeInTheDocument()
 })

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Alert, Button, Card, Empty, Space, Statistic, Tag, Typography } from 'antd'
+import { Alert, Button, Card, Empty, Input, Select, Space, Tag, Typography } from 'antd'
 import { useMutation } from '@tanstack/react-query'
 import { api, queryClient } from '../../api/runtime'
 import { ErrorNotice } from '../../components/ErrorNotice'
@@ -14,6 +14,8 @@ export default function RegistrationPage() {
  const student = !!profile.data?.studentNumber
  const registration = useRegistration(student)
  const [pending, setPending] = useState<string | null>(null)
+ const [search, setSearch] = useState('')
+ const [faculty, setFaculty] = useState<string | null>(null)
  const invalidate = () => {
   void queryClient.invalidateQueries({ queryKey: ['me', 'registration'] })
   void queryClient.invalidateQueries({ queryKey: ['me', 'enrollments'] })
@@ -45,12 +47,19 @@ export default function RegistrationPage() {
  const open = registrationOpen(registrationWindow)
  const sections = data?.sections ?? []
  const enrolled = data?.enrolled ?? []
- const available = sections.filter((section) => section.eligible).length
- const closedReason = registrationWindow?.state ?? ''
- const sectionStateText = (section: (typeof sections)[number]) => {
-  const reason = section.blockedReason || (open ? '' : closedReason)
-  return (blockedReasonText[reason] ?? windowStateText[reason] ?? reason) || 'Không thể chọn'
- }
+ const units = new Map<string, string>()
+ for (const section of sections) if (section.courseOrganizationUnitId) units.set(section.courseOrganizationUnitId, section.courseOrganizationUnitName ?? 'Chưa rõ đơn vị')
+ const defaultFaculty = profile.data?.organizationUnitId && units.has(profile.data.organizationUnitId) ? profile.data.organizationUnitId : ''
+ const facultyValue = faculty ?? defaultFaculty
+ const keyword = search.trim().toLowerCase()
+ const visible = sections.filter((section) => {
+  if (facultyValue && section.courseOrganizationUnitId !== facultyValue) return false
+  if (!keyword) return true
+  return [section.courseCode, section.courseTitle, section.sectionCode, section.facultyName].some((value) => (value ?? '').toLowerCase().includes(keyword))
+ })
+ const available = visible.filter((section) => section.eligible).length
+ const sectionStateText = (section: (typeof sections)[number]) =>
+  (blockedReasonText[section.blockedReason ?? ''] ?? section.blockedReason ?? '') || 'Không thể chọn'
 
  return <PageChrome eyebrow="ĐĂNG KÝ HỌC PHẦN" title="Đăng ký môn"
   description="Chọn lớp học phần trong học kỳ đang mở. Mỗi khóa vào theo lượt riêng, cách nhau hai ngày, khóa cũ trước.">
@@ -65,12 +74,6 @@ export default function RegistrationPage() {
     title={windowStateText[registrationWindow.state ?? ''] ?? registrationWindow.state}
     description={`${registrationWindow.termName} (${registrationWindow.termCode}) · ${dateText(registrationWindow.termStartDate)} – ${dateText(registrationWindow.termEndDate)}`} />
 
-   <div className="registration-meta">
-    <Card><Statistic title="Khóa của bạn" value={data.cohort ?? '—'} /><Typography.Text type="secondary">{data.programName ?? 'Chưa gán chương trình'}</Typography.Text></Card>
-    <Card><Statistic title="Lượt đăng ký của bạn" value={slotRange(registrationWindow.slotOpensAt, registrationWindow.slotClosesAt)} /></Card>
-    <Card><Statistic title="Cửa sổ chung" value={slotRange(registrationWindow.opensAt, registrationWindow.closesAt)} /></Card>
-   </div>
-
    <Card className="registration-card" title="Lịch mở theo khóa" extra={<Tag>{registrationWindow.slots?.length ?? 0} khóa</Tag>}>
     <div className="cohort-list">
      {(registrationWindow.slots ?? []).map((slot) => <div className={'cohort-slot' + (slot.current ? ' current' : '')} key={slot.cohort}>
@@ -83,23 +86,35 @@ export default function RegistrationPage() {
     </Typography.Paragraph>
    </Card>
 
-   <Card className="registration-card" title="Lớp đang mở" extra={<Tag color={open ? 'cyan' : 'default'}>{available} lớp có thể chọn</Tag>}>
-    {sections.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Học kỳ này chưa có lớp đang mở." /> : <div className="registration-list">
-     {sections.map((section) => <div className={'registration-row' + (section.enrolled ? ' enrolled' : '')} key={section.sectionId}>
-      <div className="registration-copy">
-       <strong>{section.courseTitle}</strong>
-       <span>{section.courseCode} · {section.credits} tín chỉ · Lớp {section.sectionCode}</span>
-       <span>{scheduleText(section.schedule)} · {section.facultyName ?? 'Chưa phân công giảng viên'}</span>
-       {section.prerequisiteCourseCode && <span className="registration-note">Tiên quyết: {section.prerequisiteCourseCode} · {section.prerequisiteCourseTitle}</span>}
-      </div>
-      <div className="registration-seats"><strong>{seatsText(section)}</strong><span>Sức chứa {section.capacity ?? 0}</span></div>
-      {section.eligible && section.sectionId && open
-       ? <Button type="primary" loading={register.isPending && pending === section.sectionId}
-          disabled={register.isPending || withdraw.isPending} onClick={() => section.sectionId && register.mutate(section.sectionId)}>Đăng ký</Button>
-       : <Tag color={section.enrolled ? 'green' : 'default'}>{sectionStateText(section)}</Tag>}
-     </div>)}
-    </div>}
+   {open ? <Card className="registration-card" title="Lớp đang mở" extra={<Tag color="cyan">{available} lớp có thể chọn</Tag>}>
+    <Space wrap className="registration-filters">
+     <Input.Search aria-label="Tìm lớp học phần" maxLength={100} allowClear placeholder="Tìm mã môn, tên môn, lớp hoặc giảng viên"
+      value={search} onChange={(event) => setSearch(event.target.value)} style={{ width: 300 }} />
+     <Select aria-label="Lọc theo khoa" value={facultyValue} onChange={setFaculty} style={{ minWidth: 240 }}
+      options={[{ value: '', label: 'Tất cả khoa' }, ...[...units].map(([value, label]) => ({ value, label }))]} />
+    </Space>
+    {visible.length === 0
+     ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={sections.length === 0 ? 'Học kỳ này chưa có lớp đang mở.' : 'Không có lớp phù hợp bộ lọc.'} />
+     : <div className="registration-list">
+      {visible.map((section) => <div className={'registration-row' + (section.enrolled ? ' enrolled' : '')} key={section.sectionId}>
+       <div className="registration-copy">
+        <strong>{section.courseTitle}</strong>
+        <span>{section.courseCode} · {section.credits} tín chỉ · Lớp {section.sectionCode}</span>
+        <span>{scheduleText(section.schedule)} · {section.facultyName ?? 'Chưa phân công giảng viên'}</span>
+        <span>{section.courseOrganizationUnitName ?? 'Chưa rõ đơn vị'}</span>
+        {section.prerequisiteCourseCode && <span className="registration-note">Tiên quyết: {section.prerequisiteCourseCode} · {section.prerequisiteCourseTitle}</span>}
+       </div>
+       <div className="registration-seats"><strong>{seatsText(section)}</strong><span>Sức chứa {section.capacity ?? 0}</span></div>
+       {section.eligible && section.sectionId
+        ? <Button type="primary" loading={register.isPending && pending === section.sectionId}
+           disabled={register.isPending || withdraw.isPending} onClick={() => section.sectionId && register.mutate(section.sectionId)}>Đăng ký</Button>
+        : <Tag color={section.enrolled ? 'green' : 'default'}>{sectionStateText(section)}</Tag>}
+      </div>)}
+     </div>}
    </Card>
+    : <Alert className="registration-blocked" type={windowStateAlert[registrationWindow.state ?? ''] ?? 'warning'} showIcon
+       title="Không trong thời gian đăng ký"
+       description={(windowStateText[registrationWindow.state ?? ''] ?? registrationWindow.state) + '. Bạn chỉ có thể chọn lớp khi lượt của khóa ' + (data.cohort ?? 'của bạn') + ' đang mở.'} />}
 
    <Card className="registration-card" title="Đã đăng ký trong học kỳ" extra={<Tag>{enrolled.length} lớp</Tag>}>
     {enrolled.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Bạn chưa đăng ký lớp nào trong học kỳ này." /> : <div className="registration-list">
@@ -120,7 +135,7 @@ export default function RegistrationPage() {
      Chỉ rút được trong lượt đăng ký đang mở; sau khi hết hạn, liên hệ phòng học vụ để xử lý ngoại lệ.
     </Typography.Paragraph>
    </Card>
-   <Typography.Text type="secondary" className="registration-footnote">Lượt của bạn mở lúc {instantText(registrationWindow.slotOpensAt)}.</Typography.Text>
+   {open && <Typography.Text type="secondary" className="registration-footnote">Lượt của bạn mở lúc {instantText(registrationWindow.slotOpensAt)}.</Typography.Text>}
   </>}
  </PageChrome>
 }

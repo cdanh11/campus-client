@@ -14,24 +14,27 @@ export function registrationActions(status: string): string[] {
  return status === 'REGISTERED' ? ['CANCEL', 'ATTEND'] : status === 'CANCELLED' ? ['RESTORE'] : []
 }
 const str = (values: Values, key: string) => String(values[key] ?? '')
+const optional = (values: Values, key: string) => values[key] ? String(values[key]) : undefined
 export const events: Resource = {
  path: '/api/v1/admin/events', title: 'Danh mục sự kiện', singular: 'sự kiện', identifier: 'code',
  fields: [
   { name: 'code', label: 'Mã sự kiện', type: 'text', rules: [nameRule(2, 32, trimOrganization), nameRule(2, 32, (value) => trimOrganization(value).toUpperCase())] },
   { name: 'title', label: 'Tên sự kiện', type: 'text', rules: [nameRule(2, 160, trimOrganization)] },
   { name: 'description', label: 'Mô tả', type: 'textarea', rules: [nameRule(2, 4000, trimOrganization)] },
+  { name: 'hostUnitId', label: 'Khoa/đơn vị tổ chức', type: 'organization' },
   { name: 'startsAt', label: 'Bắt đầu (UTC+7)', type: 'datetime', rules: [instantRule] },
   { name: 'endsAt', label: 'Kết thúc (UTC+7)', type: 'datetime', dependencies: ['startsAt'], rules: [instantRule, eventEndRule] },
   { name: 'capacity', label: 'Sức chứa', type: 'integer', min: 1, max: 2147483647, required: true, rules: [{ type: 'integer', min: 1, max: 2147483647, message: 'Sức chứa là số nguyên từ 1 đến 2147483647.' }] },
   { name: 'status', label: 'Trạng thái', type: 'enum', updateOnly: true, required: true, options: options(['DRAFT', 'OPEN', 'CLOSED', 'CANCELLED']) },
  ],
- columns: [{ key: 'code', title: 'Mã' }, { key: 'title', title: 'Tên sự kiện' }, { key: 'startsAt', title: 'Bắt đầu', format: (value) => campusTimeText(String(value)) }, { key: 'endsAt', title: 'Kết thúc', format: (value) => campusTimeText(String(value)) }, { key: 'capacity', title: 'Sức chứa' }],
+ filters: [{ name: 'hostUnitId', label: 'Lọc khoa/đơn vị tổ chức', type: 'organization' }],
+ columns: [{ key: 'code', title: 'Mã' }, { key: 'title', title: 'Tên sự kiện' }, { key: 'hostUnitId', title: 'Đơn vị tổ chức', reference: 'organization' }, { key: 'startsAt', title: 'Bắt đầu', format: (value) => campusTimeText(String(value)) }, { key: 'endsAt', title: 'Kết thúc', format: (value) => campusTimeText(String(value)) }, { key: 'capacity', title: 'Sức chứa' }],
  states: options(['DRAFT', 'OPEN', 'CLOSED', 'CANCELLED']), sorts: sorts(['code', 'title', 'startsAt', 'endsAt', 'capacity', 'status', 'createdAt', 'updatedAt'], 'startsAt,asc'),
  note: 'Nhập giờ Việt Nam (UTC+7), giữ nguyên phần giây lẻ. Quản trị viên chủ động mở/đóng. Trạng thái "Đang mở" quyết định nhận đăng ký; ngày không tự đóng sự kiện.',
  readOnly: (current) => current.status === 'CLOSED' || current.status === 'CANCELLED',
  choices: (field, current) => field.name === 'status' ? options(eventTransitions(String(current.status))) : field.options,
  body: (values, current) => {
-  const base = { code: str(values, 'code'), title: str(values, 'title'), description: str(values, 'description'), startsAt: str(values, 'startsAt'), endsAt: str(values, 'endsAt'), capacity: values.capacity as number } satisfies Schemas['CampusEventCreate']
+  const base = { code: str(values, 'code'), title: str(values, 'title'), description: str(values, 'description'), hostUnitId: optional(values, 'hostUnitId'), startsAt: str(values, 'startsAt'), endsAt: str(values, 'endsAt'), capacity: values.capacity as number } satisfies Schemas['CampusEventCreate']
   return current ? { ...base, status: values.status as Schemas['CampusEventUpdate']['status'], expectedVersion: current.rowVersion } satisfies Schemas['CampusEventUpdate'] : base
  },
 }

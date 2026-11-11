@@ -30,6 +30,7 @@ const curriculum: Curriculum = {
    { courseId: 'cs2', code: 'CS102', title: 'Kỹ thuật lập trình', credits: 3, courseGroup: 'MAJOR', status: 'IN_PROGRESS', prerequisiteCourseId: 'cs1', prerequisiteCode: 'CS101', prerequisiteTitle: 'Cơ sở lập trình', prerequisiteSatisfied: true },
    { courseId: 'cs3', code: 'CS103', title: 'Lập trình hướng đối tượng', credits: 3, courseGroup: 'MAJOR', status: 'NOT_STARTED', prerequisiteCourseId: 'cs2', prerequisiteCode: 'CS102', prerequisiteTitle: 'Kỹ thuật lập trình', prerequisiteSatisfied: false },
   ] },
+  { index: 3, courses: [{ courseId: 'cs4', code: 'CS201', title: 'Trí tuệ nhân tạo', credits: 3, courseGroup: 'SPECIALIZED', status: 'NOT_STARTED' }] },
  ],
 }
 function show() {
@@ -44,18 +45,33 @@ function show() {
 }
 afterEach(() => vi.restoreAllMocks())
 
-it('lays the curriculum out as a graph with statuses and prerequisite links', async () => {
+it('lays the curriculum out vertically with statuses, groups and prerequisite links', async () => {
  show()
  expect(await screen.findByRole('heading', { name: 'Môn học của tôi' })).toBeInTheDocument()
  expect(await screen.findByRole('button', { name: 'CS101 · Cơ sở lập trình' })).toBeInTheDocument()
  expect(screen.getByRole('button', { name: 'CS102 · Kỹ thuật lập trình' })).toBeInTheDocument()
+ expect(document.querySelector('.curriculum-roadmap')).toBeInTheDocument()
+ expect(document.querySelectorAll('.curriculum-semester')).toHaveLength(3)
+ expect(document.querySelector('.curriculum-edges')).not.toBeInTheDocument()
  expect(within(screen.getByRole('button', { name: 'CS101 · Cơ sở lập trình' })).getByText('Chưa đạt')).toBeInTheDocument()
+ expect(within(screen.getByRole('button', { name: 'CS101 · Cơ sở lập trình' })).getByText('Bắt buộc')).toBeInTheDocument()
+ expect(within(screen.getByRole('button', { name: 'CS201 · Trí tuệ nhân tạo' })).getByText('Chuyên ngành')).toBeInTheDocument()
  const current = within(screen.getByRole('button', { name: 'CS102 · Kỹ thuật lập trình' }))
  expect(current.getByText('Đang học')).toBeInTheDocument()
  expect(current.getByText('Đã học CS101')).toBeInTheDocument()
  expect(within(screen.getByRole('button', { name: 'CS103 · Lập trình hướng đối tượng' })).getByText('Chưa học CS102')).toBeInTheDocument()
- expect(document.querySelectorAll('.curriculum-edge')).toHaveLength(2)
- expect(document.querySelectorAll('.curriculum-edge.missing')).toHaveLength(1)
+})
+
+it('filters the roadmap by course category', async () => {
+ show()
+ await screen.findByRole('button', { name: 'CS201 · Trí tuệ nhân tạo' })
+ await userEvent.click(screen.getByText('Chuyên ngành (1)'))
+ expect(screen.getByRole('button', { name: 'CS201 · Trí tuệ nhân tạo' })).toBeInTheDocument()
+ expect(screen.queryByRole('button', { name: 'CS101 · Cơ sở lập trình' })).not.toBeInTheDocument()
+ expect(screen.queryByRole('button', { name: 'CS102 · Kỹ thuật lập trình' })).not.toBeInTheDocument()
+ expect(document.querySelectorAll('.curriculum-semester')).toHaveLength(1)
+ await userEvent.click(screen.getByText('Đại cương (0)'))
+ expect(screen.getByText('Không có môn nào trong nhóm này.')).toBeInTheDocument()
 })
 
 it('opens a course node with the prerequisite rule', async () => {

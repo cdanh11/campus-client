@@ -80,15 +80,21 @@ it('opens a course row with every weighted component', async () => {
  expect(dialog.getByText('4.50')).toBeInTheDocument()
 })
 
-it('charts each semester score by course code', async () => {
+it('charts the latest finalized semester and switches semesters with the selector', async () => {
  show()
  expect(await screen.findByText('Điểm theo học kỳ')).toBeInTheDocument()
+ const semesterTwo = await screen.findByRole('list', { name: 'Điểm Học kỳ demo 2' })
+ expect(within(semesterTwo).getAllByRole('listitem')).toHaveLength(2)
+ expect(within(semesterTwo).getByRole('listitem', { name: 'CD-COURSE-001 · 9.00/10 · A' })).toBeInTheDocument()
+ expect(within(semesterTwo).getByRole('listitem', { name: 'CD-COURSE-003 · 5.60/10 · C' })).toBeInTheDocument()
+ expect(screen.queryByRole('list', { name: 'Điểm Học kỳ demo 1' })).not.toBeInTheDocument()
+ await userEvent.click(screen.getByRole('combobox', { name: 'Chọn học kỳ xem biểu đồ' }))
+ await userEvent.click(await screen.findByText('Học kỳ demo 1 (2 môn)', { selector: '.ant-select-item-option-content' }))
  const semesterOne = await screen.findByRole('list', { name: 'Điểm Học kỳ demo 1' })
  expect(within(semesterOne).getAllByRole('listitem')).toHaveLength(2)
- expect(within(semesterOne).getByRole('listitem', { name: 'CD-COURSE-001 · 8.10/10 · B' })).toBeInTheDocument()
  expect(within(semesterOne).getByRole('listitem', { name: 'CD-COURSE-002 · 3.20/10 · F' })).toBeInTheDocument()
- const semesterTwo = screen.getByRole('list', { name: 'Điểm Học kỳ demo 2' })
- expect(within(semesterTwo).getAllByRole('listitem')).toHaveLength(2)
+ expect(screen.queryByRole('list', { name: 'Điểm Học kỳ demo 2' })).not.toBeInTheDocument()
+ expect(screen.getByText('1.50')).toBeInTheDocument()
 })
 
 it('projects the cumulative GPA from a selected future course', async () => {

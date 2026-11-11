@@ -33,7 +33,7 @@ export default function CoursesPage() {
   <Card className="curriculum-card" title="Lộ trình môn học"
    extra={<Space wrap><Tag color="purple">{curriculum.data?.programName ?? 'Chưa rõ ngành'}</Tag><Tag>{semesters.length} học kỳ</Tag></Space>}>
    <Typography.Paragraph type="secondary" className="curriculum-intro">
-    Mỗi ô là một môn trong chương trình. Mũi tên nối môn tiên quyết với môn kế tiếp. Chỉ cần đã học xong môn tiên quyết là đủ điều kiện đăng ký môn sau, dù kết quả đạt hay không đạt.
+    Mỗi ô là một môn trong chương trình, xếp từng học kỳ từ trên xuống. Lọc theo nhóm Đại cương, Bắt buộc hoặc Chuyên ngành; nhãn trên mỗi ô cho biết trạng thái học và môn tiên quyết. Chỉ cần đã học xong môn tiên quyết là đủ điều kiện đăng ký môn sau, dù kết quả đạt hay không đạt.
    </Typography.Paragraph>
    {curriculum.isFetching && !curriculum.data && <p role="status">Đang tải lộ trình môn học…</p>}
    {curriculum.error && <ErrorNotice error={curriculum.error} onRetry={() => { void curriculum.refetch() }} />}

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Alert, Button, Card, Descriptions, Drawer, Empty, Progress, Select, Space, Statistic, Tag, Typography } from 'antd'
+import { Alert, Button, Card, Descriptions, Drawer, Empty, Select, Space, Statistic, Tag, Typography } from 'antd'
 import { ErrorNotice } from '../../components/ErrorNotice'
 import { PageChrome } from '../../components/PageChrome'
 import {
@@ -19,13 +19,14 @@ const recordState = (record: TranscriptRecord) => {
  return <Tag color="green">Đạt</Tag>
 }
 const chooseLetter = (value: string | undefined) => (value && value in letterPoints ? value as Letter : undefined)
+const courseGroupLabel = (group?: string) => group === 'GENERAL' ? 'Đại cương' : group === 'SPECIALIZED' ? 'Chuyên ngành' : 'Bắt buộc'
 
 function ScoreChart({ term, records }: { term: TranscriptTerm; records: TranscriptRecord[] }) {
  const ordered = [...records].sort((left, right) => (left.course?.code ?? '').localeCompare(right.course?.code ?? ''))
  return <section className="score-chart-block" aria-label={`Điểm ${term.name}`}>
   <header className="score-chart-head">
    <div><strong>{term.name}</strong><span>{term.code} · {term.gradedCourses} môn · {term.credits} tín chỉ</span></div>
-   <div className="score-chart-gpa"><strong>{gpaText(term.gpa)}</strong><Tag color="cyan">{classificationLabel(term.classification)}</Tag></div>
+   <div className="score-chart-gpa"><span>GPA học kỳ</span><strong>{gpaText(term.gpa)}</strong><Tag color="cyan">{classificationLabel(term.classification)}</Tag></div>
   </header>
   <div className="score-chart">
    <div className="score-chart-axis" aria-hidden="true">{['10', '7.5', '5', '2.5', '0'].map((label) => <span key={label}>{label}</span>)}</div>
@@ -55,6 +56,7 @@ export default function ResultsPage() {
  const transcript = useTranscript(student)
  const curriculum = useCurriculum(student)
  const [termFilter, setTermFilter] = useState('all')
+ const [chartTerm, setChartTerm] = useState<string | null>(null)
  const [selected, setSelected] = useState<string | null>(null)
  const [futureIds, setFutureIds] = useState<string[]>([])
  const [futureLetters, setFutureLetters] = useState<Record<string, Letter>>({})
@@ -64,6 +66,7 @@ export default function ResultsPage() {
  const records = useMemo(() => transcript.data?.records ?? [], [transcript.data])
  const terms = transcript.data?.terms ?? []
  const summary = transcript.data?.summary
+ const chartedTerm = terms.find((term) => term.termId === chartTerm) ?? terms[0]
  const best = useMemo(() => bestAttempts(records), [records])
  const futureCourses = useMemo(() => (curriculum.data?.semesters ?? [])
   .flatMap((semester) => (semester.courses ?? []).map((course) => ({ ...course, semester: semester.index })))
@@ -111,39 +114,28 @@ export default function ResultsPage() {
     <Card><Statistic title="Xếp loại hiện tại" value={classificationLabel(summary?.classification)} /><Typography.Text type="secondary">Theo thang điểm 4</Typography.Text></Card>
    </div>
 
-   <Card className="score-chart-card" title="Điểm theo học kỳ" extra={<Tag>{terms.length} học kỳ</Tag>}>
+   <Card className="score-chart-card" title="Điểm theo học kỳ"
+    extra={chartedTerm && <Select aria-label="Chọn học kỳ xem biểu đồ" value={chartedTerm.termId} onChange={setChartTerm} style={{ minWidth: 240 }}
+     options={terms.map((term) => ({ value: term.termId ?? '', label: `${term.name} (${term.gradedCourses} môn)` }))} />}>
     <Typography.Paragraph type="secondary" className="score-chart-note">
-     Trục đứng là điểm thang 10, trục ngang là mã môn. Đường nét đứt đánh dấu mức 4.0.
+     Biểu đồ mặc định mở học kỳ gần nhất đã chốt điểm. Trục đứng là điểm thang 10, trục ngang là mã môn; đường nét đứt đánh dấu mức 4.0.
     </Typography.Paragraph>
-    {terms.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa có điểm để vẽ biểu đồ." /> : <div className="score-chart-list">
-     {terms.map((term) => <ScoreChart key={term.termId} term={term} records={records.filter((record) => record.term?.id === term.termId)} />)}
-    </div>}
+    {!chartedTerm ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa có điểm để vẽ biểu đồ." />
+     : <ScoreChart term={chartedTerm} records={records.filter((record) => record.term?.id === chartedTerm.termId)} />}
    </Card>
 
-   <div className="result-grid">
-    <Card title="GPA theo học kỳ" extra={<Tag>{terms.length} học kỳ</Tag>}>
-     {terms.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa có học kỳ nào được ghi điểm." /> : <div className="term-gpa-list">
-      {terms.map((term, index) => <div className="term-gpa-row" key={term.termId}>
-       <div className="term-gpa-copy"><strong>{term.name}</strong><span>{term.code} · {term.credits} tín chỉ · {term.gradedCourses} môn</span></div>
-       <Progress percent={Math.min(100, Math.round(numberValue(term.gpa) / 4 * 100))} showInfo={false} status={index === 0 ? 'active' : 'normal'} />
-       <div className="term-gpa-value"><strong>{gpaText(term.gpa)}</strong><Tag color={index === 0 ? 'cyan' : 'default'}>{classificationLabel(term.classification)}</Tag></div>
-      </div>)}
-     </div>}
-    </Card>
-
-    <Card title="Bảng điểm theo môn" extra={<Select aria-label="Lọc theo học kỳ" value={termFilter} onChange={setTermFilter} style={{ minWidth: 240 }}
-     options={[{ value: 'all', label: `Tất cả học kỳ (${records.length} môn)` }, ...terms.map((term) => ({ value: term.termId ?? '', label: `${term.name} (${term.gradedCourses} môn)` }))]} />}>
-     {visible.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Học kỳ này chưa có điểm." /> : <div className="result-list">
-      {visible.map((record) => <button type="button" className="result-row" key={record.enrollmentId} onClick={() => setSelected(record.enrollmentId ?? null)}>
-       <span className="result-course"><strong>{record.course?.title}</strong><span>{record.course?.code} · {record.course?.credits} TC · {record.courseGroup === 'GENERAL' ? 'Đại cương' : 'Chuyên ngành'}</span></span>
-       <span className="result-term">{record.term?.name}<small>{dateText(record.term?.startDate)}</small></span>
-       <Tag color={letterColor(record.letterGrade)}>{record.letterGrade ?? '—'}</Tag>
-       <span className="result-score">{gpaText(record.totalScore)}/10<small>{pointOf(record.letterGrade)}/4</small></span>
-       {recordState(record)}
-      </button>)}
-     </div>}
-    </Card>
-   </div>
+   <Card className="result-card" title="Bảng điểm theo môn" extra={<Select aria-label="Lọc theo học kỳ" value={termFilter} onChange={setTermFilter} style={{ minWidth: 240 }}
+    options={[{ value: 'all', label: `Tất cả học kỳ (${records.length} môn)` }, ...terms.map((term) => ({ value: term.termId ?? '', label: `${term.name} (${term.gradedCourses} môn)` }))]} />}>
+    {visible.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Học kỳ này chưa có điểm." /> : <div className="result-list">
+     {visible.map((record) => <button type="button" className="result-row" key={record.enrollmentId} onClick={() => setSelected(record.enrollmentId ?? null)}>
+      <span className="result-course"><strong>{record.course?.title}</strong><span>{record.course?.code} · {record.course?.credits} TC · {courseGroupLabel(record.courseGroup)}</span></span>
+      <span className="result-term">{record.term?.name}<small>{dateText(record.term?.startDate)}</small></span>
+      <Tag color={letterColor(record.letterGrade)}>{record.letterGrade ?? '—'}</Tag>
+      <span className="result-score">{gpaText(record.totalScore)}/10<small>{pointOf(record.letterGrade)}/4</small></span>
+      {recordState(record)}
+     </button>)}
+    </div>}
+   </Card>
 
    <Card title="Dự tính GPA" extra={<Space><Tag color="purple">Mô phỏng</Tag><Button size="small" onClick={resetProjection} disabled={futureIds.length === 0 && improvementIds.length === 0}>Đặt lại</Button></Space>}>
     <Typography.Paragraph type="secondary">Chọn môn sắp học và điểm chữ kỳ vọng, hoặc chọn môn muốn học cải thiện. Công cụ chỉ ước tính, không ghi điểm vào hệ thống.</Typography.Paragraph>
@@ -196,7 +188,7 @@ export default function ResultsPage() {
     <Descriptions column={1} items={[
      { key: 'term', label: 'Học kỳ', children: `${selectedRecord.term?.name ?? '—'} (${dateText(selectedRecord.term?.startDate)} – ${dateText(selectedRecord.term?.endDate)})` },
      { key: 'section', label: 'Lớp học phần', children: selectedRecord.sectionCode ?? '—' },
-     { key: 'group', label: 'Nhóm môn', children: selectedRecord.courseGroup === 'GENERAL' ? 'Đại cương' : 'Chuyên ngành' },
+     { key: 'group', label: 'Nhóm môn', children: courseGroupLabel(selectedRecord.courseGroup) },
      { key: 'scheme', label: 'Cách tính điểm', children: schemeLabel(selectedRecord.scheme) },
      { key: 'credits', label: 'Tín chỉ', children: selectedRecord.course?.credits ?? '—' },
      { key: 'recorded', label: 'Cập nhật gần nhất', children: dateText(selectedRecord.gradedAt) },

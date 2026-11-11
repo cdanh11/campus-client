@@ -9,10 +9,11 @@ import { api } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} })
 const event: CampusEvent = { id: 'e', code: 'PORTAL', title: 'Ngày hội sinh viên', description: '<script>văn bản thuần</script>',
- startsAt: '2026-09-01T09:00:00.123456Z', endsAt: '2026-09-01T10:00:00Z', capacity: 1, status: 'OPEN', rowVersion: 0, createdAt: '', updatedAt: '' }
+ startsAt: '2026-09-01T09:00:00.123456Z', endsAt: '2026-09-01T10:00:00Z', capacity: 1, status: 'OPEN', rowVersion: 0, createdAt: '', updatedAt: '', hostUnitId: 'unit' }
 const membership: Registration = { id: 'r', eventId: 'e', studentId: 's', status: 'REGISTERED', rowVersion: 0, registeredAt: '2026-09-01T08:00:00Z', cancelledAt: null, attendedAt: null, createdAt: '', updatedAt: '' }
 function show({ current = event, record = null, missing = false, history = false, total = 1 }: { current?: CampusEvent; record?: Registration | null; missing?: boolean; history?: boolean; total?: number } = {}) {
  vi.spyOn(api, 'request').mockImplementation(async (path) => {
+  if (path === '/api/v1/events/hosts') return [{ id: 'unit', name: 'Khoa Công nghệ thông tin' }]
   if (path.startsWith('/api/v1/event-registrations')) {
    if (missing) throw new ApiError(404, { code: 'EVENT_REGISTRATION_NOT_FOUND' })
    return path.includes('?') ? { content: record ? [record] : [], totalElements: record ? 1 : 0 } : record
@@ -100,6 +101,19 @@ it('pins the public catalog to OPEN, hides its status filter and resets paging o
   return params.get('page') === '0' && params.get('size') === '20' && params.get('q') === 'Ngày hội' && params.get('status') === 'OPEN'
  })).toBe(true))
 })
+it('groups the catalog by host faculty and filters by the selected host', async () => {
+ show()
+ await screen.findByRole('button', { name: 'Xem sự kiện' })
+ expect(screen.getByRole('heading', { level: 1, name: 'Khám phá sự kiện' })).toBeInTheDocument()
+ expect(screen.getAllByText('Khoa Công nghệ thông tin').length).toBeGreaterThan(0)
+ await userEvent.click(screen.getByRole('combobox', { name: 'Lọc theo khoa' }))
+ await userEvent.click(await screen.findByText('Khoa Công nghệ thông tin', { selector: '.ant-select-item-option-content' }))
+ await waitFor(() => expect(vi.mocked(api.request).mock.calls.some(([path]) => {
+  if (!path.startsWith('/api/v1/events?')) return false
+  return new URLSearchParams(path.split('?')[1]).get('hostUnitId') === 'unit'
+ })).toBe(true))
+})
+
 it('keeps the status filter available on own history', async () => {
  show({ history: true, record: membership })
  await screen.findByRole('heading', { name: event.title })
