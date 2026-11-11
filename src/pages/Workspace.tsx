@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
 import { Button, Card, Drawer, Layout, Result, Space, Tag, Typography } from 'antd'
-import { ApartmentOutlined, ArrowRightOutlined, BellOutlined, BookOutlined, CalendarOutlined, DashboardOutlined, HomeOutlined, IdcardOutlined, LogoutOutlined, MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined, NotificationOutlined, PieChartOutlined, ReadOutlined, TeamOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons'
+import { ApartmentOutlined, ArrowRightOutlined, BarChartOutlined, BellOutlined, BookOutlined, CalendarOutlined, DashboardOutlined, HomeOutlined, IdcardOutlined, LogoutOutlined, MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined, NotificationOutlined, PieChartOutlined, ReadOutlined, TeamOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons'
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import type { User } from '../api/client'
 import { administrationRoles, canAdminister, canEnterAdministration, type AdministrationArea } from '../api/administration'
@@ -46,6 +46,7 @@ export default function Workspace({ user, onLogout }: { user: User; onLogout: ()
   ? [{ path: '/portal/overview', label: 'Tổng quan', icon: <DashboardOutlined /> },
    { path: '/portal/timetable', label: 'Thời khóa biểu', icon: <CalendarOutlined /> },
    { path: '/portal/courses', label: 'Môn học', icon: <BookOutlined /> },
+   { path: '/portal/results', label: 'Kết quả học tập', icon: <BarChartOutlined /> },
    { path: '/portal/finance', label: 'Học phí', icon: <WalletOutlined /> },
    { path: '/portal/events', label: 'Sự kiện', icon: <NotificationOutlined /> },
    { path: '/portal/profile', label: 'Hồ sơ cá nhân', icon: <IdcardOutlined /> }]

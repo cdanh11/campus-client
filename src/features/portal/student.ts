@@ -13,11 +13,18 @@ export type Enrollments = components['schemas']['com.campus.academic.application
 export type Charge = components['schemas']['com.campus.finance.application.StudentFinanceService.ChargeView']
 export type Payment = components['schemas']['com.campus.finance.application.StudentFinanceService.PaymentView']
 export type FinanceSummary = components['schemas']['com.campus.finance.application.StudentFinanceService.FinanceSummary']
+export type Transcript = components['schemas']['com.campus.academic.application.StudentRecordService.Transcript']
+export type TranscriptTerm = components['schemas']['com.campus.academic.application.StudentRecordService.TranscriptTerm']
+export type TranscriptRecord = components['schemas']['com.campus.academic.application.StudentRecordService.TranscriptRecord']
+export type Curriculum = components['schemas']['com.campus.academic.application.StudentRecordService.Curriculum']
+export type CurriculumCourse = components['schemas']['com.campus.academic.application.StudentRecordService.CurriculumCourseStatus']
 
 export const profilePath = '/api/v1/me/student'
 export const timetablePath = '/api/v1/me/timetable'
 export const enrollmentsPath = '/api/v1/me/enrollments'
 export const financePath = '/api/v1/me/finance'
+export const transcriptPath = '/api/v1/me/transcript'
+export const curriculumPath = '/api/v1/me/curriculum'
 
 export const isMissingStudentProfile = (error: unknown) =>
  error instanceof ApiError && error.status === 404 && (error.detail.code === 'STUDENT_PROFILE_NOT_FOUND' || error.detail.code === 'ACADEMIC_RESOURCE_NOT_FOUND')
@@ -52,6 +59,22 @@ export function useFinance(enabled = true) {
   queryKey: ['me', 'finance'],
   enabled,
   queryFn: ({ signal }) => api.request<FinanceSummary>(financePath, { signal }),
+ })
+}
+
+export function useTranscript(enabled = true) {
+ return useQuery({
+  queryKey: ['me', 'transcript'],
+  enabled,
+  queryFn: ({ signal }) => api.request<Transcript>(transcriptPath, { signal }),
+ })
+}
+
+export function useCurriculum(enabled = true) {
+ return useQuery({
+  queryKey: ['me', 'curriculum'],
+  enabled,
+  queryFn: ({ signal }) => api.request<Curriculum>(curriculumPath, { signal }),
  })
 }
 

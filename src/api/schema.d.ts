@@ -83,6 +83,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/students/{studentId}/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["academicProfile"];
+        put: operations["updateAcademicProfile"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/organization-units/{unitId}": {
         parameters: {
             query?: never;
@@ -423,7 +439,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/admin/academic/courses/{id}": {
+    "/api/v1/admin/academic/enrollments/{enrollmentId}/grade": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["byEnrollment"];
+        /**
+         * Correct a recorded grade (administrative permission)
+         * @description Requires expectedVersion from the last read; stale versions return 409.
+         */
+        put: operations["update_11"];
+        /**
+         * Record a grade for an enrollment (administrative permission)
+         * @description Weights are derived from the course group and final-project flag. Scores are on the ten-point scale; a duplicate grade returns 409.
+         */
+        post: operations["create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/academic/curriculum/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -432,10 +472,30 @@ export interface paths {
         };
         get: operations["get_13"];
         /**
+         * Update a curriculum entry (administrative permission)
+         * @description Requires expectedVersion; stale versions return 409.
+         */
+        put: operations["update_12"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/academic/courses/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_14"];
+        /**
          * Update an academic course (administrative permission)
          * @description Requires expectedVersion from the last read; stale versions and duplicate codes return 409.
          */
-        put: operations["update_11"];
+        put: operations["update_13"];
         post?: never;
         delete?: never;
         options?: never;
@@ -516,7 +576,7 @@ export interface paths {
         };
         get: operations["search"];
         put?: never;
-        post: operations["create"];
+        post: operations["create_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -548,7 +608,7 @@ export interface paths {
         };
         get: operations["list"];
         put?: never;
-        post: operations["create_1"];
+        post: operations["create_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -564,7 +624,7 @@ export interface paths {
         };
         get: operations["list_1"];
         put?: never;
-        post: operations["create_2"];
+        post: operations["create_3"];
         delete?: never;
         options?: never;
         head?: never;
@@ -730,7 +790,7 @@ export interface paths {
         };
         get: operations["list_3"];
         put?: never;
-        post: operations["create_3"];
+        post: operations["create_4"];
         delete?: never;
         options?: never;
         head?: never;
@@ -746,7 +806,7 @@ export interface paths {
         };
         get: operations["list_4"];
         put?: never;
-        post: operations["create_4"];
+        post: operations["create_5"];
         delete?: never;
         options?: never;
         head?: never;
@@ -782,7 +842,7 @@ export interface paths {
          * Create Dormitory inventory (administrative permission)
          * @description ACTIVE initially; rooms/beds require immutable parentId and active ancestors.
          */
-        post: operations["create_5"];
+        post: operations["create_6"];
         delete?: never;
         options?: never;
         head?: never;
@@ -799,7 +859,7 @@ export interface paths {
         get: operations["list_6"];
         put?: never;
         /** Assign a current bed (administrative permission) */
-        post: operations["create_6"];
+        post: operations["create_7"];
         delete?: never;
         options?: never;
         head?: never;
@@ -823,7 +883,7 @@ export interface paths {
          * Create term (administrative permission)
          * @description New resources start in PLANNED; lifecycle transitions require PUT and expectedVersion.
          */
-        post: operations["create_7"];
+        post: operations["create_8"];
         delete?: never;
         options?: never;
         head?: never;
@@ -847,7 +907,7 @@ export interface paths {
          * Create section (administrative permission)
          * @description New resources start in DRAFT; lifecycle transitions require PUT and expectedVersion.
          */
-        post: operations["create_8"];
+        post: operations["create_9"];
         delete?: never;
         options?: never;
         head?: never;
@@ -868,7 +928,7 @@ export interface paths {
         get: operations["list_9"];
         put?: never;
         /** Create an academic program (administrative permission) */
-        post: operations["create_9"];
+        post: operations["create_10"];
         delete?: never;
         options?: never;
         head?: never;
@@ -892,7 +952,7 @@ export interface paths {
          * Create offering (administrative permission)
          * @description New resources start in DRAFT; lifecycle transitions require PUT and expectedVersion.
          */
-        post: operations["create_10"];
+        post: operations["create_11"];
         delete?: never;
         options?: never;
         head?: never;
@@ -916,7 +976,27 @@ export interface paths {
          * Enroll an active student (administrative permission)
          * @description Requires open section/offering, active term and available capacity. Duplicate membership returns 409; use PUT to re-enroll withdrawn membership.
          */
-        post: operations["create_11"];
+        post: operations["create_12"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/academic/curriculum": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_12"];
+        put?: never;
+        /**
+         * Add a course to a program curriculum (administrative permission)
+         * @description A program can list each course once. Semester index is 1–12; the prerequisite must be an existing course.
+         */
+        post: operations["create_13"];
         delete?: never;
         options?: never;
         head?: never;
@@ -934,10 +1014,10 @@ export interface paths {
          * Search academic courses (administrative permission)
          * @description Zero-based page, size 1–100 (default 20), q up to 100 characters matched literally against code/title, optional ACTIVE/INACTIVE status; sort field,direction with id tie-breaker.
          */
-        get: operations["list_12"];
+        get: operations["list_13"];
         put?: never;
         /** Create an academic course (administrative permission) */
-        post: operations["create_12"];
+        post: operations["create_14"];
         delete?: never;
         options?: never;
         head?: never;
@@ -984,6 +1064,23 @@ export interface paths {
             cookie?: never;
         };
         get: operations["delivery"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/transcript": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Transcript, term GPAs and cumulative GPA of the signed-in student */
+        get: operations["transcript"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1043,6 +1140,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/curriculum": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Curriculum flow of the signed-in student's program */
+        get: operations["curriculum"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/events": {
         parameters: {
             query?: never;
@@ -1050,7 +1164,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_13"];
+        get: operations["list_14"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1066,7 +1180,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["get_14"];
+        get: operations["get_15"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1082,7 +1196,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_14"];
+        get: operations["list_15"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1114,7 +1228,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["get_15"];
+        get: operations["get_16"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1162,7 +1276,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_15"];
+        get: operations["list_16"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1370,7 +1484,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_16"];
+        get: operations["list_17"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1402,7 +1516,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_17"];
+        get: operations["list_18"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1418,7 +1532,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["get_16"];
+        get: operations["get_17"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1467,6 +1581,38 @@ export interface paths {
             cookie?: never;
         };
         get: operations["lookup_8"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/academic/grades": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_19"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/academic/grades/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_18"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1627,6 +1773,13 @@ export interface components {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+        };
+        "com.campus.student.api.AdminStudentController.AcademicProfileRequest": {
+            cohort?: string;
+            /** Format: uuid */
+            programId?: string;
+            /** Format: int64 */
+            expectedVersion: number | bigint;
         };
         "com.campus.organization.api.AdminOrganizationUnitController.UpdateRequest": {
             code: string;
@@ -2125,11 +2278,81 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
+        "com.campus.academic.api.AdminAcademicGradeController.UpdateRequest": {
+            /** Format: double */
+            attendanceScore: number | bigint | LosslessNumber;
+            /** Format: double */
+            midtermScore: number | bigint | LosslessNumber;
+            /** Format: double */
+            finalScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            projectScore?: number | bigint | LosslessNumber;
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.academic.api.AdminAcademicGradeController.Response": {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            enrollmentId?: string;
+            scheme?: string;
+            /** Format: double */
+            attendanceScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            midtermScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            finalScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            projectScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            totalScore?: number | bigint | LosslessNumber;
+            letterGrade?: string;
+            /** Format: double */
+            gradePoint?: number | bigint | LosslessNumber;
+            passed?: boolean;
+            /** Format: uuid */
+            recordedBy?: string;
+            /** Format: int64 */
+            rowVersion?: number | bigint;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        "com.campus.academic.api.AdminCurriculumController.UpdateRequest": {
+            /** Format: int32 */
+            semesterIndex: number;
+            /** Format: uuid */
+            prerequisiteCourseId?: string;
+            /** Format: int64 */
+            expectedVersion: number | bigint;
+        };
+        "com.campus.academic.domain.CurriculumCourse": {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            programId?: string;
+            /** Format: uuid */
+            courseId?: string;
+            /** Format: int32 */
+            semesterIndex?: number;
+            /** Format: uuid */
+            prerequisiteCourseId?: string;
+            /** Format: int64 */
+            rowVersion?: number | bigint;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
         "com.campus.academic.api.AdminAcademicCourseController.UpdateRequest": {
             code: string;
             title: string;
             /** Format: int32 */
             credits: number;
+            /** @enum {string} */
+            courseGroup?: "GENERAL" | "MAJOR";
+            hasFinalProject?: boolean;
             /** Format: uuid */
             organizationUnitId: string;
             /** @enum {string} */
@@ -2144,6 +2367,8 @@ export interface components {
             title?: string;
             /** Format: int32 */
             credits?: number;
+            courseGroup?: string;
+            hasFinalProject?: boolean;
             /** Format: uuid */
             organizationUnitId?: string;
             status?: string;
@@ -2345,11 +2570,34 @@ export interface components {
             /** Format: uuid */
             sectionId: string;
         };
+        "com.campus.academic.api.AdminAcademicGradeController.Request": {
+            /** Format: double */
+            attendanceScore: number | bigint | LosslessNumber;
+            /** Format: double */
+            midtermScore: number | bigint | LosslessNumber;
+            /** Format: double */
+            finalScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            projectScore?: number | bigint | LosslessNumber;
+        };
+        "com.campus.academic.api.AdminCurriculumController.Request": {
+            /** Format: uuid */
+            programId: string;
+            /** Format: uuid */
+            courseId: string;
+            /** Format: int32 */
+            semesterIndex: number;
+            /** Format: uuid */
+            prerequisiteCourseId?: string;
+        };
         "com.campus.academic.api.AdminAcademicCourseController.Request": {
             code: string;
             title: string;
             /** Format: int32 */
             credits: number;
+            /** @enum {string} */
+            courseGroup?: "GENERAL" | "MAJOR";
+            hasFinalProject?: boolean;
             /** Format: uuid */
             organizationUnitId: string;
             /** @enum {string} */
@@ -2385,6 +2633,99 @@ export interface components {
             /** Format: int32 */
             credits?: number;
         };
+        "com.campus.academic.application.StudentAcademicService.TermView": {
+            /** Format: uuid */
+            id?: string;
+            code?: string;
+            name?: string;
+            /** Format: date */
+            startDate?: string;
+            /** Format: date */
+            endDate?: string;
+            /** @enum {string} */
+            status?: "PLANNED" | "ACTIVE" | "CLOSED" | "CANCELLED";
+        };
+        "com.campus.academic.application.StudentRecordService.Summary": {
+            /** Format: double */
+            cumulativeGpa?: number | bigint | LosslessNumber;
+            /** Format: int32 */
+            cumulativeCredits?: number;
+            /** Format: int32 */
+            gradedCourses?: number;
+            classification?: string;
+            /** Format: uuid */
+            latestTermId?: string;
+            /** Format: double */
+            latestTermGpa?: number | bigint | LosslessNumber;
+            /** Format: int32 */
+            latestTermPassedCredits?: number;
+            latestTermClassification?: string;
+        };
+        "com.campus.academic.application.StudentRecordService.Transcript": {
+            /** Format: uuid */
+            studentId?: string;
+            /** Format: uuid */
+            programId?: string;
+            programName?: string;
+            cohort?: string;
+            terms?: components["schemas"]["com.campus.academic.application.StudentRecordService.TranscriptTerm"][];
+            summary?: components["schemas"]["com.campus.academic.application.StudentRecordService.Summary"];
+            records?: components["schemas"]["com.campus.academic.application.StudentRecordService.TranscriptRecord"][];
+        };
+        "com.campus.academic.application.StudentRecordService.TranscriptRecord": {
+            /** Format: uuid */
+            enrollmentId?: string;
+            term?: components["schemas"]["com.campus.academic.application.StudentAcademicService.TermView"];
+            course?: components["schemas"]["com.campus.academic.application.StudentAcademicService.CourseView"];
+            sectionCode?: string;
+            courseGroup?: string;
+            scheme?: string;
+            /** Format: double */
+            attendanceWeight?: number | bigint | LosslessNumber;
+            /** Format: double */
+            midtermWeight?: number | bigint | LosslessNumber;
+            /** Format: double */
+            finalWeight?: number | bigint | LosslessNumber;
+            /** Format: double */
+            projectWeight?: number | bigint | LosslessNumber;
+            /** Format: double */
+            attendanceScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            midtermScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            finalScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            projectScore?: number | bigint | LosslessNumber;
+            /** Format: double */
+            totalScore?: number | bigint | LosslessNumber;
+            letterGrade?: string;
+            /** Format: double */
+            gradePoint?: number | bigint | LosslessNumber;
+            passed?: boolean;
+            retake?: boolean;
+            improvement?: boolean;
+            /** Format: date-time */
+            gradedAt?: string;
+        };
+        "com.campus.academic.application.StudentRecordService.TranscriptTerm": {
+            /** Format: uuid */
+            termId?: string;
+            code?: string;
+            name?: string;
+            /** Format: date */
+            startDate?: string;
+            /** Format: date */
+            endDate?: string;
+            /** Format: double */
+            gpa?: number | bigint | LosslessNumber;
+            /** Format: int32 */
+            credits?: number;
+            /** Format: int32 */
+            passedCredits?: number;
+            /** Format: int32 */
+            gradedCourses?: number;
+            classification?: string;
+        };
         "com.campus.academic.application.StudentAcademicService.EnrollmentView": {
             /** Format: uuid */
             enrollmentId?: string;
@@ -2403,18 +2744,6 @@ export interface components {
             schedule?: components["schemas"]["com.campus.academic.domain.SectionSchedule"];
             /** @enum {string} */
             sectionStatus?: "DRAFT" | "OPEN" | "CLOSED" | "CANCELLED";
-        };
-        "com.campus.academic.application.StudentAcademicService.TermView": {
-            /** Format: uuid */
-            id?: string;
-            code?: string;
-            name?: string;
-            /** Format: date */
-            startDate?: string;
-            /** Format: date */
-            endDate?: string;
-            /** @enum {string} */
-            status?: "PLANNED" | "ACTIVE" | "CLOSED" | "CANCELLED";
         };
         "com.campus.academic.application.StudentAcademicService.Timetable": {
             /** Format: uuid */
@@ -2467,6 +2796,40 @@ export interface components {
             /** Format: uuid */
             studentId?: string;
             items?: components["schemas"]["com.campus.academic.application.StudentAcademicService.EnrollmentView"][];
+        };
+        "com.campus.academic.application.StudentRecordService.Curriculum": {
+            /** Format: uuid */
+            studentId?: string;
+            /** Format: uuid */
+            programId?: string;
+            programName?: string;
+            cohort?: string;
+            semesters?: components["schemas"]["com.campus.academic.application.StudentRecordService.CurriculumSemester"][];
+        };
+        "com.campus.academic.application.StudentRecordService.CurriculumCourseStatus": {
+            /** Format: uuid */
+            courseId?: string;
+            code?: string;
+            title?: string;
+            /** Format: int32 */
+            credits?: number;
+            courseGroup?: string;
+            status?: string;
+            /** Format: double */
+            bestTotal?: number | bigint | LosslessNumber;
+            bestLetter?: string;
+            improvementAttempted?: boolean;
+            inProgress?: boolean;
+            /** Format: uuid */
+            prerequisiteCourseId?: string;
+            prerequisiteCode?: string;
+            prerequisiteTitle?: string;
+            prerequisiteSatisfied?: boolean;
+        };
+        "com.campus.academic.application.StudentRecordService.CurriculumSemester": {
+            /** Format: int32 */
+            index?: number;
+            courses?: components["schemas"]["com.campus.academic.application.StudentRecordService.CurriculumCourseStatus"][];
         };
         CampusEventPage: {
             content?: components["schemas"]["com.campus.event.domain.CampusEvent"][];
@@ -2831,6 +3194,17 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
+        "com.campus.academic.api.AdminAcademicGradeController.PageResponse": {
+            content?: components["schemas"]["com.campus.academic.api.AdminAcademicGradeController.Response"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number | bigint;
+            /** Format: int32 */
+            totalPages?: number;
+        };
         "com.campus.academic.api.delivery.PageResponseCom.campus.academic.domain.Enrollment": {
             content?: components["schemas"]["com.campus.academic.domain.Enrollment"][];
             /** Format: int32 */
@@ -2841,6 +3215,37 @@ export interface components {
             totalElements?: number | bigint;
             /** Format: int32 */
             totalPages?: number;
+        };
+        "com.campus.academic.api.AdminCurriculumController.PageResponse": {
+            content?: components["schemas"]["com.campus.academic.application.CurriculumService.EntryView"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number | bigint;
+            /** Format: int32 */
+            totalPages?: number;
+        };
+        "com.campus.academic.application.CurriculumService.EntryView": {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            programId?: string;
+            /** Format: uuid */
+            courseId?: string;
+            courseCode?: string;
+            courseTitle?: string;
+            /** Format: int32 */
+            credits?: number;
+            /** Format: int32 */
+            semesterIndex?: number;
+            /** Format: uuid */
+            prerequisiteCourseId?: string;
+            prerequisiteCode?: string;
+            prerequisiteTitle?: string;
+            /** Format: int64 */
+            rowVersion?: number | bigint;
         };
         "com.campus.academic.api.AdminAcademicCourseController.PageResponse": {
             content?: components["schemas"]["com.campus.academic.api.AdminAcademicCourseController.Response"][];
@@ -3050,6 +3455,54 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["com.campus.student.api.AdminStudentController.Response"];
+                };
+            };
+        };
+    };
+    academicProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.student.application.StudentProfileService.StudentProfile"];
+                };
+            };
+        };
+    };
+    updateAcademicProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["com.campus.student.api.AdminStudentController.AcademicProfileRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.student.application.StudentProfileService.StudentProfile"];
                 };
             };
         };
@@ -3946,7 +4399,129 @@ export interface operations {
             };
         };
     };
+    byEnrollment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                enrollmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicGradeController.Response"];
+                };
+            };
+        };
+    };
+    update_11: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                enrollmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["com.campus.academic.api.AdminAcademicGradeController.UpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicGradeController.Response"];
+                };
+            };
+        };
+    };
+    create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                enrollmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["com.campus.academic.api.AdminAcademicGradeController.Request"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicGradeController.Response"];
+                };
+            };
+        };
+    };
     get_13: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.domain.CurriculumCourse"];
+                };
+            };
+        };
+    };
+    update_12: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["com.campus.academic.api.AdminCurriculumController.UpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.domain.CurriculumCourse"];
+                };
+            };
+        };
+    };
+    get_14: {
         parameters: {
             query?: never;
             header?: never;
@@ -3968,7 +4543,7 @@ export interface operations {
             };
         };
     };
-    update_11: {
+    update_13: {
         parameters: {
             query?: never;
             header?: never;
@@ -4105,7 +4680,7 @@ export interface operations {
             };
         };
     };
-    create: {
+    create_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -4179,7 +4754,7 @@ export interface operations {
             };
         };
     };
-    create_1: {
+    create_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -4229,7 +4804,7 @@ export interface operations {
             };
         };
     };
-    create_2: {
+    create_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -4713,7 +5288,7 @@ export interface operations {
             };
         };
     };
-    create_3: {
+    create_4: {
         parameters: {
             query?: never;
             header?: never;
@@ -4763,7 +5338,7 @@ export interface operations {
             };
         };
     };
-    create_4: {
+    create_5: {
         parameters: {
             query?: never;
             header?: never;
@@ -4842,7 +5417,7 @@ export interface operations {
             };
         };
     };
-    create_5: {
+    create_6: {
         parameters: {
             query?: never;
             header?: never;
@@ -4895,7 +5470,7 @@ export interface operations {
             };
         };
     };
-    create_6: {
+    create_7: {
         parameters: {
             query?: never;
             header?: never;
@@ -4945,7 +5520,7 @@ export interface operations {
             };
         };
     };
-    create_7: {
+    create_8: {
         parameters: {
             query?: never;
             header?: never;
@@ -4996,7 +5571,7 @@ export interface operations {
             };
         };
     };
-    create_8: {
+    create_9: {
         parameters: {
             query?: never;
             header?: never;
@@ -5046,7 +5621,7 @@ export interface operations {
             };
         };
     };
-    create_9: {
+    create_10: {
         parameters: {
             query?: never;
             header?: never;
@@ -5097,7 +5672,7 @@ export interface operations {
             };
         };
     };
-    create_10: {
+    create_11: {
         parameters: {
             query?: never;
             header?: never;
@@ -5148,7 +5723,7 @@ export interface operations {
             };
         };
     };
-    create_11: {
+    create_12: {
         parameters: {
             query?: never;
             header?: never;
@@ -5174,6 +5749,54 @@ export interface operations {
     };
     list_12: {
         parameters: {
+            query: {
+                programId: string;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminCurriculumController.PageResponse"];
+                };
+            };
+        };
+    };
+    create_13: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["com.campus.academic.api.AdminCurriculumController.Request"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.domain.CurriculumCourse"];
+                };
+            };
+        };
+    };
+    list_13: {
+        parameters: {
             query?: {
                 page?: number;
                 size?: number;
@@ -5198,7 +5821,7 @@ export interface operations {
             };
         };
     };
-    create_12: {
+    create_14: {
         parameters: {
             query?: never;
             header?: never;
@@ -5295,6 +5918,26 @@ export interface operations {
             };
         };
     };
+    transcript: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.application.StudentRecordService.Transcript"];
+                };
+            };
+        };
+    };
     timetable: {
         parameters: {
             query?: {
@@ -5357,7 +6000,27 @@ export interface operations {
             };
         };
     };
-    list_13: {
+    curriculum: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.application.StudentRecordService.Curriculum"];
+                };
+            };
+        };
+    };
+    list_14: {
         parameters: {
             query?: {
                 page?: number;
@@ -5383,7 +6046,7 @@ export interface operations {
             };
         };
     };
-    get_14: {
+    get_15: {
         parameters: {
             query?: never;
             header?: never;
@@ -5405,7 +6068,7 @@ export interface operations {
             };
         };
     };
-    list_14: {
+    list_15: {
         parameters: {
             query?: {
                 page?: number;
@@ -5451,7 +6114,7 @@ export interface operations {
             };
         };
     };
-    get_15: {
+    get_16: {
         parameters: {
             query?: never;
             header?: never;
@@ -5517,7 +6180,7 @@ export interface operations {
             };
         };
     };
-    list_15: {
+    list_16: {
         parameters: {
             query?: {
                 page?: number;
@@ -5819,7 +6482,7 @@ export interface operations {
             };
         };
     };
-    list_16: {
+    list_17: {
         parameters: {
             query?: {
                 page?: number;
@@ -5870,7 +6533,7 @@ export interface operations {
             };
         };
     };
-    list_17: {
+    list_18: {
         parameters: {
             query?: {
                 page?: number;
@@ -5902,7 +6565,7 @@ export interface operations {
             };
         };
     };
-    get_16: {
+    get_17: {
         parameters: {
             query?: never;
             header?: never;
@@ -5987,6 +6650,53 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["com.campus.academic.domain.CourseOffering"][];
+                };
+            };
+        };
+    };
+    list_19: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+                enrollmentId?: string;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicGradeController.PageResponse"];
+                };
+            };
+        };
+    };
+    get_18: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicGradeController.Response"];
                 };
             };
         };
