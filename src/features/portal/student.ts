@@ -18,6 +18,10 @@ export type TranscriptTerm = components['schemas']['com.campus.academic.applicat
 export type TranscriptRecord = components['schemas']['com.campus.academic.application.StudentRecordService.TranscriptRecord']
 export type Curriculum = components['schemas']['com.campus.academic.application.StudentRecordService.Curriculum']
 export type CurriculumCourse = components['schemas']['com.campus.academic.application.StudentRecordService.CurriculumCourseStatus']
+export type Registration = components['schemas']['com.campus.academic.application.RegistrationService.Registration']
+export type RegistrationWindow = components['schemas']['com.campus.academic.application.RegistrationService.Window']
+export type RegistrationSection = components['schemas']['com.campus.academic.application.RegistrationService.SectionOption']
+export type CohortSlot = components['schemas']['com.campus.academic.application.RegistrationService.CohortSlot']
 
 export const profilePath = '/api/v1/me/student'
 export const timetablePath = '/api/v1/me/timetable'
@@ -25,6 +29,7 @@ export const enrollmentsPath = '/api/v1/me/enrollments'
 export const financePath = '/api/v1/me/finance'
 export const transcriptPath = '/api/v1/me/transcript'
 export const curriculumPath = '/api/v1/me/curriculum'
+export const registrationPath = '/api/v1/me/registration'
 
 export const isMissingStudentProfile = (error: unknown) =>
  error instanceof ApiError && error.status === 404 && (error.detail.code === 'STUDENT_PROFILE_NOT_FOUND' || error.detail.code === 'ACADEMIC_RESOURCE_NOT_FOUND')
@@ -75,6 +80,14 @@ export function useCurriculum(enabled = true) {
   queryKey: ['me', 'curriculum'],
   enabled,
   queryFn: ({ signal }) => api.request<Curriculum>(curriculumPath, { signal }),
+ })
+}
+
+export function useRegistration(enabled = true) {
+ return useQuery({
+  queryKey: ['me', 'registration'],
+  enabled,
+  queryFn: ({ signal }) => api.request<Registration>(registrationPath, { signal }),
  })
 }
 

@@ -12,6 +12,8 @@ import {
 } from './results'
 
 const letterColor = (letter?: string) => letter === 'A' ? 'green' : letter === 'B' ? 'cyan' : letter === 'C' ? 'blue' : letter === 'D' ? 'orange' : 'red'
+const curriculumState: Record<string, string> = { PASSED: 'Đã đạt', FAILED: 'Chưa đạt', IN_PROGRESS: 'Đang học', NOT_STARTED: 'Chưa học' }
+const curriculumTag: Record<string, string> = { PASSED: 'green', FAILED: 'red', IN_PROGRESS: 'blue', NOT_STARTED: 'default' }
 const recordState = (record: TranscriptRecord) => {
  if (!record.passed) return <Tag color="red">Không đạt</Tag>
  if (record.improvement) return <Tag color="gold">Cải thiện</Tag>
@@ -106,6 +108,41 @@ export default function ResultsPage() {
      </div>}
     </Card>
    </div>
+
+   <Card className="curriculum-card" title="Lộ trình môn học" extra={<Space wrap><Tag color="purple">{curriculum.data?.programName ?? 'Chưa rõ ngành'}</Tag><Tag>{curriculum.data?.semesters?.length ?? 0} học kỳ</Tag></Space>}>
+    <Typography.Paragraph type="secondary">Mỗi môn trong chương trình đào tạo hiển thị một lần, kèm môn tiên quyết. Học cải thiện không tạo thêm môn mới trên sơ đồ; điểm cao nhất vẫn được dùng cho GPA tích lũy.</Typography.Paragraph>
+    {curriculum.isFetching && !curriculum.data && <p role="status">Đang tải lộ trình môn học…</p>}
+    {curriculum.error && <ErrorNotice error={curriculum.error} onRetry={() => { void curriculum.refetch() }} />}
+    {!curriculum.isFetching && !curriculum.error && (!curriculum.data || (curriculum.data.semesters ?? []).length === 0) && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Ngành học chưa có lộ trình môn học." />}
+    {(curriculum.data?.semesters ?? []).length > 0 && <>
+     <div className="curriculum-flow">
+      {(curriculum.data?.semesters ?? []).map((semester) => {
+       const courses = semester.courses ?? []
+       const credits = courses.reduce((sum, course) => sum + numberValue(course.credits), 0)
+       return <section className="curriculum-semester" key={semester.index}>
+        <header className="curriculum-semester-head"><strong>Học kỳ {semester.index}</strong><span>{courses.length} môn · {credits} tín chỉ</span></header>
+        <div className="curriculum-course-list">
+         {courses.map((course) => {
+          const state = course.status ?? 'NOT_STARTED'
+          return <article className={`curriculum-course status-${state.toLowerCase()}`} key={course.courseId ?? `${semester.index}-${course.code}`}>
+           <div className="curriculum-course-head"><strong>{course.code}</strong><Tag color={curriculumTag[state] ?? 'default'}>{curriculumState[state] ?? state}</Tag></div>
+           <span className="curriculum-course-title">{course.title}</span>
+           <small>{course.credits ?? 0} TC{course.bestLetter ? ` · điểm ${course.bestLetter}` : ''}{course.improvementAttempted ? ' · đã học cải thiện' : ''}</small>
+           {course.prerequisiteCode && <small className={course.prerequisiteSatisfied ? 'curriculum-prereq met' : 'curriculum-prereq missing'}>Tiên quyết: {course.prerequisiteCode} · {course.prerequisiteSatisfied ? 'đã đạt' : 'chưa đạt'}</small>}
+          </article>
+         })}
+        </div>
+       </section>
+      })}
+     </div>
+     <div className="curriculum-legend">
+      <Space wrap size={[8, 8]}>
+       <Tag color="green">Đã đạt</Tag><Tag color="red">Chưa đạt</Tag><Tag color="blue">Đang học</Tag><Tag>Chưa học</Tag>
+      </Space>
+      <Typography.Text type="secondary">Sơ đồ dựa trên kết quả tốt nhất của mỗi môn.</Typography.Text>
+     </div>
+    </>}
+   </Card>
 
    <Card title="Dự tính GPA" extra={<Space><Tag color="purple">Mô phỏng</Tag><Button size="small" onClick={resetProjection} disabled={futureIds.length === 0 && improvementIds.length === 0}>Đặt lại</Button></Space>}>
     <Typography.Paragraph type="secondary">Chọn môn sắp học và điểm chữ kỳ vọng, hoặc chọn môn muốn học cải thiện. Công cụ chỉ ước tính, không ghi điểm vào hệ thống.</Typography.Paragraph>

@@ -785,6 +785,50 @@ a.admin-kpi:hover::before { height: 3px; opacity: 1; }
 .result-total > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .result-total strong { color: var(--navy); }
 
+.registration-banner { margin-bottom: 18px; }
+.registration-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 18px; }
+.registration-meta .ant-statistic-content { color: var(--navy); font-size: 18px; font-weight: 750; }
+.registration-meta .ant-card-body { display: flex; flex-direction: column; gap: 6px; }
+.registration-card { margin-bottom: 18px; }
+.registration-list { display: grid; }
+.registration-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 14px; align-items: center; padding: 12px 6px; border-bottom: 1px solid #edf2f5; }
+.registration-row:last-child { border-bottom: 0; }
+.registration-row.enrolled { background: var(--primary-soft); border-radius: 10px; }
+.registration-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.registration-copy strong { color: var(--navy); }
+.registration-copy span { color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+.registration-copy .registration-note { color: var(--primary); }
+.registration-seats { display: flex; flex-direction: column; gap: 2px; text-align: right; white-space: nowrap; }
+.registration-seats strong { color: var(--navy); }
+.registration-seats span { color: var(--muted); font-size: 11.5px; }
+.registration-hint { margin: 12px 0 0 !important; font-size: 12.5px; }
+.registration-footnote { display: block; margin-top: 4px; }
+.cohort-list { display: grid; gap: 8px; }
+.cohort-slot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; background: #f7fafb; border: 1px solid #edf2f5; border-radius: 10px; font-size: 12.5px; }
+.cohort-slot span { color: var(--muted); }
+.cohort-slot.current { background: var(--primary-soft); border-color: #bfe3e0; }
+.cohort-slot.current span { color: var(--navy); font-weight: 650; }
+
+.curriculum-card { margin-bottom: 20px; }
+.curriculum-flow { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x proximity; }
+.curriculum-semester { flex: 0 0 240px; scroll-snap-align: start; padding: 12px; background: #f7fafb; border: 1px solid #edf2f5; border-radius: 14px; }
+.curriculum-semester-head { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
+.curriculum-semester-head strong { color: var(--navy); }
+.curriculum-semester-head span { color: var(--muted); font-size: 11.5px; }
+.curriculum-course-list { display: grid; gap: 8px; }
+.curriculum-course { display: flex; flex-direction: column; gap: 3px; padding: 9px 10px; background: #fff; border: 1px solid #edf2f5; border-left: 3px solid #c9d4e0; border-radius: 10px; }
+.curriculum-course.status-passed { border-left-color: #38a169; }
+.curriculum-course.status-failed { border-left-color: var(--danger); }
+.curriculum-course.status-in_progress { border-left-color: #2f6fed; }
+.curriculum-course-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.curriculum-course-head strong { color: var(--navy); font-size: 12.5px; }
+.curriculum-course-head .ant-tag { margin-inline-end: 0; }
+.curriculum-course-title { font-size: 12.5px; }
+.curriculum-course small { color: var(--muted); font-size: 11.5px; }
+.curriculum-prereq.met { color: var(--success); }
+.curriculum-prereq.missing { color: var(--danger); }
+.curriculum-legend { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; }
+
 
 /* Responsive */
 @media (max-width: 1100px) {
@@ -828,6 +872,12 @@ a.admin-kpi:hover::before { height: 3px; opacity: 1; }
   .result-score { text-align: left; }
   .result-row { gap: 6px; }
   .charge-row, .payment-row { flex-direction: column; }
+  .registration-meta { grid-template-columns: 1fr; }
+  .registration-row { grid-template-columns: 1fr; align-items: flex-start; }
+  .registration-seats { text-align: left; }
+  .cohort-slot { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .curriculum-flow { gap: 10px; }
+  .curriculum-semester { flex-basis: 78vw; }
   .charge-amount { align-items: flex-start; text-align: left; }
   .portal-id-card { padding: 22px; }
   .portal-id-identity { flex-direction: column; align-items: flex-start; gap: 16px; }

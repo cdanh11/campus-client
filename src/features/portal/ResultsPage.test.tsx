@@ -38,6 +38,7 @@ const curriculum: Curriculum = {
  semesters: [
   { index: 3, courses: [{ courseId: 'next', code: 'CS201', title: 'Cấu trúc dữ liệu', credits: 3, status: 'NOT_STARTED', prerequisiteSatisfied: true }] },
   { index: 4, courses: [{ courseId: 'later', code: 'CS202', title: 'Cơ sở dữ liệu', credits: 3, status: 'IN_PROGRESS', prerequisiteSatisfied: true }] },
+  { index: 5, courses: [{ courseId: 'final', code: 'CS301', title: 'Đồ án tốt nghiệp', credits: 6, status: 'FAILED', improvementAttempted: true, prerequisiteCourseId: 'cs', prerequisiteCode: 'CD-COURSE-003', prerequisiteSatisfied: false }] },
  ],
 }
 function show() {
@@ -77,6 +78,20 @@ it('opens a course row with every weighted component', async () => {
  expect(dialog.getByText('50%')).toBeInTheDocument()
  expect(dialog.getByText('B · 3')).toBeInTheDocument()
  expect(dialog.getByText('4.50')).toBeInTheDocument()
+})
+
+it('lays the curriculum out by semester with statuses and prerequisites', async () => {
+ show()
+ expect(await screen.findByText('Lộ trình môn học')).toBeInTheDocument()
+ const card = screen.getByText('Lộ trình môn học').closest('.ant-card') as HTMLElement
+ const flow = within(card)
+ expect(flow.getByText('Học kỳ 3')).toBeInTheDocument()
+ expect(flow.getByText('Cấu trúc dữ liệu')).toBeInTheDocument()
+ expect(flow.getByText('Đồ án tốt nghiệp')).toBeInTheDocument()
+ expect(flow.getAllByText('Chưa học').length).toBeGreaterThan(0)
+ expect(flow.getAllByText('Đang học').length).toBeGreaterThan(0)
+ expect(flow.getByText('Tiên quyết: CD-COURSE-003 · chưa đạt')).toBeInTheDocument()
+ expect(flow.getByText(/đã học cải thiện/)).toBeInTheDocument()
 })
 
 it('projects the cumulative GPA from a selected future course', async () => {
