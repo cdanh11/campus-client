@@ -39,6 +39,14 @@ const boundary: Rule = ({ getFieldValue }) => ({ validator: async (_, value: unk
  const start = getFieldValue('startDate') as string | undefined
  if (start && typeof value === 'string' && value < start) throw new Error('Ngày kết thúc phải từ ngày bắt đầu trở đi.')
 } })
+// Values are normalized to ISO instants (UTC) by the datetime form control, so string order is chronological.
+const registrationWindowRule: Rule = ({ getFieldValue }) => ({ validator: async () => {
+ const opens = getFieldValue('registrationOpensAt') as string | undefined
+ const closes = getFieldValue('registrationClosesAt') as string | undefined
+ if (!opens && !closes) return
+ if (!opens || !closes) throw new Error('Nhập đủ thời điểm mở và đóng đăng ký, hoặc để trống cả hai.')
+ if (closes <= opens) throw new Error('Thời điểm đóng đăng ký phải sau thời điểm mở.')
+} })
 const scheduleNames = ['weekday', 'startsAt', 'endsAt', 'room', 'status']
 const scheduleDependencies = (name: string) => scheduleNames.filter((value) => value !== name)
 const scheduleRule: Rule = ({ getFieldValue }) => ({ validator: async () => {
@@ -82,14 +90,22 @@ export const courses: Resource = {
 }
 export const academicTerms: Resource = {
  path: path + 'terms', title: 'Học kỳ', singular: 'học kỳ', identifier: 'code',
- fields: [code, name('name', 'Tên học kỳ'), { name: 'startDate', label: 'Ngày bắt đầu', type: 'date', required: true }, { name: 'endDate', label: 'Ngày kết thúc', type: 'date', required: true, dependencies: ['startDate'], rules: [boundary] }, status(terms, true)],
- columns: [{ key: 'code', title: 'Mã' }, { key: 'name', title: 'Học kỳ' }, { key: 'startDate', title: 'Bắt đầu' }, { key: 'endDate', title: 'Kết thúc' }],
+ fields: [code, name('name', 'Tên học kỳ'), { name: 'startDate', label: 'Ngày bắt đầu', type: 'date', required: true }, { name: 'endDate', label: 'Ngày kết thúc', type: 'date', required: true, dependencies: ['startDate'], rules: [boundary] },
+  { name: 'registrationOpensAt', label: 'Mở đăng ký (UTC+7)', type: 'datetime', dependencies: ['registrationClosesAt'] },
+  { name: 'registrationClosesAt', label: 'Đóng đăng ký (UTC+7)', type: 'datetime', dependencies: ['registrationOpensAt'], rules: [registrationWindowRule] },
+  status(terms, true)],
+ columns: [{ key: 'code', title: 'Mã' }, { key: 'name', title: 'Học kỳ' }, { key: 'startDate', title: 'Bắt đầu' }, { key: 'endDate', title: 'Kết thúc' },
+  { key: 'registrationOpensAt', title: 'Mở đăng ký' }, { key: 'registrationClosesAt', title: 'Đóng đăng ký' }],
  sorts: sorts(['code', 'name', 'startDate', 'endDate', 'status', 'createdAt', 'updatedAt']), states: terms, defaults: { status: 'PLANNED' },
- note: 'Học kỳ mới ở trạng thái Sắp mở. Ngày bắt đầu/kết thúc cố định sau khi kích hoạt; đóng học kỳ cần không còn đợt mở môn đang mở.',
+ note: 'Học kỳ mới ở trạng thái Sắp mở. Ngày bắt đầu/kết thúc cố định sau khi kích hoạt. Thời điểm mở/đóng đăng ký dùng giờ Việt Nam (UTC+7): khóa K21 trở về trước vào đợt đầu, mỗi khóa sau cách hai ngày.',
  disabled: (field, current) => ['startDate', 'endDate'].includes(field.name) && current.status !== 'PLANNED',
  choices: (field, current) => field.name === 'status' ? options(lifecycleOptions('term', String(current.status))) : field.options,
  body: (values, current) => {
-  const base = { code: str(values, 'code'), name: str(values, 'name'), startDate: str(values, 'startDate'), endDate: str(values, 'endDate') } satisfies TermCreate
+  const base = {
+   code: str(values, 'code'), name: str(values, 'name'), startDate: str(values, 'startDate'), endDate: str(values, 'endDate'),
+   registrationOpensAt: str(values, 'registrationOpensAt') || undefined,
+   registrationClosesAt: str(values, 'registrationClosesAt') || undefined,
+  } satisfies TermCreate
   return current ? { ...base, status: values.status as TermUpdate['status'], expectedVersion: current.rowVersion } satisfies TermUpdate : base
  },
 }
