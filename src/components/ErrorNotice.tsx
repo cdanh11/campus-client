@@ -35,7 +35,7 @@ const domainMessages: Record<string, string> = {
  REGISTRATION_WINDOW_NOT_OPEN: 'Chưa đến lượt đăng ký của khóa bạn. Xem lịch mở theo khóa để biết thời điểm.',
  REGISTRATION_WINDOW_CLOSED: 'Đã hết thời gian đăng ký của học kỳ này.',
  REGISTRATION_COHORT_MISSING: 'Hồ sơ sinh viên chưa có khóa học. Liên hệ phòng học vụ để cập nhật.',
- REGISTRATION_PREREQUISITE_NOT_MET: 'Chưa đạt môn tiên quyết của lớp này nên chưa thể đăng ký.',
+ REGISTRATION_PREREQUISITE_NOT_MET: 'Chưa học môn tiên quyết của lớp này nên chưa thể đăng ký.',
  REGISTRATION_SCHEDULE_CONFLICT: 'Lớp này trùng lịch với một lớp bạn đã đăng ký trong học kỳ.',
  CONCURRENT_MODIFICATION: 'Dữ liệu hoặc trạng thái đã thay đổi. Tải lại để kiểm tra trước khi thao tác tiếp.',
  ORGANIZATION_UNIT_CODE_ALREADY_EXISTS: 'Mã đơn vị đã được sử dụng.',

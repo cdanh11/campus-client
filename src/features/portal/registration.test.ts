@@ -22,7 +22,7 @@ it('formats cohort slots in campus time', () => {
 })
 
 it('explains blocked sections and shows remaining seats', () => {
- expect(blockedReasonText.PREREQUISITE_NOT_MET).toBe('Chưa đạt môn tiên quyết')
+ expect(blockedReasonText.PREREQUISITE_NOT_MET).toBe('Chưa học môn tiên quyết')
  expect(blockedReasonText.SCHEDULE_CONFLICT).toBe('Trùng lịch học')
  expect(blockedReasonText.SECTION_FULL).toBe('Đã hết chỗ')
  expect(seatsText({ remaining: 2, capacity: 40 })).toBe('2/40 chỗ trống')

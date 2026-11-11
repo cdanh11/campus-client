@@ -4,7 +4,7 @@ import { ErrorNotice } from '../../components/ErrorNotice'
 import { PageChrome } from '../../components/PageChrome'
 import {
  dateText, isMissingStudentProfile, useCurriculum, useStudentProfile, useTranscript,
- type TranscriptRecord,
+ type TranscriptRecord, type TranscriptTerm,
 } from './student'
 import {
  bestAttempts, classificationLabel, contribution, gpaText, letterPoints, letters, numberValue,
@@ -12,8 +12,6 @@ import {
 } from './results'
 
 const letterColor = (letter?: string) => letter === 'A' ? 'green' : letter === 'B' ? 'cyan' : letter === 'C' ? 'blue' : letter === 'D' ? 'orange' : 'red'
-const curriculumState: Record<string, string> = { PASSED: 'Đã đạt', FAILED: 'Chưa đạt', IN_PROGRESS: 'Đang học', NOT_STARTED: 'Chưa học' }
-const curriculumTag: Record<string, string> = { PASSED: 'green', FAILED: 'red', IN_PROGRESS: 'blue', NOT_STARTED: 'default' }
 const recordState = (record: TranscriptRecord) => {
  if (!record.passed) return <Tag color="red">Không đạt</Tag>
  if (record.improvement) return <Tag color="gold">Cải thiện</Tag>
@@ -21,6 +19,35 @@ const recordState = (record: TranscriptRecord) => {
  return <Tag color="green">Đạt</Tag>
 }
 const chooseLetter = (value: string | undefined) => (value && value in letterPoints ? value as Letter : undefined)
+
+function ScoreChart({ term, records }: { term: TranscriptTerm; records: TranscriptRecord[] }) {
+ const ordered = [...records].sort((left, right) => (left.course?.code ?? '').localeCompare(right.course?.code ?? ''))
+ return <section className="score-chart-block" aria-label={`Điểm ${term.name}`}>
+  <header className="score-chart-head">
+   <div><strong>{term.name}</strong><span>{term.code} · {term.gradedCourses} môn · {term.credits} tín chỉ</span></div>
+   <div className="score-chart-gpa"><strong>{gpaText(term.gpa)}</strong><Tag color="cyan">{classificationLabel(term.classification)}</Tag></div>
+  </header>
+  <div className="score-chart">
+   <div className="score-chart-axis" aria-hidden="true">{['10', '7.5', '5', '2.5', '0'].map((label) => <span key={label}>{label}</span>)}</div>
+   <div className="score-chart-plot">
+    <span className="score-chart-threshold" aria-hidden="true" />
+    <div className="score-chart-bars" role="list" aria-label={`Điểm ${term.name}`}>
+     {ordered.map((record) => {
+      const score = Math.max(0, Math.min(10, numberValue(record.totalScore)))
+      const letter = (record.letterGrade ?? 'F').toLowerCase()
+      return <div className="score-bar" role="listitem" key={record.enrollmentId}
+       aria-label={`${record.course?.code} · ${gpaText(score)}/10 · ${record.letterGrade ?? '—'}`}
+       title={`${record.course?.title ?? record.course?.code} · ${gpaText(score)}/10`}>
+       <span className="score-bar-value" style={{ bottom: `calc(${score * 10}% + 5px)` }}>{gpaText(score)}</span>
+       <span className={'score-bar-fill letter-' + letter} style={{ height: `${Math.max(2, score * 10)}%` }} />
+       <span className="score-bar-code">{record.course?.code}</span>
+      </div>
+     })}
+    </div>
+   </div>
+  </div>
+ </section>
+}
 
 export default function ResultsPage() {
  const profile = useStudentProfile()
@@ -84,6 +111,15 @@ export default function ResultsPage() {
     <Card><Statistic title="Xếp loại hiện tại" value={classificationLabel(summary?.classification)} /><Typography.Text type="secondary">Theo thang điểm 4</Typography.Text></Card>
    </div>
 
+   <Card className="score-chart-card" title="Điểm theo học kỳ" extra={<Tag>{terms.length} học kỳ</Tag>}>
+    <Typography.Paragraph type="secondary" className="score-chart-note">
+     Trục đứng là điểm thang 10, trục ngang là mã môn. Đường nét đứt đánh dấu mức 4.0.
+    </Typography.Paragraph>
+    {terms.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa có điểm để vẽ biểu đồ." /> : <div className="score-chart-list">
+     {terms.map((term) => <ScoreChart key={term.termId} term={term} records={records.filter((record) => record.term?.id === term.termId)} />)}
+    </div>}
+   </Card>
+
    <div className="result-grid">
     <Card title="GPA theo học kỳ" extra={<Tag>{terms.length} học kỳ</Tag>}>
      {terms.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa có học kỳ nào được ghi điểm." /> : <div className="term-gpa-list">
@@ -108,41 +144,6 @@ export default function ResultsPage() {
      </div>}
     </Card>
    </div>
-
-   <Card className="curriculum-card" title="Lộ trình môn học" extra={<Space wrap><Tag color="purple">{curriculum.data?.programName ?? 'Chưa rõ ngành'}</Tag><Tag>{curriculum.data?.semesters?.length ?? 0} học kỳ</Tag></Space>}>
-    <Typography.Paragraph type="secondary">Mỗi môn trong chương trình đào tạo hiển thị một lần, kèm môn tiên quyết. Học cải thiện không tạo thêm môn mới trên sơ đồ; điểm cao nhất vẫn được dùng cho GPA tích lũy.</Typography.Paragraph>
-    {curriculum.isFetching && !curriculum.data && <p role="status">Đang tải lộ trình môn học…</p>}
-    {curriculum.error && <ErrorNotice error={curriculum.error} onRetry={() => { void curriculum.refetch() }} />}
-    {!curriculum.isFetching && !curriculum.error && (!curriculum.data || (curriculum.data.semesters ?? []).length === 0) && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Ngành học chưa có lộ trình môn học." />}
-    {(curriculum.data?.semesters ?? []).length > 0 && <>
-     <div className="curriculum-flow">
-      {(curriculum.data?.semesters ?? []).map((semester) => {
-       const courses = semester.courses ?? []
-       const credits = courses.reduce((sum, course) => sum + numberValue(course.credits), 0)
-       return <section className="curriculum-semester" key={semester.index}>
-        <header className="curriculum-semester-head"><strong>Học kỳ {semester.index}</strong><span>{courses.length} môn · {credits} tín chỉ</span></header>
-        <div className="curriculum-course-list">
-         {courses.map((course) => {
-          const state = course.status ?? 'NOT_STARTED'
-          return <article className={`curriculum-course status-${state.toLowerCase()}`} key={course.courseId ?? `${semester.index}-${course.code}`}>
-           <div className="curriculum-course-head"><strong>{course.code}</strong><Tag color={curriculumTag[state] ?? 'default'}>{curriculumState[state] ?? state}</Tag></div>
-           <span className="curriculum-course-title">{course.title}</span>
-           <small>{course.credits ?? 0} TC{course.bestLetter ? ` · điểm ${course.bestLetter}` : ''}{course.improvementAttempted ? ' · đã học cải thiện' : ''}</small>
-           {course.prerequisiteCode && <small className={course.prerequisiteSatisfied ? 'curriculum-prereq met' : 'curriculum-prereq missing'}>Tiên quyết: {course.prerequisiteCode} · {course.prerequisiteSatisfied ? 'đã đạt' : 'chưa đạt'}</small>}
-          </article>
-         })}
-        </div>
-       </section>
-      })}
-     </div>
-     <div className="curriculum-legend">
-      <Space wrap size={[8, 8]}>
-       <Tag color="green">Đã đạt</Tag><Tag color="red">Chưa đạt</Tag><Tag color="blue">Đang học</Tag><Tag>Chưa học</Tag>
-      </Space>
-      <Typography.Text type="secondary">Sơ đồ dựa trên kết quả tốt nhất của mỗi môn.</Typography.Text>
-     </div>
-    </>}
-   </Card>
 
    <Card title="Dự tính GPA" extra={<Space><Tag color="purple">Mô phỏng</Tag><Button size="small" onClick={resetProjection} disabled={futureIds.length === 0 && improvementIds.length === 0}>Đặt lại</Button></Space>}>
     <Typography.Paragraph type="secondary">Chọn môn sắp học và điểm chữ kỳ vọng, hoặc chọn môn muốn học cải thiện. Công cụ chỉ ước tính, không ghi điểm vào hệ thống.</Typography.Paragraph>

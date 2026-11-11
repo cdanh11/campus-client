@@ -18,7 +18,7 @@ export const blockedReasonText: Record<string, string> = {
  NOT_CONFIGURED: 'Chưa mở đăng ký',
  COHORT_MISSING: 'Thiếu thông tin khóa học',
  ALREADY_ENROLLED: 'Đã đăng ký',
- PREREQUISITE_NOT_MET: 'Chưa đạt môn tiên quyết',
+ PREREQUISITE_NOT_MET: 'Chưa học môn tiên quyết',
  SCHEDULE_CONFLICT: 'Trùng lịch học',
  SECTION_FULL: 'Đã hết chỗ',
 }

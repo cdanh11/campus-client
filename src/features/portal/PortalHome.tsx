@@ -160,9 +160,11 @@ export default function PortalHome() {
     {documents.map((document) => <Card className="document-card" key={document.title}>
      <span className="document-icon" aria-hidden="true">{document.icon}</span>
      <Space wrap className="document-heading"><Typography.Title level={3}>{document.title}</Typography.Title><Tag>{document.unit}</Tag></Space>
-     <Typography.Paragraph>{document.description}</Typography.Paragraph>
-     <Typography.Text type="secondary">Thời gian xử lý dự kiến: {document.duration}</Typography.Text>
-     <Button href={requestMail(student, document.unit, document.email, document.title)} icon={<MailOutlined aria-hidden="true" />}>Gửi yêu cầu</Button>
+     <Typography.Paragraph className="document-description">{document.description}</Typography.Paragraph>
+     <div className="document-footer">
+      <Typography.Text type="secondary" className="document-duration">Thời gian xử lý dự kiến<strong>{document.duration}</strong></Typography.Text>
+      <Button href={requestMail(student, document.unit, document.email, document.title)} icon={<MailOutlined aria-hidden="true" />}>Gửi yêu cầu</Button>
+     </div>
     </Card>)}
    </div>
    <Typography.Paragraph type="secondary" className="portal-footnote">Bản demo chưa có quy trình duyệt trực tuyến. Nút gửi yêu cầu mở sẵn nội dung trong ứng dụng thư của bạn để gửi tới hòm thư đơn vị.</Typography.Paragraph>

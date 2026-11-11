@@ -53,7 +53,7 @@ it('shows the open window, highlights the current cohort slot and registers a se
  const current = screen.getAllByText('K23').map((node) => node.closest('.cohort-slot')).find(Boolean)
  expect(current).toHaveClass('current')
  expect(screen.getByText('12/40 chỗ trống')).toBeInTheDocument()
- expect(screen.getByText('Chưa đạt môn tiên quyết')).toBeInTheDocument()
+ expect(screen.getByText('Chưa học môn tiên quyết')).toBeInTheDocument()
  await userEvent.click(screen.getByRole('button', { name: 'Đăng ký' }))
  expect(mutation).toHaveBeenCalledWith('/api/v1/me/registration', 'POST', { sectionId: 'open-section' })
 })
