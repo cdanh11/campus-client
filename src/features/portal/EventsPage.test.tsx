@@ -105,6 +105,18 @@ it('keeps the status filter available on own history', async () => {
  await screen.findByRole('heading', { name: event.title })
  expect(screen.getByRole('combobox', { name: 'Lọc trạng thái sự kiện' })).toBeInTheDocument()
 })
+it('switches to own registrations from the events tabs and pins the registered status', async () => {
+ show({ record: membership })
+ await screen.findByRole('heading', { name: 'Khám phá sự kiện' })
+ await userEvent.click(screen.getByRole('tab', { name: 'Đã đăng ký' }))
+ expect(await screen.findByRole('heading', { name: 'Đăng ký của bạn' })).toBeInTheDocument()
+ expect(await screen.findByRole('heading', { name: event.title })).toBeInTheDocument()
+ expect(screen.queryByRole('searchbox')).not.toBeInTheDocument()
+ await waitFor(() => expect(vi.mocked(api.request).mock.calls.some(([path]) => {
+  if (!path.startsWith('/api/v1/event-registrations?')) return false
+  return new URLSearchParams(path.split('?')[1]).get('status') === 'REGISTERED'
+ })).toBe(true))
+})
 it('loads own history without ADMIN or unsupported search fields and resolves the event title', async () => {
  show({ history: true, record: membership })
  await screen.findByRole('heading', { name: event.title })

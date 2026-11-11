@@ -1,5 +1,7 @@
-import { Alert, Button, Card, Empty, Input, Modal, Pagination, Select, Space, Tag, Typography, App as AntApp } from 'antd'
+import { Alert, Button, Card, Empty, Input, Modal, Pagination, Select, Space, Tabs, Tag, Typography, App as AntApp } from 'antd'
+import { ClockCircleOutlined, TeamOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { api, queryClient } from '../../api/runtime'
 import { ApiError } from '../../api/client'
 import type { components } from '../../api/schema'
@@ -11,11 +13,21 @@ import { useListQuery } from '../list-query'
 export type CampusEvent = Required<components['schemas']['com.campus.event.domain.CampusEvent']>
 export type Registration = Omit<Required<components['schemas']['com.campus.event.domain.EventRegistration']>, 'cancelledAt' | 'attendedAt'> & { cancelledAt: string | null; attendedAt: string | null }
 type Page<T> = { content: T[]; totalElements: number | bigint }
+type View = 'upcoming' | 'mine' | 'history'
 const eventPath = '/api/v1/events'
 const ownPath = '/api/v1/event-registrations'
 const states = { DRAFT: 'Bản nháp', OPEN: 'Đang mở', CLOSED: 'Đã đóng', CANCELLED: 'Đã hủy', REGISTERED: 'Đã đăng ký', ATTENDED: 'Đã tham dự' }
 const catalogSorts = [{ value: 'startsAt,asc', label: 'Bắt đầu tăng dần' }, { value: 'startsAt,desc', label: 'Bắt đầu giảm dần' }, { value: 'title,asc', label: 'Tên A–Z' }]
 const historySorts = [{ value: 'registeredAt,desc', label: 'Đăng ký mới nhất' }, { value: 'registeredAt,asc', label: 'Đăng ký cũ nhất' }]
+const heading = { upcoming: 'Khám phá sự kiện', mine: 'Đăng ký của bạn', history: 'Lịch sử sự kiện' }
+const introduction = {
+ upcoming: 'Tìm hoạt động trong khuôn viên. Chỉ sự kiện đang mở nhận đăng ký.',
+ mine: 'Các sự kiện bạn đang giữ chỗ. Mở chi tiết để hủy đăng ký.',
+ history: 'Toàn bộ đăng ký, hủy và tham dự được lưu lại để tra cứu.',
+}
+const emptyText = { upcoming: 'Hiện chưa có sự kiện đang mở đăng ký.', mine: 'Bạn chưa đăng ký sự kiện nào đang hoạt động.', history: 'Chưa có lịch sử đăng ký.' }
+const dateFormat = new Intl.DateTimeFormat('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', weekday: 'short', day: '2-digit', month: '2-digit' })
+const clockFormat = new Intl.DateTimeFormat('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
 const unlinked = (error: unknown) => error instanceof ApiError && error.status === 404 && error.detail.code === 'EVENT_REGISTRATION_NOT_FOUND'
 function LinkNotice() { return <Alert type="info" showIcon title="Chưa có hồ sơ sinh viên liên kết" description="Bạn vẫn có thể xem sự kiện. Liên hệ quản trị viên để liên kết tài khoản với hồ sơ sinh viên trước khi đăng ký." /> }
 export function ownActions(registration: Registration | null, event: CampusEvent): ('REGISTER' | 'CANCEL' | 'RESTORE')[] {
@@ -23,51 +35,148 @@ export function ownActions(registration: Registration | null, event: CampusEvent
  if (registration.status === 'REGISTERED') return ['CANCEL']
  return registration.status === 'CANCELLED' && event.status === 'OPEN' ? ['RESTORE'] : []
 }
+function eventDate(value: string) {
+ const date = new Date(value)
+ if (Number.isNaN(date.getTime())) return null
+ const parts = dateFormat.formatToParts(date)
+ const read = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? ''
+ return { weekday: read('weekday'), day: read('day'), month: read('month') }
+}
+function clock(value: string) {
+ const date = new Date(value)
+ return Number.isNaN(date.getTime()) ? '—' : clockFormat.format(date)
+}
+function EventDate({ value }: { value: string }) {
+ const parts = eventDate(value)
+ if (!parts) return <span className="event-date-chip event-date-chip-muted" aria-hidden="true">—</span>
+ return <span className="event-date-chip" aria-hidden="true">
+  <span className="event-date-weekday">{parts.weekday}</span>
+  <span className="event-date-day">{parts.day}</span>
+  <span className="event-date-month">Tháng {parts.month}</span>
+ </span>
+}
+function useEvent(id: string | null) {
+ return useQuery({
+  queryKey: ['portal-event-title', id],
+  enabled: !!id,
+  queryFn: ({ signal }) => api.request<CampusEvent>(eventPath + '/' + encodeURIComponent(id as string), { signal }),
+  staleTime: 5 * 60_000,
+  refetchOnWindowFocus: false,
+ })
+}
+function OwnBadge({ registration }: { registration: Registration | null }) {
+ if (!registration) return null
+ return <Tag color={registration.status === 'REGISTERED' ? 'green' : registration.status === 'ATTENDED' ? 'blue' : 'default'}>{states[registration.status]}</Tag>
+}
 export default function EventsPage({ history = false }: { history?: boolean }) {
- const sorts = history ? historySorts : catalogSorts
- const [filters, setFilters] = useListQuery({ page: 0, size: 20, q: '', status: history ? '' : 'OPEN', sort: history ? 'registeredAt,desc' : 'startsAt,asc' }, {
+ const [searchParams] = useSearchParams()
+ const navigate = useNavigate()
+ const requested = searchParams.get('view')
+ const view: View = requested === 'mine' || requested === 'history' ? requested : history ? 'history' : 'upcoming'
+ const ownView = view !== 'upcoming'
+ const sorts = ownView ? historySorts : catalogSorts
+ const defaults = view === 'upcoming'
+  ? { page: 0, size: 20, q: '', status: 'OPEN', sort: 'startsAt,asc' }
+  : { page: 0, size: 20, q: '', status: view === 'mine' ? 'REGISTERED' : '', sort: 'registeredAt,desc' }
+ const [filters, setFilters] = useListQuery(defaults, {
   sorts: sorts.map((option) => option.value),
-  choices: { status: history ? ['REGISTERED', 'CANCELLED', 'ATTENDED'] : [] },
+  choices: { status: ['REGISTERED', 'CANCELLED', 'ATTENDED'] },
  })
  const { selected, open, close } = useDialogSelection()
- const params = queryParams({ ...filters, q: history ? undefined : filters.q })
+ const params = queryParams({ ...filters, status: ownView ? filters.status : 'OPEN', q: ownView ? undefined : filters.q })
  const result = useQuery({
-  queryKey: ['portal-events', history ? 'history' : 'catalog', params],
+  queryKey: ['portal-events', view, params],
   placeholderData: keepPreviousData,
-  queryFn: ({ signal }) => api.request<Page<CampusEvent | Registration>>((history ? ownPath : eventPath) + '?' + params, { signal }),
+  queryFn: ({ signal }) => api.request<Page<CampusEvent | Registration>>((ownView ? ownPath : eventPath) + '?' + params, { signal }),
   select: (value) => ({ ...value, totalElements: safePageTotal(value.totalElements) }),
  })
- const statuses = history ? ['REGISTERED', 'CANCELLED', 'ATTENDED'] : ['DRAFT', 'OPEN', 'CLOSED', 'CANCELLED']
+ // One cached read of own registrations supplies the "already registered" badge on catalog cards.
+ const memberships = useQuery({
+  queryKey: ['portal-own-registrations'],
+  enabled: view === 'upcoming',
+  retry: false,
+  queryFn: async ({ signal }) => (await api.request<Page<Registration>>(ownPath + '?' + queryParams({ page: 0, size: 100, sort: 'registeredAt,desc' }), { signal })).content,
+ })
+ const membershipByEvent = new Map((memberships.data ?? []).map((registration) => [registration.eventId, registration]))
+ const changeView = (next: string) => navigate(next === 'upcoming' ? '/portal/events' : '/portal/events?view=' + next)
+ const statuses = ['REGISTERED', 'CANCELLED', 'ATTENDED']
+ const records = result.data?.content ?? []
  return <>
-  <div className="page-heading"><div><Typography.Title level={1}>{history ? 'Đăng ký của bạn' : 'Khám phá sự kiện'}</Typography.Title>
-   <Typography.Paragraph type="secondary">{history ? 'Lịch sử đăng ký, hủy và khôi phục được giữ lại.' : 'Tìm hoạt động trong khuôn viên. Chỉ sự kiện đang mở nhận đăng ký.'}</Typography.Paragraph></div></div>
+  <div className="page-heading"><div><Typography.Title level={1}>{heading[view]}</Typography.Title>
+   <Typography.Paragraph type="secondary">{introduction[view]}</Typography.Paragraph></div></div>
+  <Tabs className="portal-event-tabs" activeKey={view} onChange={changeView} items={[
+   { key: 'upcoming', label: 'Đang mở' },
+   { key: 'mine', label: 'Đã đăng ký' },
+   { key: 'history', label: 'Lịch sử' },
+  ]} />
   <Space wrap className="list-filters">
-   {!history && <Input.Search aria-label="Tìm sự kiện" maxLength={100} placeholder="Tìm mã hoặc tên sự kiện" allowClear defaultValue={filters.q} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} style={{ width: 260 }} />}
-   {history && <Select aria-label="Lọc trạng thái sự kiện" value={filters.status} onChange={(status) => setFilters({ ...filters, status, page: 0 })}
+   {!ownView && <Input.Search aria-label="Tìm sự kiện" maxLength={100} placeholder="Tìm mã hoặc tên sự kiện" allowClear defaultValue={filters.q} onSearch={(q) => setFilters({ ...filters, q, page: 0 })} style={{ width: 260 }} />}
+   {view === 'history' && <Select aria-label="Lọc trạng thái sự kiện" value={filters.status} onChange={(status) => setFilters({ ...filters, status, page: 0 })}
     options={[{ value: '', label: 'Tất cả trạng thái' }, ...statuses.map((value) => ({ value, label: states[value as keyof typeof states] }))]} style={{ minWidth: 180 }} />}
    <Select aria-label="Sắp xếp sự kiện" value={filters.sort} onChange={(sort) => setFilters({ ...filters, sort, page: 0 })}
     options={sorts} style={{ minWidth: 180 }} />
   </Space>
   {result.isFetching && <p role="status">Đang tải sự kiện…</p>}
   {unlinked(result.error) ? <LinkNotice /> : result.error && <ErrorNotice error={result.error} onRetry={() => { void result.refetch() }} />}
-  {!result.isFetching && !result.error && !result.data?.content.length && <Card><Empty description="Chưa có sự kiện phù hợp." /></Card>}
-  <div className="portal-event-grid">{!result.error && result.data?.content.map((row) => {
-   const event = row as CampusEvent
-   const registration = row as Registration
-   return <Card key={row.id}>
-    <Tag color={row.status === 'OPEN' || row.status === 'REGISTERED' ? 'purple' : 'default'}>{states[row.status]}</Tag>
-    <Typography.Title level={2} style={{ fontSize: 20 }}>{history ? <EventTitle id={registration.eventId} /> : event.title}</Typography.Title>
-    {history ? <><Typography.Paragraph>Đăng ký lúc: <CampusTime value={registration.registeredAt} /></Typography.Paragraph>
-     {registration.cancelledAt && <Typography.Paragraph>Hủy lúc: <CampusTime value={registration.cancelledAt} /></Typography.Paragraph>}
-     {registration.attendedAt && <Typography.Paragraph>Tham dự lúc: <CampusTime value={registration.attendedAt} /></Typography.Paragraph>}</>
-     : <><Typography.Paragraph type="secondary">{event.code} · Sức chứa: {event.capacity}</Typography.Paragraph><Typography.Paragraph>Bắt đầu: <CampusTime value={event.startsAt} /></Typography.Paragraph></>}
-    <Button onClick={(click) => open(history ? registration.eventId : event.id, click.currentTarget)}>Xem sự kiện</Button>
-   </Card>
-  })}</div>
+  {!result.isFetching && !result.error && records.length === 0 && <Card><Empty description={emptyText[view]} /></Card>}
+  <div className="portal-event-grid">
+   {!result.error && !ownView && (records as CampusEvent[]).map((event) => <CatalogCard key={event.id} event={event}
+    registration={membershipByEvent.get(event.id) ?? null} onOpen={open} />)}
+   {!result.error && ownView && (records as Registration[]).map((registration) => <RegistrationCard key={registration.id} registration={registration} onOpen={open} />)}
+  </div>
   <Pagination aria-label="Trang sự kiện" current={filters.page + 1} pageSize={filters.size} total={result.data?.totalElements ?? 0}
    showSizeChanger pageSizeOptions={[10, 20, 50, 100]} onChange={(page, size) => setFilters({ ...filters, page: page - 1, size })} />
   {selected && <EventDetail key={selected} id={selected} onClose={close} />}
  </>
+}
+function CatalogCard({ event, registration, onOpen }: { event: CampusEvent; registration: Registration | null; onOpen: (id: string, element: HTMLElement) => void }) {
+ return <Card className="portal-event-card">
+  <div className="event-card-body">
+   <EventDate value={event.startsAt} />
+   <div className="event-card-main">
+    <div className="event-card-top">
+     <Tag color={event.status === 'OPEN' ? 'purple' : 'default'}>{states[event.status]}</Tag>
+     <OwnBadge registration={registration} />
+     <Typography.Text type="secondary">{event.code}</Typography.Text>
+    </div>
+    <Typography.Title level={2} className="event-card-title">{event.title}</Typography.Title>
+    {event.description && <Typography.Paragraph type="secondary" className="event-card-description"
+     ellipsis={{ rows: 2, tooltip: event.description }}>{event.description}</Typography.Paragraph>}
+    <Space size={18} wrap className="event-card-meta">
+     <span><ClockCircleOutlined aria-hidden="true" /> {clock(event.startsAt)} – {clock(event.endsAt)} (UTC+7)</span>
+     <span><TeamOutlined aria-hidden="true" /> Sức chứa {event.capacity}</span>
+    </Space>
+   </div>
+  </div>
+  <div className="event-card-foot">
+   <Typography.Text type="secondary">Bắt đầu: <CampusTime value={event.startsAt} /></Typography.Text>
+   <Button onClick={(click) => onOpen(event.id, click.currentTarget)}>Xem sự kiện</Button>
+  </div>
+ </Card>
+}
+function RegistrationCard({ registration, onOpen }: { registration: Registration; onOpen: (id: string, element: HTMLElement) => void }) {
+ const event = useEvent(registration.eventId)
+ return <Card className="portal-event-card">
+  <div className="event-card-body">
+   <EventDate value={event.data?.startsAt ?? registration.registeredAt} />
+   <div className="event-card-main">
+    <div className="event-card-top">
+     <Tag color={registration.status === 'REGISTERED' ? 'green' : registration.status === 'ATTENDED' ? 'blue' : 'default'}>{states[registration.status]}</Tag>
+     {event.data && <Typography.Text type="secondary">{event.data.code}</Typography.Text>}
+    </div>
+    <Typography.Title level={2} className="event-card-title">{event.data?.title ?? (event.isFetching ? 'Đang tải tên sự kiện…' : 'Sự kiện ' + registration.eventId)}</Typography.Title>
+    <div className="event-card-timeline">
+     <Typography.Paragraph>Đăng ký lúc: <CampusTime value={registration.registeredAt} /></Typography.Paragraph>
+     {registration.cancelledAt && <Typography.Paragraph>Hủy lúc: <CampusTime value={registration.cancelledAt} /></Typography.Paragraph>}
+     {registration.attendedAt && <Typography.Paragraph>Tham dự lúc: <CampusTime value={registration.attendedAt} /></Typography.Paragraph>}
+    </div>
+   </div>
+  </div>
+  <div className="event-card-foot">
+   {event.data && <Typography.Text type="secondary">Bắt đầu: <CampusTime value={event.data.startsAt} /></Typography.Text>}
+   <Button onClick={(click) => onOpen(registration.eventId, click.currentTarget)}>Xem sự kiện</Button>
+  </div>
+ </Card>
 }
 function EventDetail({ id, onClose }: { id: string; onClose: () => void }) {
  const { message } = AntApp.useApp()
@@ -89,7 +198,7 @@ function EventDetail({ id, onClose }: { id: string; onClose: () => void }) {
     { action, expectedVersion: membership.data.rowVersion } satisfies components['schemas']['EventRegistrationChange'])
   },
   onSuccess: async (_, action) => {
-   await Promise.all([queryClient.invalidateQueries({ queryKey: ['portal-events'] }), queryClient.invalidateQueries({ queryKey: ['portal-own-registration', id] })])
+   await Promise.all([queryClient.invalidateQueries({ queryKey: ['portal-events'] }), queryClient.invalidateQueries({ queryKey: ['portal-own-registrations'] }), queryClient.invalidateQueries({ queryKey: ['portal-own-registration', id] })])
    void message.success(action === 'REGISTER' ? 'Đã đăng ký sự kiện.' : action === 'CANCEL' ? 'Đã hủy đăng ký.' : 'Đã khôi phục đăng ký.')
    onClose()
   },
@@ -107,19 +216,25 @@ function EventDetail({ id, onClose }: { id: string; onClose: () => void }) {
   {event.error && <ErrorNotice error={event.error} onRetry={() => { void event.refetch() }} />}
   {unlinked(membership.error) ? <LinkNotice /> : membership.error && <ErrorNotice error={membership.error} onRetry={() => { void membership.refetch() }} />}
   {mutation.error && <><ErrorNotice error={mutation.error} /><Alert type="info" title="Đóng và mở lại sự kiện để kiểm tra dữ liệu mới nhất; thao tác chưa được gửi lại." /></>}
-  {!event.error && event.data && <><Typography.Title level={2}>{event.data.title}</Typography.Title><Tag>{states[event.data.status]}</Tag>
-   <Typography.Paragraph style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{event.data.description}</Typography.Paragraph>
-   <Typography.Paragraph>Bắt đầu: <CampusTime value={event.data.startsAt} /></Typography.Paragraph><Typography.Paragraph>Kết thúc: <CampusTime value={event.data.endsAt} /></Typography.Paragraph>
-   <Typography.Paragraph>Sức chứa: {event.data.capacity}. Số chỗ còn lại được máy chủ kiểm tra khi đăng ký.</Typography.Paragraph></>}
-  {membership.data && <><Typography.Paragraph>Đăng ký của bạn: {states[membership.data.status]}</Typography.Paragraph>
+  {!event.error && event.data && <>
+   <div className="event-detail-hero">
+    <EventDate value={event.data.startsAt} />
+    <div><Typography.Title level={2}>{event.data.title}</Typography.Title>
+     <Space wrap><Tag color={event.data.status === 'OPEN' ? 'purple' : 'default'}>{states[event.data.status]}</Tag>
+      <Typography.Text type="secondary">{event.data.code}</Typography.Text></Space></div>
+   </div>
+   <div className="event-detail-facts">
+    <div><span className="fact-label">Bắt đầu</span><CampusTime value={event.data.startsAt} /></div>
+    <div><span className="fact-label">Kết thúc</span><CampusTime value={event.data.endsAt} /></div>
+    <div><span className="fact-label">Sức chứa</span>{event.data.capacity} chỗ<span className="fact-note">Số chỗ còn lại được máy chủ kiểm tra khi đăng ký.</span></div>
+   </div>
+   <Typography.Paragraph className="event-detail-description">{event.data.description}</Typography.Paragraph>
+  </>}
+  {membership.data && <div className="event-membership">
+   <Space wrap><Typography.Text strong>Đăng ký của bạn</Typography.Text><OwnBadge registration={membership.data} /></Space>
    <Typography.Paragraph>Đăng ký lúc: <CampusTime value={membership.data.registeredAt} /></Typography.Paragraph>
    {membership.data.cancelledAt && <Typography.Paragraph>Hủy lúc: <CampusTime value={membership.data.cancelledAt} /></Typography.Paragraph>}
-   {membership.data.attendedAt && <Typography.Paragraph>Tham dự lúc: <CampusTime value={membership.data.attendedAt} /></Typography.Paragraph>}</>}
+   {membership.data.attendedAt && <Typography.Paragraph>Tham dự lúc: <CampusTime value={membership.data.attendedAt} /></Typography.Paragraph>}
+  </div>}
  </Modal>
-}
-
-// Titles are cached per event so paging back and remounting rows do not repeat requests.
-function EventTitle({ id }: { id: string }) {
- const event = useQuery({ queryKey: ['portal-event-title', id], queryFn: ({ signal }) => api.request<CampusEvent>(eventPath + '/' + encodeURIComponent(id), { signal }), staleTime: 5 * 60_000, refetchOnWindowFocus: false })
- return <>{event.data?.title ?? (event.isFetching ? 'Đang tải tên sự kiện…' : 'Sự kiện ' + id)}</>
 }

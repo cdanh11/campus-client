@@ -45,7 +45,7 @@ for (const width of [375, 768, 1440]) {
   if (await mobileMenu.isVisible()) await mobileMenu.click()
   await page.getByRole('navigation', { name: 'Điều hướng chính', exact: true }).getByRole('link', { name: 'Sự kiện', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Khám phá sự kiện' })).toBeVisible()
-    const contrast = await page.locator('.portal-event-grid .ant-typography-secondary').evaluate((element) => {
+    const contrast = await page.locator('.portal-event-grid .event-card-description').evaluate((element) => {
    const numbers = (color: string) => color.match(/[\d.]+/g)!.map(Number)
    const foreground = numbers(getComputedStyle(element).color)
    const background = numbers(getComputedStyle(element.closest('.ant-card')!).backgroundColor)
