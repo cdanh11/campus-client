@@ -503,6 +503,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/registration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Registration window, cohort slot and available sections of the signed-in student
+         * @description Cohorts enter in two-day slots ordered oldest first (K21 and earlier together). Each section carries a blocked reason when it cannot be chosen.
+         */
+        get: operations["registration"];
+        put?: never;
+        /**
+         * Register the signed-in student in a section
+         * @description Requires the term, offering and section to be open and the student's cohort slot to be current. Rejects duplicates, full sections, unmet prerequisites and timetable conflicts.
+         */
+        post: operations["register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/events/{eventId}/registrations": {
         parameters: {
             query?: never;
@@ -512,7 +536,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["register"];
+        post: operations["register_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -822,7 +846,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["register_1"];
+        post: operations["register_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1637,6 +1661,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/registration/{enrollmentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Withdraw the signed-in student's own enrollment
+         * @description Only enrollments created through self-service can be withdrawn here, and only while the student's registration slot is open.
+         */
+        delete: operations["withdraw"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2143,6 +2187,10 @@ export interface components {
             endDate: string;
             /** @enum {string} */
             status: "PLANNED" | "ACTIVE" | "CLOSED" | "CANCELLED";
+            /** Format: date-time */
+            registrationOpensAt?: string;
+            /** Format: date-time */
+            registrationClosesAt?: string;
             /** Format: int64 */
             expectedVersion: number | bigint;
         };
@@ -2157,6 +2205,10 @@ export interface components {
             endDate?: string;
             /** @enum {string} */
             status?: "PLANNED" | "ACTIVE" | "CLOSED" | "CANCELLED";
+            /** Format: date-time */
+            registrationOpensAt?: string;
+            /** Format: date-time */
+            registrationClosesAt?: string;
             /** Format: int64 */
             rowVersion?: number | bigint;
             /** Format: date-time */
@@ -2379,6 +2431,10 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
+        "com.campus.academic.api.me.OwnRegistrationController.RegisterRequest": {
+            /** Format: uuid */
+            sectionId: string;
+        };
         "com.campus.identity.api.AuthController.RefreshResponse": {
             accessToken?: string;
             tokenType?: string;
@@ -2535,6 +2591,10 @@ export interface components {
             startDate: string;
             /** Format: date */
             endDate: string;
+            /** Format: date-time */
+            registrationOpensAt?: string;
+            /** Format: date-time */
+            registrationClosesAt?: string;
         };
         "com.campus.academic.api.delivery.AdminClassSectionController.CreateRequest": {
             /** Format: uuid */
@@ -2750,6 +2810,76 @@ export interface components {
             studentId?: string;
             term?: components["schemas"]["com.campus.academic.application.StudentAcademicService.TermView"];
             meetings?: components["schemas"]["com.campus.academic.application.StudentAcademicService.EnrollmentView"][];
+        };
+        "com.campus.academic.application.RegistrationService.CohortSlot": {
+            cohort?: string;
+            label?: string;
+            /** Format: date-time */
+            opensAt?: string;
+            /** Format: date-time */
+            closesAt?: string;
+            current?: boolean;
+        };
+        "com.campus.academic.application.RegistrationService.Registration": {
+            /** Format: uuid */
+            studentId?: string;
+            studentNumber?: string;
+            cohort?: string;
+            /** Format: uuid */
+            programId?: string;
+            programName?: string;
+            window?: components["schemas"]["com.campus.academic.application.RegistrationService.Window"];
+            sections?: components["schemas"]["com.campus.academic.application.RegistrationService.SectionOption"][];
+            enrolled?: components["schemas"]["com.campus.academic.application.StudentAcademicService.EnrollmentView"][];
+        };
+        "com.campus.academic.application.RegistrationService.SectionOption": {
+            /** Format: uuid */
+            sectionId?: string;
+            sectionCode?: string;
+            /** Format: uuid */
+            offeringId?: string;
+            /** Format: uuid */
+            courseId?: string;
+            courseCode?: string;
+            courseTitle?: string;
+            /** Format: int32 */
+            credits?: number;
+            courseGroup?: string;
+            /** Format: uuid */
+            facultyId?: string;
+            facultyName?: string;
+            schedule?: components["schemas"]["com.campus.academic.domain.SectionSchedule"];
+            /** Format: int32 */
+            capacity?: number;
+            /** Format: int64 */
+            occupied?: number | bigint;
+            /** Format: int32 */
+            remaining?: number;
+            enrolled?: boolean;
+            eligible?: boolean;
+            blockedReason?: string;
+            prerequisiteCourseCode?: string;
+            prerequisiteCourseTitle?: string;
+        };
+        "com.campus.academic.application.RegistrationService.Window": {
+            /** Format: uuid */
+            termId?: string;
+            termCode?: string;
+            termName?: string;
+            /** Format: date */
+            termStartDate?: string;
+            /** Format: date */
+            termEndDate?: string;
+            /** Format: date-time */
+            opensAt?: string;
+            /** Format: date-time */
+            closesAt?: string;
+            /** Format: date-time */
+            slotOpensAt?: string;
+            /** Format: date-time */
+            slotClosesAt?: string;
+            state?: string;
+            slots?: components["schemas"]["com.campus.academic.application.RegistrationService.CohortSlot"][];
         };
         "com.campus.finance.application.StudentFinanceService.ChargeView": {
             /** Format: uuid */
@@ -4569,7 +4699,51 @@ export interface operations {
             };
         };
     };
+    registration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.application.RegistrationService.Registration"];
+                };
+            };
+        };
+    };
     register: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["com.campus.academic.api.me.OwnRegistrationController.RegisterRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.academic.domain.Enrollment"];
+                };
+            };
+        };
+    };
+    register_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -5362,7 +5536,7 @@ export interface operations {
             };
         };
     };
-    register_1: {
+    register_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -6720,6 +6894,26 @@ export interface operations {
                 content: {
                     "*/*": components["schemas"]["com.campus.academic.api.AdminAcademicCourseController.Response"][];
                 };
+            };
+        };
+    };
+    withdraw: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                enrollmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

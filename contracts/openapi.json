@@ -1864,10 +1864,64 @@
         } ]
       }
     },
+    "/api/v1/me/registration" : {
+      "get" : {
+        "tags" : [ "own-registration-controller" ],
+        "summary" : "Registration window, cohort slot and available sections of the signed-in student",
+        "description" : "Cohorts enter in two-day slots ordered oldest first (K21 and earlier together). Each section carries a blocked reason when it cannot be chosen.",
+        "operationId" : "registration",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/com.campus.academic.application.RegistrationService.Registration"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "own-registration-controller" ],
+        "summary" : "Register the signed-in student in a section",
+        "description" : "Requires the term, offering and section to be open and the student's cohort slot to be current. Rejects duplicates, full sections, unmet prerequisites and timetable conflicts.",
+        "operationId" : "register",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/com.campus.academic.api.me.OwnRegistrationController.RegisterRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/com.campus.academic.domain.Enrollment"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
     "/api/v1/events/{eventId}/registrations" : {
       "post" : {
         "tags" : [ "own-event-registration-controller" ],
-        "operationId" : "register",
+        "operationId" : "register_1",
         "parameters" : [ {
           "name" : "eventId",
           "in" : "path",
@@ -3250,7 +3304,7 @@
     "/api/v1/admin/events/{eventId}/registrations" : {
       "post" : {
         "tags" : [ "admin-event-registration-controller" ],
-        "operationId" : "register_1",
+        "operationId" : "register_2",
         "parameters" : [ {
           "name" : "eventId",
           "in" : "path",
@@ -5720,6 +5774,31 @@
           "bearerAuth" : [ ]
         } ]
       }
+    },
+    "/api/v1/me/registration/{enrollmentId}" : {
+      "delete" : {
+        "tags" : [ "own-registration-controller" ],
+        "summary" : "Withdraw the signed-in student's own enrollment",
+        "description" : "Only enrollments created through self-service can be withdrawn here, and only while the student's registration slot is open.",
+        "operationId" : "withdraw",
+        "parameters" : [ {
+          "name" : "enrollmentId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
     }
   },
   "components" : {
@@ -6909,6 +6988,14 @@
             "type" : "string",
             "enum" : [ "PLANNED", "ACTIVE", "CLOSED", "CANCELLED" ]
           },
+          "registrationOpensAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "registrationClosesAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
           "expectedVersion" : {
             "type" : "integer",
             "format" : "int64"
@@ -6940,6 +7027,14 @@
           "status" : {
             "type" : "string",
             "enum" : [ "PLANNED", "ACTIVE", "CLOSED", "CANCELLED" ]
+          },
+          "registrationOpensAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "registrationClosesAt" : {
+            "type" : "string",
+            "format" : "date-time"
           },
           "rowVersion" : {
             "type" : "integer",
@@ -7454,6 +7549,16 @@
           }
         }
       },
+      "com.campus.academic.api.me.OwnRegistrationController.RegisterRequest" : {
+        "type" : "object",
+        "properties" : {
+          "sectionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        },
+        "required" : [ "sectionId" ]
+      },
       "com.campus.identity.api.AuthController.RefreshResponse" : {
         "type" : "object",
         "properties" : {
@@ -7893,6 +7998,14 @@
           "endDate" : {
             "type" : "string",
             "format" : "date"
+          },
+          "registrationOpensAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "registrationClosesAt" : {
+            "type" : "string",
+            "format" : "date-time"
           }
         },
         "required" : [ "code", "endDate", "name", "startDate" ]
@@ -8426,6 +8539,183 @@
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.EnrollmentView"
+            }
+          }
+        }
+      },
+      "com.campus.academic.application.RegistrationService.CohortSlot" : {
+        "type" : "object",
+        "properties" : {
+          "cohort" : {
+            "type" : "string"
+          },
+          "label" : {
+            "type" : "string"
+          },
+          "opensAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "closesAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "current" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "com.campus.academic.application.RegistrationService.Registration" : {
+        "type" : "object",
+        "properties" : {
+          "studentId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "studentNumber" : {
+            "type" : "string"
+          },
+          "cohort" : {
+            "type" : "string"
+          },
+          "programId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "programName" : {
+            "type" : "string"
+          },
+          "window" : {
+            "$ref" : "#/components/schemas/com.campus.academic.application.RegistrationService.Window"
+          },
+          "sections" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.academic.application.RegistrationService.SectionOption"
+            }
+          },
+          "enrolled" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.academic.application.StudentAcademicService.EnrollmentView"
+            }
+          }
+        }
+      },
+      "com.campus.academic.application.RegistrationService.SectionOption" : {
+        "type" : "object",
+        "properties" : {
+          "sectionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "sectionCode" : {
+            "type" : "string"
+          },
+          "offeringId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "courseId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "courseCode" : {
+            "type" : "string"
+          },
+          "courseTitle" : {
+            "type" : "string"
+          },
+          "credits" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "courseGroup" : {
+            "type" : "string"
+          },
+          "facultyId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "facultyName" : {
+            "type" : "string"
+          },
+          "schedule" : {
+            "$ref" : "#/components/schemas/com.campus.academic.domain.SectionSchedule"
+          },
+          "capacity" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "occupied" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "remaining" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "enrolled" : {
+            "type" : "boolean"
+          },
+          "eligible" : {
+            "type" : "boolean"
+          },
+          "blockedReason" : {
+            "type" : "string"
+          },
+          "prerequisiteCourseCode" : {
+            "type" : "string"
+          },
+          "prerequisiteCourseTitle" : {
+            "type" : "string"
+          }
+        }
+      },
+      "com.campus.academic.application.RegistrationService.Window" : {
+        "type" : "object",
+        "properties" : {
+          "termId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "termCode" : {
+            "type" : "string"
+          },
+          "termName" : {
+            "type" : "string"
+          },
+          "termStartDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "termEndDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "opensAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "closesAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "slotOpensAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "slotClosesAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "state" : {
+            "type" : "string"
+          },
+          "slots" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/com.campus.academic.application.RegistrationService.CohortSlot"
             }
           }
         }
