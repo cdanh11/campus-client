@@ -1213,6 +1213,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/events/hosts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["hosts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/event-registrations": {
         parameters: {
             query?: never;
@@ -2104,6 +2120,8 @@ export interface components {
             status: "DRAFT" | "OPEN" | "CLOSED" | "CANCELLED";
             /** Format: int64 */
             expectedVersion: number | bigint;
+            /** Format: uuid */
+            hostUnitId?: string;
         };
         "com.campus.event.domain.CampusEvent": {
             /** Format: uuid */
@@ -2125,6 +2143,8 @@ export interface components {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+            /** Format: uuid */
+            hostUnitId?: string;
         };
         DormitoryInventoryUpdateRequest: {
             code: string;
@@ -2403,7 +2423,7 @@ export interface components {
             /** Format: int32 */
             credits: number;
             /** @enum {string} */
-            courseGroup?: "GENERAL" | "MAJOR";
+            courseGroup?: "GENERAL" | "MAJOR" | "SPECIALIZED";
             hasFinalProject?: boolean;
             /** Format: uuid */
             organizationUnitId: string;
@@ -2567,6 +2587,8 @@ export interface components {
             endsAt: string;
             /** Format: int32 */
             capacity: number;
+            /** Format: uuid */
+            hostUnitId?: string;
         };
         EventRegistrationCreate: {
             /** Format: uuid */
@@ -2656,7 +2678,7 @@ export interface components {
             /** Format: int32 */
             credits: number;
             /** @enum {string} */
-            courseGroup?: "GENERAL" | "MAJOR";
+            courseGroup?: "GENERAL" | "MAJOR" | "SPECIALIZED";
             hasFinalProject?: boolean;
             /** Format: uuid */
             organizationUnitId: string;
@@ -2860,6 +2882,9 @@ export interface components {
             blockedReason?: string;
             prerequisiteCourseCode?: string;
             prerequisiteCourseTitle?: string;
+            /** Format: uuid */
+            courseOrganizationUnitId?: string;
+            courseOrganizationUnitName?: string;
         };
         "com.campus.academic.application.RegistrationService.Window": {
             /** Format: uuid */
@@ -2971,6 +2996,11 @@ export interface components {
             totalElements?: number | bigint;
             /** Format: int32 */
             totalPages?: number;
+        };
+        "com.campus.event.application.EventCatalogService.EventHost": {
+            /** Format: uuid */
+            id?: string;
+            name?: string;
         };
         EventRegistrationPage: {
             content?: components["schemas"]["com.campus.event.domain.EventRegistration"][];
@@ -5493,6 +5523,7 @@ export interface operations {
                 size?: number;
                 q?: string;
                 status?: string;
+                hostUnitId?: string;
                 sort?: string;
             };
             header?: never;
@@ -6201,6 +6232,7 @@ export interface operations {
                 size?: number;
                 q?: string;
                 status?: string;
+                hostUnitId?: string;
                 sort?: string;
             };
             header?: never;
@@ -6238,6 +6270,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["com.campus.event.domain.CampusEvent"];
+                };
+            };
+        };
+    };
+    hosts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["com.campus.event.application.EventCatalogService.EventHost"][];
                 };
             };
         };

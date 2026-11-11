@@ -6,7 +6,8 @@
     "version" : "v1"
   },
   "servers" : [ {
-    "url" : "http://localhost:8080"
+    "url" : "http://localhost",
+    "description" : "Generated server url"
   } ],
   "paths" : {
     "/api/v1/notifications/{id}/read" : {
@@ -3247,6 +3248,14 @@
             "type" : "string"
           }
         }, {
+          "name" : "hostUnitId",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
           "name" : "sort",
           "in" : "query",
           "required" : false,
@@ -4510,6 +4519,14 @@
             "type" : "string"
           }
         }, {
+          "name" : "hostUnitId",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
           "name" : "sort",
           "in" : "query",
           "required" : false,
@@ -4555,6 +4572,30 @@
               "*/*" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/com.campus.event.domain.CampusEvent"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/events/hosts" : {
+      "get" : {
+        "tags" : [ "event-catalog-controller" ],
+        "operationId" : "hosts",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/com.campus.event.application.EventCatalogService.EventHost"
+                  }
                 }
               }
             }
@@ -6799,6 +6840,10 @@
           "expectedVersion" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "hostUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
           }
         },
         "required" : [ "capacity", "code", "description", "endsAt", "expectedVersion", "startsAt", "status", "title" ]
@@ -6846,6 +6891,10 @@
           "updatedAt" : {
             "type" : "string",
             "format" : "date-time"
+          },
+          "hostUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
           }
         }
       },
@@ -7485,7 +7534,7 @@
           },
           "courseGroup" : {
             "type" : "string",
-            "enum" : [ "GENERAL", "MAJOR" ]
+            "enum" : [ "GENERAL", "MAJOR", "SPECIALIZED" ]
           },
           "hasFinalProject" : {
             "type" : "boolean"
@@ -7934,6 +7983,10 @@
           "capacity" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "hostUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
           }
         },
         "required" : [ "capacity", "code", "description", "endsAt", "startsAt", "title" ]
@@ -8173,7 +8226,7 @@
           },
           "courseGroup" : {
             "type" : "string",
-            "enum" : [ "GENERAL", "MAJOR" ]
+            "enum" : [ "GENERAL", "MAJOR", "SPECIALIZED" ]
           },
           "hasFinalProject" : {
             "type" : "boolean"
@@ -8669,6 +8722,13 @@
           },
           "prerequisiteCourseTitle" : {
             "type" : "string"
+          },
+          "courseOrganizationUnitId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "courseOrganizationUnitName" : {
+            "type" : "string"
           }
         }
       },
@@ -8958,6 +9018,18 @@
           "totalPages" : {
             "type" : "integer",
             "format" : "int32"
+          }
+        }
+      },
+      "com.campus.event.application.EventCatalogService.EventHost" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "name" : {
+            "type" : "string"
           }
         }
       },
